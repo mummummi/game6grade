@@ -172,7 +172,7 @@ function slidingPuzzle(ok){
 function hanoi(ok){
   const HN=DD.han,LIM=2**HN-1,IN=()=>[Array.from({length:HN},(_,i)=>HN-i),[],[]];let P=IN(),sel=null,moves=0;const W={1:50,2:75,3:100,4:125},C={1:'#ffb74d',2:'#a1887f',3:'#6d4c41',4:'#4e342e'};
   function draw(){
-    $('hn').innerHTML=P.map((p,i)=>`<div class="peg" data-i="${i}" style="flex:1;height:${HN>3?240:200}px;position:relative;cursor:pointer;background:${sel===i?'rgba(242,193,78,.15)':'transparent'};border-radius:10px"><div style="position:absolute;left:50%;bottom:0;width:10px;height:180px;background:#5d4037;transform:translateX(-50%)"></div>${p.map((d,k)=>`<div style="position:absolute;left:50%;bottom:${k*42}px;width:${W[d]}px;height:38px;background:${C[d]};border:3px solid #3e2415;border-radius:10px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff">${(HN===2?['','작은 통','큰 통']:HN===4?['','작은 통','중간 통','큰 통','왕 큰 통']:['','작은 통','중간 통','큰 통'])[d]}</div>`).join('')}<div style="position:absolute;bottom:-26px;width:100%;text-align:center;color:var(--muted)">${['출발','중간','도착'][i]}</div></div>`).join('');
+    $('hn').innerHTML=P.map((p,i)=>`<div class="peg" data-i="${i}" style="flex:1;height:${HN>3?240:200}px;position:relative;cursor:pointer;background:${sel===i?'rgba(242,193,78,.15)':'transparent'};border-radius:10px"><div style="position:absolute;left:50%;bottom:0;width:10px;height:180px;background:#5d4037;transform:translateX(-50%)"></div>${p.map((d,k)=>`<div style="position:absolute;left:50%;bottom:${k*42}px;width:${W[d]}px;height:38px;background:${C[d]};border:3px solid #3e2415;border-radius:10px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff"><span style="white-space:nowrap;font-size:${d===1?12:14}px">${(HN===2?['','작은 통','큰 통']:HN===4?['','작은 통','중간 통','큰 통','왕 큰 통']:['','작은 통','중간 통','큰 통'])[d]}</span></div>`).join('')}<div style="position:absolute;bottom:-26px;width:100%;text-align:center;color:var(--muted)">${['출발','중간','도착'][i]}</div></div>`).join('');
     $('hc').textContent=moves;
     document.querySelectorAll('.peg').forEach(g=>g.onclick=()=>{const i=+g.dataset.i;
       if(sel===null){if(P[i].length){sel=i;draw()}return}
@@ -321,7 +321,7 @@ const rooms=[
 {
   name:'선장실',scene:sceneCabin,
   objects:[
-    {id:'pics',click(){openModal('그림 액자',box('여섯 개의 그림이 걸려 있다. 액자 아래 금속판에 글씨가 새겨져 있다.')+`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:56px;text-align:center;background:#f3e0b5;border-radius:10px;padding:10px">${DD.pics.e.map(e=>`<div>${e}</div>`).join('')}</div>`+paper('"'+DD.pics.rule+' 선장의 상자가 열릴 것이다."')+DD.pics.tip)}},
+    {id:'pics',click(){openModal('그림 액자',box(['','한','두','세','네','다섯','여섯','일곱','여덟','아홉'][DD.pics.e.length]+' 개의 그림이 걸려 있다. 액자 아래 금속판에 글씨가 새겨져 있다.')+`<div style="display:grid;grid-template-columns:repeat(${DD.pics.e.length===4?4:3},1fr);gap:8px;font-size:56px;text-align:center;background:#f3e0b5;border-radius:10px;padding:10px">${DD.pics.e.map(e=>`<div>${e}</div>`).join('')}</div>`+paper('"'+DD.pics.rule+' 선장의 상자가 열릴 것이다."')+DD.pics.tip)}},
     {id:'chest',click(){
       if(S.f.chest){openModal('선장의 상자',box('상자는 비어 있다.'));return}
       openModal('선장의 상자',box('🔒 '+DD.pics.ans.length+'칸짜리 자물쇠')+lock({placeholder:DD.pics.ph,maxlen:10}),()=>bindLock(DD.pics.ans,()=>{S.f.chest=true;save();openModal('선장의 상자',box('상자 안에 금빛 <b>망원경</b>이 들어 있다!'));give('scope')}))}},

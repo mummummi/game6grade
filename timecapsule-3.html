@@ -141,7 +141,7 @@ function moonSVG(type,cx=50,cy=50,r=38){
   return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#2c2f45"/>${lit}`;
 }
 function moonPoster(){
-  if(DD.poster.mode==='emoji')return `<div style="display:grid;grid-template-columns:repeat(${DD.poster.items.length},1fr);gap:8px;background:#0d1330;padding:12px;border-radius:8px">${DD.poster.items.map((e,i)=>`<div style="text-align:center;color:#fff"><div style="font-size:54px">${e}</div><b>사진 ${i+1}</b></div>`).join('')}</div>`;
+  if(DD.poster.mode==='emoji')return `<div style="display:grid;grid-template-columns:repeat(${DD.poster.items.length},1fr);gap:8px;background:#0d1330;padding:12px;border-radius:8px">${DD.poster.items.map((e,i)=>`<div style="text-align:center;color:#fff"><div style="font-size:54px">${e}</div><b>사진 ${i+1}</b>${DD.poster.caps&&DD.poster.caps[i]?`<div style="font-size:13px;opacity:.85;margin-top:2px;word-break:keep-all">${DD.poster.caps[i]}</div>`:''}</div>`).join('')}</div>`;
   const m=DD.poster.items.map((t,i)=>[t,i+1]);
   return `<div style="display:grid;grid-template-columns:repeat(${m.length},1fr);gap:8px;background:#0d1330;padding:12px;border-radius:8px">${m.map(([t,n])=>`<div style="text-align:center;color:#fff"><svg viewBox="0 0 100 100" width="100%">${moonSVG(t)}</svg><b>사진 ${n}</b></div>`).join('')}</div>`;
 }
