@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>해적선의 보물 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#12141c;--panel:#1e2130;--panel2:#282c40;--ink:#f3efe4;--muted:#a9a6b8;--gold:#f2c14e;--red:#e85d5d;--green:#5fd39a;--line:#3a3f57}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 50% 0%,#232842 0%,var(--bg) 60%);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:18px;line-height:1.6;-webkit-user-select:none;user-select:none}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .brand{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gold)}
+  .stats{display:flex;gap:8px;font-size:15px;flex-wrap:wrap}
+  .pill{background:var(--panel);border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+  h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:36px;margin:0 0 6px;color:var(--gold)}
+  h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .story{background:var(--panel2);border-left:4px solid var(--gold);padding:14px 16px;border-radius:10px;margin:14px 0;text-align:left}
+  .center{text-align:center}
+  .muted{color:var(--muted);font-size:15px}
+  button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+  .btn{background:var(--gold);color:#2a2100}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .roombar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 8px;gap:8px;flex-wrap:wrap}
+  .scene{position:relative;width:100%;border-radius:16px;overflow:hidden;border:2px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .hot{cursor:pointer}
+  .obj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;line-height:1;transition:transform .15s,filter .15s;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+  .obj:hover{transform:translate(-50%,-50%) scale(1.12);filter:drop-shadow(0 0 10px rgba(242,193,78,.8))}
+  .obj .seen{position:absolute;right:-4px;top:-4px;font-size:12px;background:var(--green);color:#000;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .inv{display:flex;gap:8px;align-items:center;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:62px;flex-wrap:wrap}
+  .inv .lbl{color:var(--muted);font-size:14px;margin-right:4px}
+  .item{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:15px}
+  .item span{font-size:24px}
+  .item.sel{border-color:var(--gold);background:#3b3420}
+  .selinfo{margin-left:auto;font-size:14px;color:var(--gold)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+  .modal.show{display:flex}
+  .modal .card{width:100%;max-width:620px;max-height:92vh;overflow:auto;animation:pop .2s}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .x{background:transparent;color:var(--muted);font-size:26px;padding:0 6px}
+  .box{background:#161925;border:1px dashed var(--line);border-radius:12px;padding:16px;margin:10px 0;text-align:center}
+  .paper{background:#fbf6e6;color:#2b2414;border-radius:6px;padding:16px 18px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:17px}
+  .paper table{border-collapse:collapse;margin:8px auto}
+  .paper td{padding:3px 10px;border-bottom:1px solid #d9cfb3}
+  .paper td.c{font-family:monospace;font-size:22px;font-weight:bold;letter-spacing:4px}
+  .lockform{display:flex;gap:8px;margin-top:12px}
+  .lockform input{flex:1;min-width:0;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#0e1018;color:var(--ink);font-family:monospace;letter-spacing:6px;text-align:center;-webkit-user-select:text;user-select:text}
+  .lockform input:focus{outline:none;border-color:var(--gold)}
+  .msg{min-height:26px;margin-top:8px;font-weight:bold;text-align:center}
+  .msg.bad{color:var(--red)}.msg.good{color:var(--green)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .chalk{background:#1f4d36;border:10px solid #7a5230;border-radius:6px;color:#eef;padding:18px;font-size:24px;text-align:center}
+  .poster{position:relative;height:240px;background:#fff;border-radius:6px;overflow:hidden;transition:background .4s}
+  .poster .msgtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a46ff;font-size:24px;font-weight:bold;line-height:1.5}
+  .poster .noise{position:absolute;font-weight:bold;color:#ff2a2a;pointer-events:none;transition:color .4s}
+  .poster.filtered{background:#ff9d9d}
+  .poster.filtered .noise{color:#ff9d9d;opacity:0}
+  .poster.filtered .msgtxt{color:#2a0010}
+  .ptable{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;font-size:13px}
+  .ptable div{background:#2f3a5c;border-radius:4px;padding:4px 0;text-align:center}
+  .ptable b{display:block;font-size:18px;color:#fff}
+  .ptable small{color:#9fb0e0}
+  .scale{font-size:30px;margin:6px 0;letter-spacing:4px}
+  .scope{width:220px;height:220px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#e8f3ff 0%,#a9c3dc 70%,#223 72%);display:flex;align-items:center;justify-content:center;color:#123;font-size:26px;font-weight:bold;letter-spacing:3px;border:8px solid #333}
+  .piano{position:relative;display:flex;justify-content:center;margin:12px auto 4px;height:170px;width:max-content;max-width:100%}
+  .wk{width:46px;height:170px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;cursor:pointer}
+  .wk:active,.wk.hit{background:#ffe9a8}
+  .bk{position:absolute;top:0;width:30px;height:105px;background:#111;border-radius:0 0 6px 6px;cursor:pointer;z-index:2}
+  .bk:active{background:#444}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .dots i{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+  .dots i.on{background:var(--gold)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#2a2100;padding:12px 22px;border-radius:999px;font-weight:bold;z-index:30;display:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .toast.show{display:block;animation:pop .25s}
+  .hint{background:#2b2a1f;border:1px solid #5c5330;color:#f5e6b0;padding:10px 14px;border-radius:10px;margin-top:8px;text-align:left}
+  .teaser{border:2px dashed var(--gold);border-radius:14px;padding:16px;margin-top:18px}
+  .big-emoji{font-size:70px;line-height:1}
+  @media (max-width:560px){.wk{width:30px}.bk{width:20px}.chalk{font-size:19px}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🏴‍☠️ 검은 갈매기호</div>
+    <div class="stats">
+      <span class="pill" id="lvPill"></span>
+      <span class="pill">⏱ <span id="timer">00:00</span></span>
+      <span class="pill">💡 힌트 <span id="hintCount">0</span></span>
+      <button class="ghost" id="resetBtn" style="font-size:13px;padding:4px 10px">처음부터</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="mcard">
+  <div class="mhead"><h2 id="mtitle"></h2><div><button class="x" id="mclose">✕</button></div></div>
+  <div id="mbody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 해적선의 보물 ================= */
+const GRADE=6;
+const DATA={"easy":{"pics":{"e":["☀️","🏠","🍦","🐷"],"ans":"SHIP","rule":"그림의 <b>영어 이름 첫 글자</b>를 순서대로 읽어라.","ph":"영어 4글자","h":"그림 영어 이름: Sun, House, Ice cream, Pig → 첫 글자를 이어 보세요.","tip":"<div class=\"tipbox\">🧭 도움말: 그림의 영어 이름을 떠올려 첫 알파벳만 적어요.</div>"},"lan":{"rows":["001","110","010"],"ans":"162","rule":"· 한 줄에 랜턴 3개, <b>왼쪽부터 4, 2, 1</b>을 뜻한다.<br>· <b>켜진 랜턴</b>의 수만 더하면 그 줄의 숫자가 된다.<br>· 맨 위 줄부터 차례로 읽으면 <b>책상 서랍 비밀번호</b>다.","h":"랜턴은 켜진 칸의 수만 더해요(위 줄: 꺼짐·꺼짐·켜짐 = 1 = 1).","tip":"<div class=\"tipbox\">🧭 도움말: 줄마다 종이에 숫자를 하나씩 적어 두세요.</div>"},"tri":{"inner":"<polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"150\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"72\" y1=\"140\" x2=\"228\" y2=\"140\" stroke=\"#3e2415\" stroke-width=\"3\"/>","svg":"<svg viewBox=\"0 0 300 240\" width=\"280\"><polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"150\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"72\" y1=\"140\" x2=\"228\" y2=\"140\" stroke=\"#3e2415\" stroke-width=\"3\"/></svg>","ans":6,"h":"삼각형: 꼭대기에서 내려온 선이 밑변을 2칸으로 나눠요. 밑변 하나마다 삼각형 3개, 밑변 역할을 하는 선이 2개.","tip":"<div class=\"tipbox\">🧭 도움말: 작은 삼각형 1칸짜리, 2칸을 합친 것, 3칸을 합친 것… 크기별로 나눠 세어요.</div>"},"dice":{"html":"<div style=\"position:relative;width:248px;height:186px;margin:10px auto\"><div style=\"position:absolute;left:0px;top:0px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">4</div><div style=\"position:absolute;left:0px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">2</div><div style=\"position:absolute;left:62px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">1</div><div style=\"position:absolute;left:124px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉠</div><div style=\"position:absolute;left:186px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉡</div><div style=\"position:absolute;left:186px;top:124px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉢</div></div>","rule":"\"주사위는 <b>마주 보는 두 면의 눈의 합이 7</b>이다.<br>선장실 문 비밀번호 = ㉠ ㉡ ㉢\"","ans":"563","h":"전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!","tip":"<div class=\"tipbox\">🧭 도움말: 종이에 전개도를 그려 오려서 접어 보면 바로 알 수 있어요.</div>"},"legs":{"c":{"parrot":2,"spider":3,"ant":0,"cat":1,"crab":0},"mode":"legs","ans":32,"q":"지금 <b>갑판 위에 있는 동물들의 다리 수</b>를 모두 더한 값","h":"다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개.","a":"새 2마리 × 2 + 거미 3마리 × 8 + 고양이 1마리 × 4","tip":"<div class=\"tipbox\">🧭 도움말: 동물을 하나씩 눌러 몇 마리인지 적고, 다리 수를 곱해 더해요.</div>"},"scale":{"html":"<b>항해사의 메모</b><br>\"해도의 축척은 <b>1 : 100,000</b>. 배부터 보물섬까지 잰 길이는 <b>5cm</b>.<br>실제 거리(km)를 탄약 상자에 적어 둠.\"","ans":5,"u":"km","h":"항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","tip":"<div class=\"tipbox\">🧭 도움말: 1000m = 1km, 100cm = 1m 를 기억해요.</div>"},"map":{"o":0,"side":"위쪽","ans":"D1","html":"지도 뒷면: \"💀 해골 바위에서 출발.<br><b>동쪽으로 3칸 → 북쪽으로 1칸</b>.<br>도착한 칸의 이름이 화물칸 해치의 암호다.\"","h":"나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 위쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!","a":"D1","tip":"<div class=\"tipbox\">🧭 도움말: 손가락을 해골 바위에 올려놓고 한 칸씩 움직여 보세요.</div>"},"gram":{"html":"<b>화물 상자 비밀번호 — 바른 말에 쓰인 숫자를 차례로!</b><br><br>1) 네가 행복하길 (<b>4</b> 바라 / <b>7</b> 바래).<br>2) 눈에 (<b>6</b> 띠는 / <b>9</b> 띄는) 옷차림<br>3) 선장님, 내일 (<b>2</b> 뵈요 / <b>3</b> 봬요).","ans":"493","h":"바른 말: 바라, 띄는, 봬요.","tip":"<div class=\"tipbox\">🧭 도움말: 헷갈리면 다른 문장에 넣어 보세요. \"안 먹다(O) / 않 먹다(X)\"</div>"},"bar":{"v":["3/4","0.7","4/5","0.85"],"ans":"4312","h":"물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","tip":"<div class=\"tipbox\">🧭 도움말: 가장 많이 남은 통부터 하나씩 지워 가며 적어요.</div>"},"slideK":15,"han":3,"mural":{"svg":"<svg viewBox=\"0 0 520 220\" width=\"100%\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/><text x=\"58\" y=\"180\" font-size=\"20\" font-weight=\"bold\">60°</text><text x=\"188\" y=\"180\" font-size=\"20\" font-weight=\"bold\">60°</text><text x=\"140\" y=\"75\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text><rect x=\"290\" y=\"168\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#000\" stroke-width=\"2\"/><text x=\"440\" y=\"178\" font-size=\"20\" font-weight=\"bold\">90°</text><text x=\"440\" y=\"70\" font-size=\"20\" font-weight=\"bold\">90°</text><text x=\"318\" y=\"98\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text></svg>","inner":"<g transform=\"translate(190,230) scale(.77)\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/></g>","ans":"6090","rule":"\"보물 상자 비밀번호 = <b>삼각형의 ?</b> 각도, 그다음 <b>사각형의 ?</b> 각도\"","cap":"벽에 도형 두 개가 새겨져 있다. (사각형 왼쪽 아래 각은 직각) 그림의 크기는 실제 각도와 다를 수 있다.","h":"벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°.","tip":"<div class=\"tipbox\">🧭 도움말: 180에서 아는 두 각을 빼고, 360에서 아는 세 각을 빼요.</div>","scene":true},"drops":{"q":"물이 끓을 때 생기는 기체는?","o":["산소","수증기","이산화 탄소","질소"],"a":1,"h":"물방울 돌판: 정답은 \"수증기\"."},"hints":[["그림 영어 이름: Sun, House, Ice cream, Pig → 첫 글자를 이어 보세요. 랜턴은 켜진 칸의 수만 더해요(위 줄: 꺼짐·꺼짐·켜짐 = 1 = 1).","삼각형: 꼭대기에서 내려온 선이 밑변을 2칸으로 나눠요. 밑변 하나마다 삼각형 3개, 밑변 역할을 하는 선이 2개. 전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!","정답 공개 — 선장 상자 SHIP · 서랍 162 · 옷장 6 · 문 563"],["망원경을 선택하고 돛대를 눌러요. 다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개. 항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 위쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!","정답 공개 — 갑판 보물상자 32 (새 2마리 × 2 + 거미 3마리 × 8 + 고양이 1마리 × 4) · 탄약 상자 5 · 해치 D1"],["바른 말: 바라, 띄는, 봬요. 물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","지도 조각은 1~8 순서로 밀어요. 통 옮기기: 작은 통부터, 7번 안에! 큰 통은 늘 작은 통 아래에.","정답 공개 — 화물 상자 493 · 금고 4312"],["먼저 밧줄을 선택하고 통나무를 눌러 뗏목을 만들어요. 강 건너기: 쥐를 먼저 데려가요. 고양이를 데려가고, 돌아올 때 쥐를 다시 데려와요.","쥐를 내려놓고 치즈를 데려가요(고양이와 치즈는 함께 있어도 괜찮아요). 다시 돌아와 쥐를 데려가면 끝! 벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°. 물방울 돌판: 정답은 \"수증기\".","정답 공개 — 벽화 6090 · 물방울 수증기"]]},"normal":{"pics":{"e":["🍎","👃","🐱","🏠","🐙","🌈"],"ans":"ANCHOR","rule":"그림의 <b>영어 이름 첫 글자</b>를 순서대로 읽어라.","ph":"영어 6글자","h":"그림 영어 이름: Apple, Nose, Cat, House, Octopus, Rainbow → 첫 글자를 이어 보세요.","tip":""},"lan":{"rows":["0101","1001","0010","0111"],"ans":"5927","rule":"· 한 줄에 랜턴 4개, <b>왼쪽부터 8, 4, 2, 1</b>을 뜻한다.<br>· <b>켜진 랜턴</b>의 수만 더하면 그 줄의 숫자가 된다.<br>· 맨 위 줄부터 차례로 읽으면 <b>책상 서랍 비밀번호</b>다.","h":"랜턴은 켜진 칸의 수만 더해요(위 줄: 꺼짐·켜짐·꺼짐·켜짐 = 4 + 1 = 5).","tip":""},"tri":{"inner":"<polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"107\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"193\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"72\" y1=\"140\" x2=\"228\" y2=\"140\" stroke=\"#3e2415\" stroke-width=\"3\"/>","svg":"<svg viewBox=\"0 0 300 240\" width=\"280\"><polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"107\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"193\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"72\" y1=\"140\" x2=\"228\" y2=\"140\" stroke=\"#3e2415\" stroke-width=\"3\"/></svg>","ans":12,"h":"삼각형: 꼭대기에서 내려온 선이 밑변을 3칸으로 나눠요. 밑변 하나마다 삼각형 6개, 밑변 역할을 하는 선이 2개.","tip":""},"dice":{"html":"<div style=\"position:relative;width:248px;height:186px;margin:10px auto\"><div style=\"position:absolute;left:62px;top:0px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">2</div><div style=\"position:absolute;left:0px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">3</div><div style=\"position:absolute;left:62px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉠</div><div style=\"position:absolute;left:124px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉡</div><div style=\"position:absolute;left:186px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">6</div><div style=\"position:absolute;left:62px;top:124px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉢</div></div>","rule":"\"주사위는 <b>마주 보는 두 면의 눈의 합이 7</b>이다.<br>선장실 문 비밀번호 = ㉠ ㉡ ㉢\"","ans":"145","h":"전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!","tip":""},"legs":{"c":{"parrot":2,"spider":3,"ant":5,"cat":1,"crab":0},"mode":"legs","ans":62,"q":"지금 <b>갑판 위에 있는 동물들의 다리 수</b>를 모두 더한 값","h":"다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개.","a":"새 2마리 × 2 + 거미 3마리 × 8 + 개미 5마리 × 6 + 고양이 1마리 × 4","tip":""},"scale":{"html":"<b>항해사의 메모</b><br>\"해도의 축척은 <b>1 : 50,000</b>. 해도에서 배부터 보물섬까지 잰 길이는 <b>7cm</b>.<br>실제 거리(km)를 탄약 상자에 적어 둠.\"","ans":3.5,"u":"km","h":"항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","tip":""},"map":{"o":1,"side":"오른쪽","ans":"B4","html":"지도 뒷면: \"💀 해골 바위에서 출발.<br><b>북쪽으로 2칸 → 동쪽으로 3칸 → 남쪽으로 1칸 → 서쪽으로 1칸</b>.<br>도착한 칸의 이름이 화물칸 해치의 암호다.\"","h":"나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 오른쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!","a":"B4","tip":""},"gram":{"html":"<b>화물 상자 비밀번호 — 바른 말에 쓰인 숫자를 차례로!</b><br><br>1) 어제 숙제를 (<b>3</b> 안 / <b>7</b> 않) 했다.<br>2) (<b>5</b> 왠지 / <b>2</b> 웬지) 배가 심하게 흔들린다.<br>3) 퀴즈의 정답을 모두 (<b>8</b> 맞혔다 / <b>1</b> 맞췄다).<br>4) 선장님, 내일 (<b>6</b> 봬요 / <b>4</b> 뵈요).","ans":"3586","h":"쪽지: 낱말을 소리 내어 읽어 보고, 국어사전에 있는 바른 말을 골라요.","tip":""},"bar":{"v":["2/3","7/12","3/4","5/8"],"ans":"3142","h":"물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","tip":""},"slideK":60,"han":3,"mural":{"svg":"<svg viewBox=\"0 0 520 220\" width=\"100%\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/><text x=\"58\" y=\"180\" font-size=\"20\" font-weight=\"bold\">47°</text><text x=\"188\" y=\"180\" font-size=\"20\" font-weight=\"bold\">68°</text><text x=\"140\" y=\"75\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text><rect x=\"290\" y=\"168\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#000\" stroke-width=\"2\"/><text x=\"440\" y=\"178\" font-size=\"20\" font-weight=\"bold\">85°</text><text x=\"440\" y=\"70\" font-size=\"20\" font-weight=\"bold\">110°</text><text x=\"318\" y=\"98\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text></svg>","inner":"<g transform=\"translate(190,230) scale(.77)\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/></g>","ans":"6575","rule":"\"보물 상자 비밀번호 = <b>삼각형의 ?</b> 각도, 그다음 <b>사각형의 ?</b> 각도\"","cap":"벽에 도형 두 개가 새겨져 있다. (사각형 왼쪽 아래 각은 직각) 그림의 크기는 실제 각도와 다를 수 있다.","h":"벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°.","tip":"","scene":true},"drops":{"q":"공기 중의 <b>수증기</b>가 차가운 벽에 닿아 <b>물방울</b>로 변하는 현상은?","o":["증발","응결","융해","응고"],"a":1,"h":"물방울 돌판: 정답은 \"응결\"."},"hints":[["그림 영어 이름: Apple, Nose, Cat, House, Octopus, Rainbow → 첫 글자를 이어 보세요. 랜턴은 켜진 칸의 수만 더해요(위 줄: 꺼짐·켜짐·꺼짐·켜짐 = 4 + 1 = 5).","삼각형: 꼭대기에서 내려온 선이 밑변을 3칸으로 나눠요. 밑변 하나마다 삼각형 6개, 밑변 역할을 하는 선이 2개. 전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!","정답 공개 — 선장 상자 ANCHOR · 서랍 5927 · 옷장 12 · 문 145"],["망원경을 선택하고 돛대를 눌러요. 다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개. 항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 오른쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!","정답 공개 — 갑판 보물상자 62 (새 2마리 × 2 + 거미 3마리 × 8 + 개미 5마리 × 6 + 고양이 1마리 × 4) · 탄약 상자 3.5 · 해치 B4"],["쪽지: 낱말을 소리 내어 읽어 보고, 국어사전에 있는 바른 말을 골라요. 물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","지도 조각은 1~8 순서로 밀어요. 통 옮기기: 작은 통부터, 7번 안에! 큰 통은 늘 작은 통 아래에.","정답 공개 — 화물 상자 3586 · 금고 3142"],["먼저 밧줄을 선택하고 통나무를 눌러 뗏목을 만들어요. 강 건너기: 쥐를 먼저 데려가요. 고양이를 데려가고, 돌아올 때 쥐를 다시 데려와요.","쥐를 내려놓고 치즈를 데려가요(고양이와 치즈는 함께 있어도 괜찮아요). 다시 돌아와 쥐를 데려가면 끝! 벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°. 물방울 돌판: 정답은 \"응결\".","정답 공개 — 벽화 6575 · 물방울 응결"]]},"hard":{"pics":{"e":["🐱","🍎","🐷","🐯","🐜","🍦","👃"],"ans":"CAPTAIN","rule":"그림의 <b>영어 이름 첫 글자</b>를 순서대로 읽어라.","ph":"영어 7글자","h":"그림 영어 이름: Cat, Apple, Pig, Tiger, Ant, Ice cream, Nose → 첫 글자를 이어 보세요.","tip":""},"lan":{"rows":["1001","1000","0111","1001","0011"],"ans":"98793","rule":"· 한 줄에 랜턴 4개, <b>왼쪽부터 8, 4, 2, 1</b>을 뜻한다.<br>· <b>켜진 랜턴</b>의 수만 더하면 그 줄의 숫자가 된다.<br>· 맨 위 줄부터 차례로 읽으면 <b>책상 서랍 비밀번호</b>다.","h":"랜턴은 켜진 칸의 수만 더해요(위 줄: 켜짐·꺼짐·꺼짐·켜짐 = 8 + 1 = 9).","tip":""},"tri":{"inner":"<polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"85\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"150\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"215\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"107\" y1=\"87\" x2=\"193\" y2=\"87\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"63\" y1=\"153\" x2=\"237\" y2=\"153\" stroke=\"#3e2415\" stroke-width=\"3\"/>","svg":"<svg viewBox=\"0 0 300 240\" width=\"280\"><polygon points=\"150,20 20,220 280,220\" fill=\"#f3e0b5\" stroke=\"#3e2415\" stroke-width=\"4\"/><line x1=\"150\" y1=\"20\" x2=\"85\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"150\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"150\" y1=\"20\" x2=\"215\" y2=\"220\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"107\" y1=\"87\" x2=\"193\" y2=\"87\" stroke=\"#3e2415\" stroke-width=\"3\"/><line x1=\"63\" y1=\"153\" x2=\"237\" y2=\"153\" stroke=\"#3e2415\" stroke-width=\"3\"/></svg>","ans":30,"h":"삼각형: 꼭대기에서 내려온 선이 밑변을 4칸으로 나눠요. 밑변 하나마다 삼각형 10개, 밑변 역할을 하는 선이 3개.","tip":""},"dice":{"html":"<div style=\"position:relative;width:248px;height:186px;margin:10px auto\"><div style=\"position:absolute;left:62px;top:0px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉠</div><div style=\"position:absolute;left:0px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉡</div><div style=\"position:absolute;left:62px;top:62px;width:60px;height:60px;background:#ffe9a8;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#c0392b\">㉢</div><div style=\"position:absolute;left:124px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">3</div><div style=\"position:absolute;left:186px;top:62px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">1</div><div style=\"position:absolute;left:124px;top:124px;width:60px;height:60px;background:#fff;border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:#3e2415\">5</div></div>","rule":"\"주사위는 <b>마주 보는 두 면의 눈의 합이 7</b>이다.<br>선장실 문 비밀번호 = ㉠ ㉡ ㉢\"","ans":"246","h":"전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!","tip":""},"legs":{"c":{"parrot":4,"spider":5,"ant":7,"cat":2,"crab":2},"mode":"legs","ans":118,"q":"지금 <b>갑판 위에 있는 동물들의 다리 수</b>를 모두 더한 값","h":"다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개, 게 10개.","a":"새 4마리 × 2 + 거미 5마리 × 8 + 개미 7마리 × 6 + 고양이 2마리 × 4 + 게 2마리 × 10","tip":""},"scale":{"html":"<b>항해사의 메모</b><br>\"해도의 축척은 <b>1 : 250,000</b>. 배부터 보물섬까지 잰 길이는 <b>4.2cm</b>.<br>실제 거리(km)를 탄약 상자에 적어 둠.\"","ans":10.5,"u":"km","h":"항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","tip":""},"map":{"o":3,"side":"왼쪽","ans":"B5","html":"지도 뒷면: \"💀 해골 바위에서 출발.<br><b>남쪽으로 1칸 → 서쪽으로 2칸 → 남쪽으로 1칸 → 서쪽으로 1칸 → 북쪽으로 1칸</b>.<br>도착한 칸의 이름이 화물칸 해치의 암호다.\"","h":"나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 왼쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!","a":"B5","tip":""},"gram":{"html":"<b>화물 상자 비밀번호 — 바른 말에 쓰인 숫자를 차례로!</b><br><br>1) 우체국에서 편지를 (<b>2</b> 부쳤다 / <b>1</b> 붙였다).<br>2) 손가락으로 별을 (<b>1</b> 가르쳤다 / <b>5</b> 가리켰다).<br>3) 카드로 물건값을 (<b>9</b> 결제 / <b>1</b> 결재)했다.<br>4) (<b>1</b> 있다가 / <b>4</b> 이따가) 다시 만나자.<br>5) 학생(<b>4</b> 으로써 / <b>9</b> 으로서) 지켜야 할 일","ans":"25949","h":"쪽지: 낱말을 소리 내어 읽어 보고, 국어사전에 있는 바른 말을 골라요.","tip":""},"bar":{"v":["40%","0.45","3/8","0.42","1/4"],"ans":"24135","h":"물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","tip":""},"slideK":100,"han":4,"mural":{"svg":"<svg viewBox=\"0 0 520 220\" width=\"100%\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/><text x=\"58\" y=\"180\" font-size=\"20\" font-weight=\"bold\">44°</text><text x=\"188\" y=\"180\" font-size=\"20\" font-weight=\"bold\">77°</text><text x=\"140\" y=\"75\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text><rect x=\"290\" y=\"168\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#000\" stroke-width=\"2\"/><text x=\"440\" y=\"178\" font-size=\"20\" font-weight=\"bold\">128°</text><text x=\"440\" y=\"70\" font-size=\"20\" font-weight=\"bold\">73°</text><text x=\"318\" y=\"98\" font-size=\"26\" font-weight=\"bold\" fill=\"#c62828\">?</text></svg>","inner":"<g transform=\"translate(190,230) scale(.77)\"><polygon points=\"30,190 230,190 150,30\" fill=\"#4db6ac\" stroke=\"#004d40\" stroke-width=\"4\"/><polygon points=\"290,190 490,190 470,40 310,70\" fill=\"#ffb74d\" stroke=\"#e65100\" stroke-width=\"4\"/></g>","ans":"5969","rule":"\"보물 상자 비밀번호 = <b>삼각형의 ?</b> 각도, 그다음 <b>사각형의 ?</b> 각도\"","cap":"벽에 도형 두 개가 새겨져 있다. (사각형 왼쪽 아래 각은 직각) 그림의 크기는 실제 각도와 다를 수 있다.","h":"벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°.","tip":"","scene":true},"drops":{"q":"초가 탈 때 생기는 물질 두 가지는?","o":["물과 이산화 탄소","산소와 질소","수소와 산소","소금과 물"],"a":0,"h":"물방울 돌판: 생활 속에서 본 장면을 떠올려 봐요."},"hints":[["그림 영어 이름: Cat, Apple, Pig, Tiger, Ant, Ice cream, Nose → 첫 글자를 이어 보세요. 랜턴은 켜진 칸의 수만 더해요(위 줄: 켜짐·꺼짐·꺼짐·켜짐 = 8 + 1 = 9).","삼각형: 꼭대기에서 내려온 선이 밑변을 4칸으로 나눠요. 밑변 하나마다 삼각형 10개, 밑변 역할을 하는 선이 3개. 전개도를 접으면 한 칸 건너 있는 면끼리 마주 봐요. 마주 보는 두 면의 합은 7!"],["망원경을 선택하고 돛대를 눌러요. 다리 수: 새 2개, 거미 8개(거미는 곤충이 아니에요!), 개미(곤충) 6개, 고양이 4개, 게 10개. 항해 메모: 실제 거리 = 지도 거리 × 축척의 뒤 수. cm → m → km로 바꿔요.","나침반을 선택하고 지도를 펼친 테이블을 누르면 지도의 왼쪽이 북쪽이에요. 동쪽은 북쪽에서 시계 방향으로 90° 돈 쪽!"],["쪽지: 낱말을 소리 내어 읽어 보고, 국어사전에 있는 바른 말을 골라요. 물통: 분수와 소수를 같은 모양(통분하거나 소수로)으로 바꿔 비교해요.","지도 조각은 1~8 순서로 밀어요. 통 옮기기: 작은 통부터, 15번 안에! 큰 통은 늘 작은 통 아래에."],["먼저 밧줄을 선택하고 통나무를 눌러 뗏목을 만들어요. 강 건너기: 쥐를 먼저 데려가요. 고양이를 데려가고, 돌아올 때 쥐를 다시 데려와요.","쥐를 내려놓고 치즈를 데려가요(고양이와 치즈는 함께 있어도 괜찮아요). 다시 돌아와 쥐를 데려가면 끝! 벽화: 삼각형 세 각의 합은 180°, 사각형 네 각의 합은 360°. 물방울 돌판: 생활 속에서 본 장면을 떠올려 봐요."]]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'pirate-escape-v1':'pirate-escape-v1-'+LV;
+const ITEMS={
+  scope:{e:'🔭',n:'망원경'},
+  compass:{e:'🧭',n:'나침반'},
+  ckey:{e:'🔑',n:'선장실 열쇠'},
+  map:{e:'🗺️',n:'보물 지도'},
+  hook:{e:'🪝',n:'갈고리'},
+  rope:{e:'🪢',n:'밧줄'},
+  pieces:{e:'🧩',n:'지도 조각'},
+  skey:{e:'🗝️',n:'해골 열쇠'}
+};
+const KN_=['','한','두','세','네','다섯','여섯','일곱','여덟','아홉'];
+const paper=html=>`<div class="paper">${html}</div>`;
+const box=html=>`<div class="box">${html}</div>`;
+const has=id=>S.inv.includes(id);
+const lbl=(x,y,t,c='#333',fs=18,fw='normal')=>`<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" fill="${c}" font-weight="${fw}" font-family="Gowun Dodum">${t}</text>`;
+function bad(id,t){const m=$(id);m.className='msg bad';m.textContent=t;const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+function good(id,t){const m=$(id);m.className='msg good';m.textContent=t}
+function planks(c1,c2,h=650){let s=R(0,0,1600,h,c1);for(let y=0;y<h;y+=46)s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="3"/>`;for(let y=0;y<h;y+=46)for(let x=((y/46)%2)*130;x<1600;x+=260)s+=`<line x1="${x}" x2="${x}" y1="${y}" y2="${y+46}" stroke="${c2}" stroke-width="2"/>`;return s}
+function deckFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let x=0;x<1600;x+=70)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="${c2}" stroke-width="3"/>`;return s+R(0,640,1600,14,'#3e2415')}
+function porthole(cx,cy,r){return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#4fc3f7"/><path d="M${cx-r} ${cy+4} A${r} ${r} 0 0 0 ${cx+r} ${cy+4} Z" fill="#0277bd"/><path d="M${cx-r+12} ${cy+16} q${r/2} -8 ${r} 0" stroke="#e1f5fe" stroke-width="3" fill="none"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#b8860b" stroke-width="10"/>`}
+
+/* ---------- 퍼즐 그림/위젯 ---------- */
+function lanternGrid(){
+  const rows=DD.lan.rows;
+  return `<div style="display:inline-grid;grid-template-columns:repeat(${rows[0].length},52px);gap:8px;background:#3e2415;padding:12px;border-radius:10px">${rows.join('').split('').map(b=>`<div style="height:52px;border-radius:50% 50% 12px 12px;background:${b==='1'?'radial-gradient(circle,#fff59d,#ff9800)':'#4e3426'};border:3px solid #1b0f08;box-shadow:${b==='1'?'0 0 14px #ffb300':'none'}"></div>`).join('')}</div>`;
+}
+function triangleSVG(){return DD.tri.svg;
+  return `<svg viewBox="0 0 300 240" width="280"><polygon points="150,20 20,220 280,220" fill="#fff3e0" stroke="#3e2415" stroke-width="4"/><line x1="150" y1="20" x2="107" y2="220" stroke="#3e2415" stroke-width="3"/><line x1="150" y1="20" x2="193" y2="220" stroke="#3e2415" stroke-width="3"/><line x1="72" y1="140" x2="228" y2="140" stroke="#3e2415" stroke-width="3"/></svg>`;
+}
+function diceNet(){return DD.dice.html;
+  const cell=(v,x,y,q)=>`<div style="position:absolute;left:${x*62}px;top:${y*62}px;width:60px;height:60px;background:${q?'#ffe9a8':'#fff'};border:2px solid #3e2415;display:flex;align-items:center;justify-content:center;font-size:${q?20:30}px;font-weight:bold;color:${q?'#c0392b':'#3e2415'}">${v}</div>`;
+  return `<div style="position:relative;width:${4*62}px;height:${3*62}px;margin:10px auto">${cell(2,1,0)}${cell(3,0,1)}${cell('㉠',1,1,1)}${cell('㉡',2,1,1)}${cell(6,3,1)}${cell('㉢',1,2,1)}</div>`;
+}
+function treasureMap(showN){
+  const cols='ABCDE';let h=`<div style="position:relative;display:inline-block;background:#f3e0b5;padding:30px 14px 14px 34px;border-radius:10px;border:4px solid #8d6e3f">`;
+  h+=`<div style="display:grid;grid-template-columns:repeat(5,48px);gap:2px">`;
+  for(let r=1;r<=5;r++)for(let c=0;c<5;c++){const id=cols[c]+r;const icon={A2:'💀',D1:'🌴',E5:'🌋',B2:'🪨',C4:'🌴',D3:'🐊'}[id]||'';h+=`<div style="height:48px;border:1px dashed #a1887f;display:flex;align-items:center;justify-content:center;font-size:24px">${icon}</div>`}
+  h+=`</div>${cols.split('').map((c,i)=>`<div style="position:absolute;top:6px;left:${34+i*50+18}px;color:#5d4037;font-weight:bold">${c}</div>`).join('')}${[1,2,3,4,5].map((n,i)=>`<div style="position:absolute;left:12px;top:${30+i*50+14}px;color:#5d4037;font-weight:bold">${n}</div>`).join('')}`;
+  if(showN)h+=[`<div style="position:absolute;left:40%;top:-30px;background:#c62828;color:#fff;padding:4px 10px;border-radius:8px;font-weight:bold">↑ 북 N</div>`,`<div style="position:absolute;right:-74px;top:110px;background:#c62828;color:#fff;padding:6px 10px;border-radius:8px;font-weight:bold">북 N →</div>`,`<div style="position:absolute;left:40%;bottom:-34px;background:#c62828;color:#fff;padding:4px 10px;border-radius:8px;font-weight:bold">↓ 북 N</div>`,`<div style="position:absolute;left:-78px;top:110px;background:#c62828;color:#fff;padding:6px 10px;border-radius:8px;font-weight:bold">← 북 N</div>`][DD.map.o];
+  return h+`</div>`;
+}
+function slidingPuzzle(ok){
+  const C=['','#e57373','#ffb74d','#fff176','#81c784','#4fc3f7','#7986cb','#ba68c8','#a1887f'];
+  let t=S.f.sl;
+  if(!t){t=[1,2,3,4,5,6,7,8,0];let seed=7,last=-1;for(let k=0;k<DD.slideK;k++){const z=t.indexOf(0),r=Math.floor(z/3),c=z%3;const nb=[[r-1,c],[r+1,c],[r,c-1],[r,c+1]].filter(([a,b])=>a>=0&&a<3&&b>=0&&b<3).map(([a,b])=>a*3+b).filter(i=>i!==last);seed=(seed*9301+49297)%233280;const pick=nb[Math.floor(seed/233280*nb.length)];last=z;[t[z],t[pick]]=[t[pick],t[z]]}S.f.sl=t;save()}
+  function draw(){
+    $('slg').innerHTML=t.map((v,i)=>`<div class="slt" data-i="${i}" style="height:84px;border-radius:8px;background:${v?C[v]:'transparent'};border:${v?'3px solid #3e2415':'2px dashed #777'};display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:bold;color:#3e2415;cursor:${v?'pointer':'default'}">${v||''}</div>`).join('');
+    document.querySelectorAll('.slt').forEach(d=>d.onclick=()=>{const i=+d.dataset.i,z=t.indexOf(0);const ri=Math.floor(i/3),ci=i%3,rz=Math.floor(z/3),cz=z%3;if(Math.abs(ri-rz)+Math.abs(ci-cz)===1){[t[i],t[z]]=[t[z],t[i]];tone(400);S.f.sl=t;save();draw();if(t.join()==='1,2,3,4,5,6,7,8,0'){good('slm','✅ 지도가 완성되었다!');setTimeout(ok,1100)}}});
+  }
+  openModal('지도 테이블',box('지도 조각을 테이블에 펼쳤다. 조각을 밀어서 <b>1부터 8까지 순서대로</b> 맞춰라. (빈칸 옆 조각만 움직일 수 있다)')+`<div id="slg" style="display:grid;grid-template-columns:repeat(3,84px);gap:6px;justify-content:center;margin:10px 0"></div><div class="center muted">1 2 3 / 4 5 6 / 7 8 □ 이 되면 완성</div><div class="msg" id="slm"></div>`,draw);
+}
+function hanoi(ok){
+  const HN=DD.han,LIM=2**HN-1,IN=()=>[Array.from({length:HN},(_,i)=>HN-i),[],[]];let P=IN(),sel=null,moves=0;const W={1:50,2:75,3:100,4:125},C={1:'#ffb74d',2:'#a1887f',3:'#6d4c41',4:'#4e342e'};
+  function draw(){
+    $('hn').innerHTML=P.map((p,i)=>`<div class="peg" data-i="${i}" style="flex:1;height:${HN>3?240:200}px;position:relative;cursor:pointer;background:${sel===i?'rgba(242,193,78,.15)':'transparent'};border-radius:10px"><div style="position:absolute;left:50%;bottom:0;width:10px;height:180px;background:#5d4037;transform:translateX(-50%)"></div>${p.map((d,k)=>`<div style="position:absolute;left:50%;bottom:${k*42}px;width:${W[d]}px;height:38px;background:${C[d]};border:3px solid #3e2415;border-radius:10px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff">${(HN===2?['','작은 통','큰 통']:HN===4?['','작은 통','중간 통','큰 통','왕 큰 통']:['','작은 통','중간 통','큰 통'])[d]}</div>`).join('')}<div style="position:absolute;bottom:-26px;width:100%;text-align:center;color:var(--muted)">${['출발','중간','도착'][i]}</div></div>`).join('');
+    $('hc').textContent=moves;
+    document.querySelectorAll('.peg').forEach(g=>g.onclick=()=>{const i=+g.dataset.i;
+      if(sel===null){if(P[i].length){sel=i;draw()}return}
+      if(sel===i){sel=null;draw();return}
+      const d=P[sel][P[sel].length-1],top=P[i][P[i].length-1];
+      if(top&&top<d){bad('hm','❌ 작은 통 위에 큰 통을 올리면 부서진다!');sel=null;draw();return}
+      P[i].push(P[sel].pop());moves++;sel=null;tone(250+moves*30);draw();
+      if(P[2].length===HN){good('hm',`✅ ${moves}번 만에 성공! 사다리가 드러났다`);setTimeout(ok,1200);return}
+      if(moves>=LIM){bad('hm',`통이 너무 흔들린다! ${LIM}번 안에 옮겨야 한다. 처음부터!`);setTimeout(()=>{P=IN();moves=0;draw()},900)}});
+  }
+  openModal('통 쌓기 구역',box(`사다리가 통 더미에 가려져 있다. 통 ${HN}개를 <b>도착</b> 자리로 옮겨라.<br><b>규칙:</b> 한 번에 맨 위 통 하나만 옮길 수 있고, 작은 통 위에 큰 통을 올릴 수 없다. <b>${LIM}번 이내</b>로 옮겨야 한다!`)+`<div id="hn" style="display:flex;gap:8px;margin:14px 0 34px"></div><div class="center">옮긴 횟수: <b id="hc" style="color:var(--gold)">0</b> / ${LIM}</div><div class="msg" id="hm"></div>`,draw);
+}
+function riverCross(ok){
+  const N={cat:'🐈 고양이',mouse:'🐭 쥐',cheese:'🧀 치즈'};
+  let st={boat:0,cat:0,mouse:0,cheese:0,load:null};
+  function bankHTML(side){return Object.keys(N).filter(k=>st[k]===side&&st.load!==k).map(k=>`<button class="ghost itm" data-k="${k}" style="margin:3px;font-size:16px">${N[k]}</button>`).join('')||'<span class="muted">비어 있음</span>'}
+  function draw(){
+    $('rv').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:center">
+      <div class="box" style="margin:0;min-height:120px"><b>이쪽 기슭</b><br>${bankHTML(0)}</div>
+      <div style="background:#0277bd;border-radius:12px;padding:12px;min-height:120px;display:flex;flex-direction:column;align-items:${st.boat?'flex-end':'flex-start'};justify-content:center"><div style="background:#8d6e3f;border-radius:0 0 40px 40px;padding:8px 14px;color:#fff">🏴‍☠️ ${st.load?`<button class="ghost itm" data-k="${st.load}" style="font-size:15px;padding:4px 8px;color:#fff">${N[st.load]}</button>`:''}</div></div>
+      <div class="box" style="margin:0;min-height:120px"><b>보물섬 기슭</b><br>${bankHTML(1)}</div></div>
+      <div class="center" style="margin-top:10px"><button class="btn" id="row">${st.boat?'◀ 노 저어 돌아가기':'노 저어 건너기 ▶'}</button></div>`;
+    document.querySelectorAll('.itm').forEach(b=>b.onclick=()=>{const k=b.dataset.k;
+      if(st.load===k){st.load=null}else if(st[k]===st.boat&&!st.load){st.load=k}else if(st[k]!==st.boat){bad('rvm','뗏목이 반대편에 있다!');return}else{bad('rvm','뗏목에는 해적 말고 하나만 탈 수 있다!');return}
+      $('rvm').textContent='';draw();check()});
+    $('row').onclick=()=>{const from=st.boat;st.boat=1-st.boat;if(st.load)st[st.load]=st.boat;tone(300);
+      const left=Object.keys(N).filter(k=>st[k]===from&&st.load!==k);
+      if(left.includes('cat')&&left.includes('mouse')){bad('rvm','😱 해적이 없는 사이 고양이가 쥐를 쫓아가 버렸다! 처음부터');st={boat:0,cat:0,mouse:0,cheese:0,load:null};setTimeout(draw,600);return}
+      if(left.includes('mouse')&&left.includes('cheese')){bad('rvm','😱 해적이 없는 사이 쥐가 치즈를 먹어 버렸다! 처음부터');st={boat:0,cat:0,mouse:0,cheese:0,load:null};setTimeout(draw,600);return}
+      $('rvm').textContent='';draw();check()};
+  }
+  function check(){if(['cat','mouse','cheese'].every(k=>st[k]===1)){good('rvm','✅ 모두 무사히 보물섬에 도착했다!');setTimeout(ok,1200)}}
+  openModal('지하 호수의 뗏목',box('밧줄로 묶은 뗏목으로 호수를 건너야 한다. 그런데 배에서 따라온 <b>고양이, 쥐, 치즈</b>도 데려가야 한다!<br>· 뗏목에는 해적과 <b>하나만</b> 더 탈 수 있다.<br>· 해적이 없으면 <b>고양이는 쥐를</b>, <b>쥐는 치즈를</b> 먹어 버린다.<br><span class="muted">물건을 눌러 태우고 내린 뒤, 노를 저어라.</span>')+`<div id="rv"></div><div class="msg" id="rvm"></div>`,draw);
+}
+function angleMural(){return DD.mural.svg;
+  return `<svg viewBox="0 0 520 220" width="100%"><polygon points="30,190 230,190 150,30" fill="#4db6ac" stroke="#004d40" stroke-width="4"/><text x="58" y="180" font-size="20" font-weight="bold">47°</text><text x="188" y="180" font-size="20" font-weight="bold">68°</text><text x="140" y="75" font-size="26" font-weight="bold" fill="#c62828">?</text>
+  <polygon points="290,190 490,190 470,40 310,70" fill="#ffb74d" stroke="#e65100" stroke-width="4"/><rect x="290" y="168" width="22" height="22" fill="none" stroke="#000" stroke-width="2"/><text x="440" y="178" font-size="20" font-weight="bold">85°</text><text x="440" y="70" font-size="20" font-weight="bold">110°</text><text x="318" y="98" font-size="26" font-weight="bold" fill="#c62828">?</text></svg>`;
+}
+
+/* ---------- 장면 1: 선장실 ---------- */
+function sceneCabin(){
+  let s=planks('#7a4b2a','#5e3820')+deckFloor('#8d5a33','#6e4325');
+  s+=porthole(130,170,60)+porthole(1470,170,60);
+  // 그림 액자 6개
+  const pics=DD.pics.e;const pc_=pics.length>6?4:3,ps_=pc_===4?80:90,pg_=pc_===4?86:112;
+  let pf=R(250,90,380,250,'#b8860b','rx="6"')+R(262,102,356,226,'#f3e0b5');
+  pics.forEach((e,i)=>{const x=272+(i%pc_)*pg_,y=110+Math.floor(i/pc_)*(pc_===4?72:104);pf+=R(x,y,ps_,pc_===4?66:90,'#fff','stroke="#8d6e3f" stroke-width="3"')+`<text x="${x+ps_/2}" y="${y+(pc_===4?48:62)}" font-size="${pc_===4?40:48}" text-anchor="middle">${e}</text>`});
+  s+=hot('pics',pf);
+  // 랜턴 걸이
+  let ln=R(680,80,260,22,'#3e2415','rx="6"');const rows=DD.lan.rows;
+  rows.forEach((r,ri)=>r.split('').forEach((b,ci)=>{const x=705+ci*60,y=120+ri*(rows.length>4?46:55);ln+=`<line x1="${x+15}" x2="${x+15}" y1="${y-14}" y2="${y}" stroke="#222" stroke-width="2"/>${R(x,y,30,40,b==='1'?'#ffb300':'#4e3426','rx="8" stroke="#1b0f08" stroke-width="3"')}${b==='1'?`<circle cx="${x+15}" cy="${y+20}" r="22" fill="#ffe082" opacity=".35"/>`:''}`}));
+  s+=hot('lanterns',ln);
+  // 옷장 (삼각형 문양)
+  s+=hot('wardrobe',`${R(1000,120,260,520,'#5d3a1e','rx="8" stroke="#2b1a0d" stroke-width="5"')}<line x1="1130" x2="1130" y1="130" y2="630" stroke="#2b1a0d" stroke-width="4"/><g transform="translate(1035,220) scale(.63)">${DD.tri.inner}</g><circle cx="1115" cy="420" r="8" fill="#d4af37"/><circle cx="1145" cy="420" r="8" fill="#d4af37"/>${R(1110,460,40,30,'#d4af37','rx="4"')}`);
+  // 책상 + 일지 + 서랍
+  s+=R(300,500,520,24,'#4e2e16','rx="4"')+R(320,524,480,126,'#5d3a1e');
+  s+=hot('drawer',`${R(350,545,180,56,'#6e4325','stroke="#2b1a0d" stroke-width="3"')}${R(425,566,30,12,'#d4af37','rx="4"')}${R(480,560,36,26,'#1b0f08','rx="4"')}`);
+  s+=hot('log',`${R(560,465,130,40,'#8d1f1f','rx="4" transform="rotate(-5 625 485)"')}${R(566,460,120,34,'#f3e0b5','transform="rotate(-5 625 485)"')}${lbl(626,483,'항해 일지','#3e2415',16)}`);
+  s+=hot('dice',`${R(720,470,80,36,'#fff','transform="rotate(8 760 488)"')}<rect x="735" y="455" width="26" height="26" fill="#fafafa" stroke="#333" stroke-width="2" rx="4"/><circle cx="742" cy="462" r="2.5"/><circle cx="754" cy="474" r="2.5"/>`);
+  // 선장 상자
+  s+=hot('chest',`${R(80,760,280,150,'#6e4325','rx="8" stroke="#2b1a0d" stroke-width="5"')}<path d="M80 770 q140 -80 280 0" fill="#8d5a33" stroke="#2b1a0d" stroke-width="5"/>${R(80,800,280,14,'#d4af37')}${R(200,820,40,46,'#d4af37','rx="4"')}`);
+  // 해적 모자 (장식)
+  s+=hot('hat',`<path d="M500 800 q90 -90 180 0 q-90 -20 -180 0z" fill="#212121"/><text x="590" y="790" font-size="28" text-anchor="middle">☠️</text>`);
+  // 문
+  s+=hot('door',`${R(1340,260,200,390,'#4e2e16','rx="8" stroke="#2b1a0d" stroke-width="5"')}${[330,410,490,570].map(y=>`<line x1="1350" x2="1530" y1="${y}" y2="${y}" stroke="#2b1a0d" stroke-width="3"/>`).join('')}<circle cx="1365" cy="470" r="10" fill="#d4af37"/>${R(1375,445,30,40,'#1b0f08','rx="4"')}${R(1440,300,80,30,'#1b0f08','rx="4"')}`)+lbl(1440,250,'갑판으로 ↑','#f3e0b5',20,'bold');
+  return svgWrap(s);
+}
+
+/* ---------- 장면 2: 갑판 ---------- */
+function sceneDeck(){
+  let s=`<defs><linearGradient id="skyD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#e1f5fe"/></linearGradient></defs>`+R(0,0,1600,650,'url(#skyD)')+R(0,380,1600,270,'#0288d1');
+  s+=`<path d="M1300 380 q60 -70 140 -10 q30 -30 60 10 z" fill="#66bb6a"/><text x="1400" y="340" font-size="40">🌴</text>`;
+  for(let i=0;i<8;i++)s+=`<path d="M${i*210} 420 q30 -10 60 0" stroke="#e1f5fe" stroke-width="3" fill="none"/>`;
+  s+=R(0,520,1600,130,'#6e4325')+R(0,510,1600,16,'#4e2e16')+[100,300,500,700,900,1100,1300,1500].map(x=>R(x,520,14,130,'#4e2e16')).join('');
+  s+=deckFloor('#a0703f','#82572e');
+  // 돛대 + 돛 + 깃발
+  s+=hot('mast',`${R(780,20,26,640,'#4e2e16')}<path d="M806 70 q200 120 0 260 z" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="3"/><path d="M780 90 q-180 110 0 240 z" fill="#eeeeee" stroke="#bdbdbd" stroke-width="3"/><path d="M806 20 h80 l-20 22 l20 22 h-80 z" fill="#212121"/><text x="840" y="52" font-size="22" text-anchor="middle">☠️</text>${R(760,330,66,16,'#3e2415','rx="4"')}`);
+  // 동물들
+  s+=hot('parrot',`${R(1180,470,10,60,'#4e2e16')}${R(1150,465,70,10,'#4e2e16','rx="4"')}<text x="1160" y="462" font-size="40">🦜</text><text x="1205" y="460" font-size="34">🦜</text>`);
+  s+=hot('spider',`<g stroke="#eeeeee" stroke-width="2" fill="none"><circle cx="300" cy="210" r="30"/><circle cx="300" cy="210" r="55"/><circle cx="300" cy="210" r="80"/>${[0,45,90,135].map(a=>`<line x1="${300-85*Math.cos(a*Math.PI/180)}" y1="${210-85*Math.sin(a*Math.PI/180)}" x2="${300+85*Math.cos(a*Math.PI/180)}" y2="${210+85*Math.sin(a*Math.PI/180)}"/>`).join('')}</g><line x1="220" y1="20" x2="300" y2="130" stroke="#8d6e63" stroke-width="5"/><text x="275" y="200" font-size="26">🕷️</text><text x="320" y="240" font-size="22">🕷️</text><text x="250" y="260" font-size="20">🕷️</text>`);
+  s+=hot('ants',`${Array.from({length:Math.max(DD.legs.c.ant,0)},(_,i)=>`<text x="${470+i*30}" y="${880-i*5}" font-size="26">🐜</text>`).join('')}<path d="M440 890 q120 -30 260 -40" stroke="#5d4037" stroke-width="2" stroke-dasharray="4 6" fill="none"/>`);
+  s+=hot('cat',`<ellipse cx="1050" cy="760" rx="60" ry="70" fill="#8d5a33" stroke="#4e2e16" stroke-width="4"/>${[720,790].map(y=>`<line x1="992" x2="1108" y1="${y}" y2="${y}" stroke="#4e2e16" stroke-width="4"/>`).join('')}<text x="1050" y="700" font-size="50" text-anchor="middle">🐈</text>`);
+  // 갑판 보물상자
+  s+=hot('deckchest',`${R(140,740,220,130,'#8d5a33','rx="8" stroke="#3e2415" stroke-width="5"')}<path d="M140 750 q110 -60 220 0" fill="#a0703f" stroke="#3e2415" stroke-width="5"/>${R(230,790,40,40,'#d4af37','rx="4"')}`);
+  // 항해 테이블
+  s+=hot('navtable',`${R(1200,700,300,24,'#4e2e16','rx="4"')}${R(1220,724,20,140,'#3e2415')}${R(1460,724,20,140,'#3e2415')}${R(1230,670,200,40,'#f3e0b5','transform="rotate(-3 1330 690)"')}<line x1="1250" x2="1400" y1="690" y2="684" stroke="#c62828" stroke-width="3" stroke-dasharray="6 4"/>${R(1420,660,70,10,'#bdbdbd','transform="rotate(20 1455 665)"')}`);
+  // 탄약 상자, 대포
+  s+=hot('ammo',`${R(600,650,160,100,'#5d4037','stroke="#3e2415" stroke-width="4"')}<line x1="600" x2="760" y1="650" y2="750" stroke="#3e2415" stroke-width="4"/><line x1="760" x2="600" y1="650" y2="750" stroke="#3e2415" stroke-width="4"/>${R(660,690,40,26,'#1b0f08','rx="4"')}`);
+  s+=hot('cannon',`${R(870,600,180,50,'#424242','rx="25" transform="rotate(-10 960 625)"')}<circle cx="910" cy="660" r="28" fill="#5d4037" stroke="#3e2415" stroke-width="5"/><circle cx="1000" cy="660" r="28" fill="#5d4037" stroke="#3e2415" stroke-width="5"/>`);
+  // 해치 (화물칸 입구)
+  s+=hot('door',`${R(560,890,300,90,'#5d3a1e','rx="6" stroke="#2b1a0d" stroke-width="6"')}${[600,660,720,780,840].map(x=>`<line x1="${x}" x2="${x}" y1="895" y2="975" stroke="#2b1a0d" stroke-width="3"/>`).join('')}<circle cx="710" cy="935" r="14" fill="none" stroke="#bdbdbd" stroke-width="6"/>`)+lbl(710,880,'화물칸 해치','#3e2415',18,'bold');
+  return svgWrap(s);
+}
+
+/* ---------- 장면 3: 화물칸 ---------- */
+function barrel(x,y,w,h,label){return `${R(x,y,w,h,'#8d5a33','rx="20" stroke="#3e2415" stroke-width="4"')}${R(x,y+h*.2,w,8,'#3e2415')}${R(x,y+h*.75,w,8,'#3e2415')}${label?`<circle cx="${x+w/2}" cy="${y+h/2}" r="26" fill="#f3e0b5"/>`+lbl(x+w/2,y+h/2+8,label,'#3e2415',22,'bold'):''}`}
+function sceneHold(){
+  let s=planks('#4e2e16','#3a2110')+deckFloor('#5d3a1e','#4a2d16');
+  s+=`<line x1="0" x2="1600" y1="40" y2="40" stroke="#2b1a0d" stroke-width="30"/>`+[200,600,1000,1400].map(x=>R(x,40,30,610,'#3a2110')).join('');
+  // 랜턴 빛
+  s+=`<circle cx="800" cy="90" r="160" fill="#ffcc80" opacity=".12"/><rect x="788" y="60" width="24" height="34" fill="#ffb300" rx="6"/>`;
+  // 선원 쪽지
+  s+=hot('note',`${R(60,120,200,170,'#f3e0b5','transform="rotate(-3 160 205)"')}${lbl(160,160,'선원의 쪽지','#3e2415',20,'bold')}${[190,215,240,265].map(y=>`<line x1="85" x2="235" y1="${y}" y2="${y}" stroke="#a1887f" stroke-width="4"/>`).join('')}<circle cx="160" cy="128" r="6" fill="#c62828"/>`);
+  // 화물 상자
+  s+=hot('crate',`${R(60,480,240,170,'#a0703f','stroke="#5d3a1e" stroke-width="6"')}<line x1="60" x2="300" y1="480" y2="650" stroke="#5d3a1e" stroke-width="6"/><line x1="300" x2="60" y1="480" y2="650" stroke="#5d3a1e" stroke-width="6"/>${R(150,540,60,44,'#1b0f08','rx="4"')}`);
+  // 물통 4개
+  s+=hot('barrels',DD.bar.v.map((_,i)=>['①②③④⑤'[i],i]).map(([l,i])=>{const n=DD.bar.v.length,st=n>4?86:n<4?130:105;return barrel(330+i*st,480,n>4?76:95,170,l)}).join(''));
+  // 선원 금고
+  s+=hot('safe',`${R(780,500,150,150,'#455a64','rx="10"')}<circle cx="855" cy="565" r="34" fill="#263238" stroke="#b0bec5" stroke-width="5"/>${R(820,620,70,14,'#b0bec5','rx="4"')}`);
+  // 지도 테이블
+  s+=hot('maptable',`${R(980,560,300,24,'#3e2415','rx="4"')}${R(1000,584,20,90,'#2b1a0d')}${R(1240,584,20,90,'#2b1a0d')}${S.f.slide?R(1020,520,220,44,'#f3e0b5'):[0,1,2,3].map(i=>R(1020+i*55,530+(i%2)*8,46,30,'#f3e0b5','transform="rotate('+(i*13-20)+' '+(1043+i*55)+' 545)"')).join('')}`);
+  // 통 쌓기 구역 + 사다리
+  s+=hot('hanoi',`${S.f.hanoi?'':barrel(1330,500,110,150,'')+barrel(1345,380,80,120,'')+barrel(1360,290,50,90,'')}${S.f.hanoi?`<g>${[0,1,2,3,4,5,6].map(i=>R(1350,140+i*70,120,10,'#a1887f')).join('')}${R(1345,120,10,530,'#8d6e63')}${R(1465,120,10,530,'#8d6e63')}</g>`:''}`);
+  // 해먹, 쥐
+  s+=hot('hammock',`<path d="M60 360 q200 120 400 0" stroke="#d7ccc8" stroke-width="40" fill="none" opacity=".9"/><line x1="40" x2="60" y1="330" y2="360" stroke="#8d6e63" stroke-width="5"/><line x1="480" x2="460" y1="330" y2="360" stroke="#8d6e63" stroke-width="5"/>`);
+  s+=hot('rat',`<text x="700" y="900" font-size="36">🐀</text>`);
+  // 출구 (사다리 위)
+  s+=hot('door',`${R(1330,40,160,40,'#2b1a0d')}${R(1340,46,140,28,S.f.hanoi?'#ffcc80':'#3a2110')}`)+lbl(1410,110,S.f.hanoi?'↑ 탈출구':'','#ffcc80',20,'bold');
+  return svgWrap(s);
+}
+
+/* ---------- 장면 4: 보물 동굴 ---------- */
+function sceneCave(){
+  let s=R(0,0,1600,1000,'#1c2a36');
+  s+=`<path d="M0 0 H1600 V120 q-80 40 -160 0 t-160 20 t-200 -10 t-180 30 t-220 -20 t-200 10 t-200 -20 t-280 10 Z" fill="#101820"/>`;
+  [[200,0,60],[420,0,90],[700,0,70],[980,0,110],[1250,0,80]].forEach(([x,y,h])=>s+=`<path d="M${x-18} 100 L${x} ${100+h} L${x+18} 100 Z" fill="#2c3e50"/>`);
+  s+=R(0,620,1600,380,'#26323d');
+  // 호수
+  s+=`<path d="M0 560 q400 -40 800 0 t800 0 V720 q-400 40 -800 0 t-800 0 Z" fill="#0d47a1" opacity=".85"/>`;
+  for(let i=0;i<6;i++)s+=`<path d="M${120+i*260} ${620+(i%2)*20} q30 -8 60 0" stroke="#90caf9" stroke-width="3" fill="none"/>`;
+  // 건너편 (호수 위쪽)
+  s+=hot('mural',`${R(170,200,440,260,'#5d6d7e','rx="12" stroke="#2c3e50" stroke-width="6"')}${DD.mural.scene?DD.mural.inner:`<g transform="translate(190,215) scale(.75)">${DD.mural.inner}</g>`}`);
+  s+=hot('drops',`${[[760,130],[820,150],[880,125]].map(([x,y])=>`<path d="M${x-14} 100 L${x} ${y+40} L${x+14} 100 Z" fill="#455a64"/><path d="M${x} ${y+48} q-7 12 0 18 q7 -6 0 -18z" fill="#81d4fa"/>`).join('')}${R(740,320,160,120,'#37474f','rx="60"')}<ellipse cx="820" cy="330" rx="60" ry="14" fill="#4fc3f7" opacity=".7"/>`);
+  s+=hot('treasure',`<ellipse cx="1220" cy="500" rx="200" ry="40" fill="#ffd54f" opacity=".25"/>${R(1110,380,220,130,'#8d5a33','rx="10" stroke="#3e2415" stroke-width="6"')}<path d="M1110 392 q110 -70 220 0" fill="#a0703f" stroke="#3e2415" stroke-width="6"/>${R(1110,420,220,14,'#d4af37')}${R(1195,440,50,50,'#d4af37','rx="6"')}<circle cx="1220" cy="462" r="8" fill="#3e2415"/>${[[1100,505],[1350,500],[1130,515]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="12" fill="#ffd54f" stroke="#c49000" stroke-width="2"/>`).join('')}`);
+  s+=hot('bat',`<text x="1450" y="200" font-size="44">🦇</text>`);
+  // 이쪽 기슭
+  s+=hot('raft',`${[0,1,2,3,4,5].map(i=>R(560+i*40,760,34,130,'#a0703f','rx="10" stroke="#5d3a1e" stroke-width="3"')).join('')}${S.f.raftTied?`<line x1="560" x2="800" y1="790" y2="790" stroke="#d7ccc8" stroke-width="6"/><line x1="560" x2="800" y1="860" y2="860" stroke="#d7ccc8" stroke-width="6"/>`:''}`);
+  s+=hot('skull',`<text x="200" y="880" font-size="50">💀</text>`);
+  s+=`<text x="1000" y="860" font-size="40">🐈</text><text x="1060" y="870" font-size="30">🐭</text><text x="1110" y="870" font-size="30">🧀</text>`;
+  s+=`<circle cx="400" cy="820" r="18" fill="#ffb300"/><circle cx="400" cy="820" r="120" fill="#ffcc80" opacity=".1"/>`;
+  return svgWrap(s);
+}
+
+/* ---------- 방 정의 ---------- */
+const rooms=[
+{
+  name:'선장실',scene:sceneCabin,
+  objects:[
+    {id:'pics',click(){openModal('그림 액자',box('여섯 개의 그림이 걸려 있다. 액자 아래 금속판에 글씨가 새겨져 있다.')+`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:56px;text-align:center;background:#f3e0b5;border-radius:10px;padding:10px">${DD.pics.e.map(e=>`<div>${e}</div>`).join('')}</div>`+paper('"'+DD.pics.rule+' 선장의 상자가 열릴 것이다."')+DD.pics.tip)}},
+    {id:'chest',click(){
+      if(S.f.chest){openModal('선장의 상자',box('상자는 비어 있다.'));return}
+      openModal('선장의 상자',box('🔒 '+DD.pics.ans.length+'칸짜리 자물쇠')+lock({placeholder:DD.pics.ph,maxlen:10}),()=>bindLock(DD.pics.ans,()=>{S.f.chest=true;save();openModal('선장의 상자',box('상자 안에 금빛 <b>망원경</b>이 들어 있다!'));give('scope')}))}},
+    {id:'lanterns',click(){openModal('랜턴 걸이',box('랜턴이 여러 줄로 걸려 있다. 몇 개는 켜져 있고, 몇 개는 꺼져 있다.<br>'+lanternGrid()))}},
+    {id:'log',click(){openModal('항해 일지',paper('<b>선장의 항해 일지</b><br>"우리 배의 랜턴 신호 읽는 법을 적어 둔다.<br>'+DD.lan.rule+'"')+DD.lan.tip)}},
+    {id:'drawer',click(){
+      if(S.f.drawer){openModal('책상 서랍',box('서랍은 비어 있다.'));return}
+      openModal('책상 서랍',box('🔒 숫자 자물쇠')+lock({placeholder:'숫자 '+DD.lan.ans.length+'자리',maxlen:DD.lan.ans.length}),()=>bindLock(DD.lan.ans,()=>{S.f.drawer=true;save();openModal('책상 서랍',box('서랍 안에 <b>나침반</b>이 있다. 바늘이 빙글빙글 돈다.'));give('compass')}))}},
+    {id:'wardrobe',click(){
+      if(S.f.ward){openModal('옷장',box('옷장 안엔 낡은 코트뿐이다.'));return}
+      openModal('옷장',box('옷장 문에 커다란 문양이 새겨져 있다.<br>'+triangleSVG())+paper('"이 문양 안에 숨은 <b>삼각형의 개수</b>가 옷장의 비밀번호다. (크고 작은 것 모두)"')+DD.tri.tip+lock({placeholder:'숫자',maxlen:3}),()=>bindLock(String(DD.tri.ans),()=>{S.f.ward=true;save();openModal('옷장',box('옷장 코트 주머니에서 <b>선장실 열쇠</b>를 찾았다!'));give('ckey')}))}},
+    {id:'dice',click(){openModal('책상 위 쪽지',box('주사위 그림이 그려진 쪽지다.<br>'+diceNet())+paper(DD.dice.rule)+DD.dice.tip)}},
+    {id:'hat',click(){openModal('해적 모자',box('선장의 모자. 써 보고 싶지만 지금은 탈출이 먼저!'))}},
+    {id:'door',click(){
+      if(!S.f.doorKey){if(uses('ckey')){consume('ckey');S.f.doorKey=true;save()}else{openModal('선장실 문',box('문에 <b>열쇠 구멍</b>과 숫자 자물쇠가 함께 달려 있다.'));return}}
+      openModal('선장실 문',box('열쇠를 돌렸다. 이제 🔒 숫자 자물쇠만 남았다.')+lock({placeholder:'숫자 '+DD.dice.ans.length+'자리',maxlen:DD.dice.ans.length}),()=>bindLock(DD.dice.ans,()=>nextRoom('문이 열렸다! 갑판으로 올라가자')))}}
+  ],
+  hints:DD.hints[0]
+},
+{
+  name:'갑판',scene:sceneDeck,
+  objects:[
+    {id:'mast',click(){
+      if(!S.f.mast){if(uses('scope')){S.f.mast=true;save()}else{openModal('돛대',box('돛대 꼭대기 깃발에 뭔가 적혀 있는데 너무 멀어서 안 보인다.'));return}}
+      openModal('망원경으로 본 깃발',box('<div style="font-size:50px">🏴‍☠️</div>깃발 뒷면에 글씨가 수놓아져 있다.')+paper('"갑판 보물상자의 비밀번호 = '+DD.legs.q+'"')+DD.legs.tip)}},
+    {id:'parrot',click(){openModal('앵무새',box(`<div style="font-size:50px">${'🦜'.repeat(DD.legs.c.parrot)}</div>앵무새 <b>${KN_[DD.legs.c.parrot]} 마리</b>가 "보물! 보물!" 하고 떠든다.`))}},
+    {id:'spider',click(){openModal('밧줄 사이 거미줄',box(DD.legs.c.spider?`<div style="font-size:40px">${'🕷️'.repeat(DD.legs.c.spider)}</div>거미 <b>${KN_[DD.legs.c.spider]} 마리</b>가 거미줄에 매달려 있다.`:'거미줄만 있고 거미는 보이지 않는다.'))}},
+    {id:'ants',click(){openModal('갑판 위 개미',box(DD.legs.c.ant?`<div style="font-size:40px">${'🐜'.repeat(DD.legs.c.ant)}</div>개미 <b>${KN_[DD.legs.c.ant]} 마리</b>가 줄지어 빵 부스러기를 나른다.`:'빵 부스러기만 떨어져 있다. 개미는 없다.'))}},
+    {id:'cat',click(){openModal('통 위의 고양이',box(`<div style="font-size:50px">${'🐈'.repeat(DD.legs.c.cat)}</div>배의 고양이 <b>${KN_[DD.legs.c.cat]} 마리</b>가 늘어지게 하품한다.`+(DD.legs.c.crab?`<br><div style="font-size:40px">${'🦀'.repeat(DD.legs.c.crab)}</div>통 옆에는 게 <b>${KN_[DD.legs.c.crab]} 마리</b>가 옆으로 기어간다.`:'')))}},
+    {id:'deckchest',click(){
+      if(S.f.dchest){openModal('갑판 보물상자',box('상자는 비어 있다.'));return}
+      openModal('갑판 보물상자',box('🔒 숫자 자물쇠')+lock({placeholder:'숫자',maxlen:4}),()=>bindLock(String(DD.legs.ans),()=>{S.f.dchest=true;save();openModal('갑판 보물상자',box('상자 안에 둘둘 말린 <b>보물 지도</b>가 있다!'));give('map')}))}},
+    {id:'navtable',click(){
+      if(uses('compass')&&has('map')){S.f.mapN=true;save()}
+      openModal('항해 테이블',paper(DD.scale.html)+DD.scale.tip+(has('map')?box('보물 지도를 펼쳤다. 그런데 <b>방위 표시가 없다!</b><br>'+treasureMap(S.f.mapN)+(S.f.mapN?`<p style="color:var(--gold)">🧭 나침반을 대 보니 지도의 <b>${DD.map.side}이 북쪽</b>이었다!</p>`:'<p class="muted">지도 위에 나침반을 올려 보면 어떨까?</p>'))+paper(DD.map.html)+DD.map.tip:''))}},
+    {id:'ammo',click(){
+      if(S.f.ammo){openModal('탄약 상자',box('상자는 비어 있다.'));return}
+      openModal('탄약 상자',box(`🔒 "실제 거리(${DD.scale.u})를 입력하시오"`)+lock({placeholder:'숫자',maxlen:6}),()=>bindLock(String(DD.scale.ans),()=>{S.f.ammo=true;save();openModal('탄약 상자',box('상자 안에 쇠 <b>갈고리</b>가 들어 있다. 무거운 것을 들어 올릴 때 쓰는 것 같다.'));give('hook')}))}},
+    {id:'cannon',click(){openModal('대포',box('녹슨 대포. 쏘면 안 된다!'))}},
+    {id:'door',click(){
+      if(!S.f.hatchOpen){if(uses('hook')){consume('hook');S.f.hatchOpen=true;save()}else{openModal('화물칸 해치',box('해치 뚜껑이 너무 무거워서 맨손으로는 들 수 없다. 고리에 걸 만한 도구가 필요하다.'));return}}
+      openModal('화물칸 해치',box('갈고리로 뚜껑을 들어 올렸다! 안쪽에 또 자물쇠가 있다.<br>🔒 "지도 칸 이름 (예: A1)"')+lock({placeholder:'예: A1',maxlen:2}),()=>bindLock(DD.map.ans,()=>nextRoom('해치를 열고 화물칸으로 내려갔다!')))}}
+  ],
+  hints:DD.hints[1]
+},
+{
+  name:'화물칸',scene:sceneHold,
+  objects:[
+    {id:'note',click(){openModal('선원의 쪽지',paper(DD.gram.html)+DD.gram.tip)}},
+    {id:'crate',click(){
+      if(S.f.crate){openModal('화물 상자',box('상자는 비어 있다.'));return}
+      openModal('화물 상자',box('🔒 숫자 자물쇠')+lock({placeholder:'숫자 '+DD.gram.ans.length+'자리',maxlen:DD.gram.ans.length}),()=>bindLock(DD.gram.ans,()=>{S.f.crate=true;save();openModal('화물 상자',box('상자 안에 튼튼한 <b>밧줄</b>이 감겨 있다.'));give('rope')}))}},
+    {id:'barrels',click(){openModal('물통 네 개',box('물통마다 남은 물의 양이 적혀 있다.')+`<div style="display:grid;grid-template-columns:repeat(${DD.bar.v.length},1fr);gap:8px;text-align:center;font-size:22px">${DD.bar.v.map((b,i)=>['①②③④⑤'[i],b]).map(([a,b])=>`<div class="paper" style="text-align:center"><b>${a}</b><br><span style="font-size:28px">${b}</span></div>`).join('')}</div>`+paper('"선원 금고 비밀번호: 물이 <b>많이 남은 통부터</b> 번호를 적어라."')+DD.bar.tip)}},
+    {id:'safe',click(){
+      if(S.f.safe){openModal('선원 금고',box('금고는 비어 있다.'));return}
+      openModal('선원 금고',box('🔒 숫자 다이얼')+lock({placeholder:'숫자 '+DD.bar.ans.length+'자리',maxlen:DD.bar.ans.length}),()=>bindLock(DD.bar.ans,()=>{S.f.safe=true;save();openModal('선원 금고',box('금고 안에서 찢어진 <b>지도 조각</b> 8장을 찾았다!'));give('pieces')}))}},
+    {id:'maptable',click(){
+      if(S.f.slide){openModal('완성된 지도',box('<div style="font-size:50px">🗺️</div>지도가 완성되자 구석에 글씨가 나타났다.')+paper('"보물섬 동굴로 가는 사다리는 <b>통 더미 뒤</b>에 있다. 통을 옮겨라!"'));return}
+      if(!S.f.slideOn){if(uses('pieces')){consume('pieces');S.f.slideOn=true;save()}else{openModal('지도 테이블',box('넓은 지도 테이블. 펼칠 지도가 없다.'));return}}
+      slidingPuzzle(()=>{S.f.slide=true;save();closeModal();openModal('완성된 지도',box('<div style="font-size:50px">🗺️</div>지도가 완성되자 구석에 글씨가 나타났다.')+paper('"보물섬 동굴로 가는 사다리는 <b>통 더미 뒤</b>에 있다. 통을 옮겨라!"'))})}},
+    {id:'hanoi',click(){
+      if(S.f.hanoi){openModal('사다리',box('통을 치우자 위로 올라가는 사다리가 드러났다!'));return}
+      if(!S.f.slide){openModal('통 더미',box('큰 통, 중간 통, 작은 통이 쌓여 있다. 왜 여기 쌓여 있는지 아직 모르겠다.'));return}
+      hanoi(()=>{S.f.hanoi=true;save();closeModal();toast('사다리 발견! 위쪽 탈출구로')})}},
+    {id:'hammock',click(){openModal('해먹',box('선원들이 자던 해먹. 별건 없다.'))}},
+    {id:'rat',click(){openModal('쥐',box('찍찍! 쥐가 도망간다. 별건 없다.'))}},
+    {id:'door',click(){
+      if(!S.f.hanoi){openModal('천장',box('천장에 작은 문이 있지만 손이 닿지 않는다.'));return}
+      if(!has('rope')){openModal('탈출구',box('나가기 전에… 보물섬에서 쓸 <b>밧줄</b>을 챙겨야 할 것 같다.'));return}
+      nextRoom('사다리를 타고 보물섬에 상륙! 동굴 안으로')}}
+  ],
+  hints:DD.hints[2]
+},
+{
+  name:'보물 동굴',scene:sceneCave,
+  objects:[
+    {id:'raft',click(){
+      if(S.f.crossed){openModal('뗏목',box('뗏목은 건너편 기슭에 묶어 두었다.'));return}
+      if(!S.f.raftTied){if(uses('rope')){consume('rope');S.f.raftTied=true;save();render();toast('밧줄로 통나무를 묶어 뗏목을 만들었다!');return}openModal('통나무 더미',box('통나무들이 흩어져 있다. 무언가로 <b>묶으면</b> 뗏목이 될 것 같다.'));return}
+      riverCross(()=>{S.f.crossed=true;save();closeModal();toast('호수를 건넜다! 이제 동굴 안쪽을 조사할 수 있다')})}},
+    {id:'mural',click(){openModal('동굴 벽화',box(DD.mural.cap)+angleMural()+paper(DD.mural.rule)+DD.mural.tip)}},
+    {id:'drops',click(){
+      if(S.f.drops){openModal('물웅덩이',box('물웅덩이 바닥은 이제 비어 있다.'));return}
+      openModal('천장의 물방울',box('차가운 동굴 천장과 벽에 물방울이 송골송골 맺혀 똑똑 떨어진다. 웅덩이 바닥에 무언가 반짝이는데, 돌판에 질문이 새겨져 있다.')+paper('"'+DD.drops.q+'"')+`<div class="center">${DD.drops.o.map(w=>`<button class="ghost wbtn" data-w="${w}" style="margin:4px;font-size:18px">${w}</button>`).join('')}</div><div class="msg" id="wm"></div>`,()=>{
+        document.querySelectorAll('.wbtn').forEach(b=>b.onclick=()=>{if(b.dataset.w===DD.drops.o[DD.drops.a]){good('wm','✅ 정답! 웅덩이 물이 빠지며 열쇠가 드러났다');S.f.drops=true;save();setTimeout(()=>{closeModal();give('skey')},1000)}else bad('wm','❌ 아무 일도 일어나지 않는다')})})}},
+    {id:'treasure',click(){
+      if(!S.f.tOpen){if(uses('skey')){consume('skey');S.f.tOpen=true;save()}else{openModal('보물 상자',box('황금빛 보물 상자! 해골 모양 <b>열쇠 구멍</b>과 숫자 자물쇠가 있다.'));return}}
+      openModal('보물 상자',box('해골 열쇠를 돌렸다. 마지막 🔒 숫자 자물쇠!')+lock({placeholder:'숫자 '+DD.mural.ans.length+'자리',maxlen:DD.mural.ans.length}),()=>bindLock(DD.mural.ans,()=>{closeModal();finish()}))}},
+    {id:'bat',click(){openModal('박쥐',box('파닥파닥! 박쥐가 날아간다.'))}},
+    {id:'skull',click(){openModal('해골',box('옛 해적의 해골… 별건 없다. 으스스하다.'))}}
+  ],
+  hints:DD.hints[3]
+}];
+
+/* 동굴: 호수를 건너기 전에는 건너편 물건을 조사할 수 없음 */
+rooms[3].objects.forEach(o=>{if(['mural','drops','treasure','bat'].includes(o.id)){const c=o.click;o.click=function(){if(!S.f.crossed){openModal('호수 건너편',box('호수 건너편이라 닿지 않는다. 먼저 호수를 건너야 한다.'));return}c.call(this)}}});
+
+/* ---------- 시작 / 끝 ---------- */
+function renderIntro(app){
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🏴‍☠️</div><h1>해적선의 보물</h1><div class="muted" style="font-weight:bold">${GRADE}학년 · ${LVN}${LV==='easy'?' · 🧭 문제마다 도움말이 나와요':LV==='hard'?' · 정답 힌트 없음':''}</div>
+  <div class="muted">방 4개 · 퍼즐 15개 · 교과 + 관찰·논리·조작 퍼즐</div>
+  <div class="story">전설의 해적선 <b>"검은 갈매기호"</b>에 몰래 올라탄 우리. 그런데 선장실에 들어서자마자 문이 쾅 잠겼다!<br><br>
+  선장실 → 갑판 → 화물칸 → 보물섬 동굴까지, 선장이 숨겨 둔 수수께끼를 풀고 <b>전설의 보물 상자</b>를 열어라!</div>
+  <p class="muted">종이와 연필을 준비하면 좋아요 · 막히면 💡 힌트</p>
+  <button class="btn" id="startBtn" style="font-size:22px;padding:14px 40px">항해 시작!</button></div>`;
+  $('startBtn').onclick=()=>{S.room=0;S.start=Date.now();save();render()};
+}
+function renderEnd(app){
+  const t=S.end&&S.start?fmt(S.end-S.start):'--:--';const h=S.hints.reduce((a,b)=>a+b,0);
+  const rank=h===0?'🏆 전설의 해적왕':h<=3?'🥇 노련한 선장':h<=7?'🥈 용감한 항해사':'🥉 견습 선원';
+  app.innerHTML=`<div class="card center"><div class="big-emoji">💰</div><h1>보물을 찾았다!</h1>
+  <p>기록 <b style="color:var(--gold)">${t}</b> · 힌트 <b style="color:var(--gold)">${h}번</b></p>
+  <p style="font-size:24px">${rank}</p>
+  <div class="story">끼이익… 보물 상자가 열리자 금화와 보석이 동굴을 환하게 비춘다! 상자 안쪽에는 선장의 마지막 쪽지가 있다.<br><br>
+  <i>"이 보물을 찾은 자여, 진짜 보물은 끝까지 포기하지 않고 머리를 맞댄 너희의 <b>팀워크</b>다. 금화는… 덤이다!"</i></div>${LV!=='hard'?`<p><a class="btn" style="text-decoration:none;display:inline-block" href="${location.pathname.split('/').pop()}?lv=${LV==='easy'?'normal':'hard'}">다음 단계 (${LV==='easy'?'🟡 보통':'🔴 어려움'}) 도전하기 →</a></p>`:''}</div>`;
+}
+
+let S=load()||fresh();
+function fresh(){return{room:-1,inv:[],sel:null,f:{},seen:{},hints:[0,0,0,0],start:null,end:null}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const norm=s=>s.replace(/\s/g,'').toUpperCase();
+const $=id=>document.getElementById(id);
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2200)}
+function give(id){if(!S.inv.includes(id)){S.inv.push(id);save();toast(`${ITEMS[id].e} ${ITEMS[id].n} 획득!`);renderInv()}}
+function uses(id){return S.sel===id}
+function consume(id){S.inv=S.inv.filter(x=>x!==id);if(S.sel===id)S.sel=null;save();renderInv()}
+
+function openModal(title,html,setup){$('mtitle').textContent=title;$('mbody').innerHTML=html;$('modal').classList.add('show');if(setup)setup()}
+function closeModal(){$('modal').classList.remove('show');render()}
+$('mclose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function lock(opts){
+  // opts: {label, placeholder, answer, ok(), maxlen}
+  return `<div class="muted" style="text-align:center">${opts.label||''}</div>
+  <form class="lockform" id="lf"><input id="li" maxlength="${opts.maxlen||8}" placeholder="${opts.placeholder||''}" autocomplete="off"><button class="btn">열기</button></form>
+  <div class="msg" id="lm"></div>`;
+}
+function bindLock(answer,ok){
+  const f=$('lf');if(!f)return;
+  f.onsubmit=e=>{e.preventDefault();const v=norm($('li').value);if(!v)return;
+    if(v===norm(answer)){$('lm').className='msg good';$('lm').textContent='✅ 철컥! 열렸다!';f.querySelectorAll('input,button').forEach(x=>x.disabled=true);setTimeout(ok,900)}
+    else{$('lm').className='msg bad';$('lm').textContent='❌ 열리지 않는다…';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+  };
+}
+
+/* ---------- 소리 ---------- */
+let actx=null;
+function tone(f){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.3,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+
+/* ---------- 장면 그리기 도우미 ---------- */
+const hot=(id,inner)=>`<g class="hot" data-id="${id}">${inner}</g>`;
+const R=(x,y,w,h,f,ex='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${ex}/>`;
+function woodFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let y=690;y<1000;y+=45){s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="3"/>`;for(let x=((y/45)%2)*120;x<1600;x+=240)s+=`<line x1="${x}" x2="${x}" y1="${y-45}" y2="${y}" stroke="${c2}" stroke-width="2"/>`}return s}
+function lamps(){return [300,800,1300].map(x=>R(x-100,10,200,16,'#fffef5','rx="6" stroke="#ddd"')).join('')}
+function windowPane(x,y,w,h){return `${R(x-8,y-8,w+16,h+16,'#fff')}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sky)"/><line x1="${x+w/2}" x2="${x+w/2}" y1="${y}" y2="${y+h}" stroke="#fff" stroke-width="8"/><line x1="${x}" x2="${x+w}" y1="${y+h/2}" y2="${y+h/2}" stroke="#fff" stroke-width="8"/><ellipse cx="${x+w*0.3}" cy="${y+h*0.25}" rx="28" ry="12" fill="#fff" opacity=".8"/>`}
+function studentDesk(x,y,sc=1){const w=200*sc,h=16*sc;return `<g>${R(x-w/2,y,w,h,'#ddb983','rx="3"')}${R(x-w/2+8,y+h,w-16,40*sc,'#b98f5a')}${R(x-w/2+6,y+h+40*sc,8*sc,60*sc,'#666')}${R(x+w/2-14,y+h+40*sc,8*sc,60*sc,'#666')}${R(x-55*sc,y+90*sc,110*sc,14*sc,'#3d6fb0','rx="4"')}${R(x-50*sc,y+50*sc,100*sc,40*sc,'#4a7fc1','rx="6"')}${R(x-48*sc,y+104*sc,7*sc,40*sc,'#555')}${R(x+41*sc,y+104*sc,7*sc,40*sc,'#555')}</g>`}
+function clockFace(cx,cy,r){const a=(deg,len,w,c)=>{const t=(deg-90)*Math.PI/180;return `<line x1="${cx}" y1="${cy}" x2="${cx+len*Math.cos(t)}" y2="${cy+len*Math.sin(t)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};let ticks='';for(let i=0;i<12;i++){const t=i*30*Math.PI/180;ticks+=`<line x1="${cx+r*.8*Math.cos(t)}" y1="${cy+r*.8*Math.sin(t)}" x2="${cx+r*.92*Math.cos(t)}" y2="${cy+r*.92*Math.sin(t)}" stroke="#333" stroke-width="3"/>`}return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fffdf5" stroke="#6b4a2a" stroke-width="7"/>${ticks}${a(122.5,r*.5,6,'#111')}${a(30,r*.78,4,'#c0392b')}<circle cx="${cx}" cy="${cy}" r="4" fill="#111"/>`}
+const DEFS=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc9ff"/><stop offset="1" stop-color="#d8efff"/></linearGradient></defs>`;
+const svgWrap=inner=>`<svg viewBox="0 0 1600 1000" width="100%" style="display:block">${DEFS}${inner}</svg>`;
+/* ---------- 진행 ---------- */
+function mx(){return Math.max(S.maxRoom||0,S.room)}
+function nextRoom(t){closeModal();S.room++;S.maxRoom=Math.max(mx(),S.room);S.sel=null;save();render();if(t)toast(t)}
+function goRoom(i){S.maxRoom=mx();S.room=i;S.sel=null;save();render()}
+function finish(){S.end=Date.now();S.room=rooms.length;save();render()}
+
+function renderInv(){
+  const el=$('inv');if(!el)return;
+  el.innerHTML=`<span class="lbl">🎒 소지품</span>`+(S.inv.length?S.inv.map(id=>`<div class="item ${S.sel===id?'sel':''}" data-id="${id}"><span>${ITEMS[id].e}</span>${ITEMS[id].n}</div>`).join(''):'<span class="muted">아직 없음</span>')+(S.sel?`<span class="selinfo">사용 중: ${ITEMS[S.sel].n} → 쓸 곳을 눌러 보세요</span>`:'');
+  el.querySelectorAll('.item').forEach(it=>it.onclick=()=>{const id=it.dataset.id;S.sel=S.sel===id?null:id;save();renderInv()});
+}
+
+function render(){
+  $('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);
+  const app=$('app');
+  if(S.room===-1)return renderIntro(app);
+  if(S.room>=rooms.length)return renderEnd(app);
+  const r=rooms[S.room];
+  app.innerHTML=`<div class="roombar"><h2>방 ${S.room+1} / ${rooms.length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<mx()?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
+  <div class="scene">${r.scene()}</div><div class="inv" id="inv"></div>
+  <p class="muted" style="text-align:center">방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 선택한 뒤 쓸 곳을 누르면 돼요.</p>`;
+  app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-6);h.setAttribute('y',b.y-6);h.setAttribute('width',b.width+12);h.setAttribute('height',b.height+12);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}});
+  app.querySelectorAll('.hot').forEach(el=>el.addEventListener('click',()=>{const o=r.objects.find(x=>x.id===el.dataset.id);if(!o)return;if(o.id==='door'&&S.room<mx()){goRoom(S.room+1);toast('이미 열어 둔 문이다. 다음 방으로!');return}o.click()}));
+  if($('prevBtn'))$('prevBtn').onclick=()=>goRoom(S.room-1);
+  if($('nextBtn'))$('nextBtn').onclick=()=>goRoom(S.room+1);
+  $('hintBtn').onclick=showHints;
+  renderInv();
+}
+function showHints(){
+  const r=rooms[S.room];const n=S.hints[S.room];
+  const html=r.hints.slice(0,n).map((h,i)=>`<div class="hint">💡 ${i+1}. ${h}</div>`).join('')+(n<r.hints.length?`<div class="center" style="margin-top:14px"><button class="btn" id="moreHint">힌트 ${n+1} 열기</button><div class="muted">힌트를 쓰면 기록에 남아요</div></div>`:'<p class="muted center">이 방의 힌트를 모두 열었어요.</p>');
+  openModal(`💡 ${r.name} 힌트`,html,()=>{const b=$('moreHint');if(b)b.onclick=()=>{S.hints[S.room]++;save();$('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);showHints()}});
+}
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+setInterval(()=>{$('timer').textContent=S.start?fmt((S.end||Date.now())-S.start):'00:00'},500);
+$('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="muted">지금까지 푼 기록이 모두 지워져요.</p><div class="center"><button class="btn" id="yesReset">다시 시작</button></div>',()=>{$('yesReset').onclick=()=>{S=fresh();save();closeModal()}});
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 게임을 끝까지 깨면 게임 목록에 완료 표시 */
+setInterval(function(){try{var t=(S&&S.end)?String(S.end):null;if(t&&localStorage.getItem('class-done-skip-pirate@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['pirate@'+LV]){d['pirate@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

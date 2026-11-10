@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우주정거장 탈출 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#12141c;--panel:#1e2130;--panel2:#282c40;--ink:#f3efe4;--muted:#a9a6b8;--gold:#f2c14e;--red:#e85d5d;--green:#5fd39a;--line:#3a3f57}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 50% 0%,#232842 0%,var(--bg) 60%);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:18px;line-height:1.6;-webkit-user-select:none;user-select:none}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .brand{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gold)}
+  .stats{display:flex;gap:8px;font-size:15px;flex-wrap:wrap}
+  .pill{background:var(--panel);border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+  h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:36px;margin:0 0 6px;color:var(--gold)}
+  h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .story{background:var(--panel2);border-left:4px solid var(--gold);padding:14px 16px;border-radius:10px;margin:14px 0;text-align:left}
+  .center{text-align:center}
+  .muted{color:var(--muted);font-size:15px}
+  button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+  .btn{background:var(--gold);color:#2a2100}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .roombar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 8px;gap:8px;flex-wrap:wrap}
+  .scene{position:relative;width:100%;border-radius:16px;overflow:hidden;border:2px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .hot{cursor:pointer}
+  .obj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;line-height:1;transition:transform .15s,filter .15s;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+  .obj:hover{transform:translate(-50%,-50%) scale(1.12);filter:drop-shadow(0 0 10px rgba(242,193,78,.8))}
+  .obj .seen{position:absolute;right:-4px;top:-4px;font-size:12px;background:var(--green);color:#000;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .inv{display:flex;gap:8px;align-items:center;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:62px;flex-wrap:wrap}
+  .inv .lbl{color:var(--muted);font-size:14px;margin-right:4px}
+  .item{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:15px}
+  .item span{font-size:24px}
+  .item.sel{border-color:var(--gold);background:#3b3420}
+  .selinfo{margin-left:auto;font-size:14px;color:var(--gold)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+  .modal.show{display:flex}
+  .modal .card{width:100%;max-width:620px;max-height:92vh;overflow:auto;animation:pop .2s}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .x{background:transparent;color:var(--muted);font-size:26px;padding:0 6px}
+  .box{background:#161925;border:1px dashed var(--line);border-radius:12px;padding:16px;margin:10px 0;text-align:center}
+  .paper{background:#fbf6e6;color:#2b2414;border-radius:6px;padding:16px 18px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:17px}
+  .paper table{border-collapse:collapse;margin:8px auto}
+  .paper td{padding:3px 10px;border-bottom:1px solid #d9cfb3}
+  .paper td.c{font-family:monospace;font-size:22px;font-weight:bold;letter-spacing:4px}
+  .lockform{display:flex;gap:8px;margin-top:12px}
+  .lockform input{flex:1;min-width:0;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#0e1018;color:var(--ink);font-family:monospace;letter-spacing:6px;text-align:center;-webkit-user-select:text;user-select:text}
+  .lockform input:focus{outline:none;border-color:var(--gold)}
+  .msg{min-height:26px;margin-top:8px;font-weight:bold;text-align:center}
+  .msg.bad{color:var(--red)}.msg.good{color:var(--green)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .chalk{background:#1f4d36;border:10px solid #7a5230;border-radius:6px;color:#eef;padding:18px;font-size:24px;text-align:center}
+  .poster{position:relative;height:240px;background:#fff;border-radius:6px;overflow:hidden;transition:background .4s}
+  .poster .msgtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a46ff;font-size:24px;font-weight:bold;line-height:1.5}
+  .poster .noise{position:absolute;font-weight:bold;color:#ff2a2a;pointer-events:none;transition:color .4s}
+  .poster.filtered{background:#ff9d9d}
+  .poster.filtered .noise{color:#ff9d9d;opacity:0}
+  .poster.filtered .msgtxt{color:#2a0010}
+  .ptable{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;font-size:13px}
+  .ptable div{background:#2f3a5c;border-radius:4px;padding:4px 0;text-align:center}
+  .ptable b{display:block;font-size:18px;color:#fff}
+  .ptable small{color:#9fb0e0}
+  .scale{font-size:30px;margin:6px 0;letter-spacing:4px}
+  .scope{width:220px;height:220px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#e8f3ff 0%,#a9c3dc 70%,#223 72%);display:flex;align-items:center;justify-content:center;color:#123;font-size:26px;font-weight:bold;letter-spacing:3px;border:8px solid #333}
+  .piano{position:relative;display:flex;justify-content:center;margin:12px auto 4px;height:170px;width:max-content;max-width:100%}
+  .wk{width:46px;height:170px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;cursor:pointer}
+  .wk:active,.wk.hit{background:#ffe9a8}
+  .bk{position:absolute;top:0;width:30px;height:105px;background:#111;border-radius:0 0 6px 6px;cursor:pointer;z-index:2}
+  .bk:active{background:#444}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .dots i{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+  .dots i.on{background:var(--gold)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#2a2100;padding:12px 22px;border-radius:999px;font-weight:bold;z-index:30;display:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .toast.show{display:block;animation:pop .25s}
+  .hint{background:#2b2a1f;border:1px solid #5c5330;color:#f5e6b0;padding:10px 14px;border-radius:10px;margin-top:8px;text-align:left}
+  .teaser{border:2px dashed var(--gold);border-radius:14px;padding:16px;margin-top:18px}
+  .big-emoji{font-size:70px;line-height:1}
+  @media (max-width:560px){.wk{width:30px}.bk{width:20px}.chalk{font-size:19px}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🚀 우주정거장 오로라</div>
+    <div class="stats">
+      <span class="pill" id="lvPill"></span>
+      <span class="pill">⏱ <span id="timer">00:00</span></span>
+      <span class="pill">💡 힌트 <span id="hintCount">0</span></span>
+      <button class="ghost" id="resetBtn" style="font-size:13px;padding:4px 10px">처음부터</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="mcard">
+  <div class="mhead"><h2 id="mtitle"></h2><div><button class="x" id="mclose">✕</button></div></div>
+  <div id="mbody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 우주정거장 탈출 (학년·난이도 데이터형) ================= */
+const GRADE=6;
+const DATA={"easy":{"intro":"비와 비율·부피·전기·별자리·논리 퍼즐","seq":{"terms":[2,4,8,16],"ans":32,"h":"상자 뚜껑: 앞의 수의 2배예요.","tip":"","note":""},"suit":{"html":"<b>비 3 : 5 에서 기준량은?</b>","ans":5,"h":"우주복 쪽지: \"3 대 5\"에서 기준이 되는 쪽은 뒤의 수예요.","tip":""},"cipher":{"mode":"caesar","word":"MOON","shift":1},"note":{"html":"· 영양액은 <b>물 : 영양제 = 3 : 1</b> 비율로 섞는다.<br>· 영양제는 <b>10mL</b>를 쓴다.<br>· 재배기에는 <b>섞은 영양액 전체의 양(mL)</b>을 입력한다.","ans":40,"h":"재배기: 영양제가 1이면 10mL, 물은 3이니까 30mL.","ask":"영양액 주입량(mL)을 입력하세요","tip":""},"scope":{"mode":"polaris","labels":[1,4,3,2,5,6],"q":"<b>북극성으로 쓰인 별의 번호</b>, 그다음 <b>북두칠성으로 북극성을 찾을 때 쓰는 거리의 배수</b>","ans":"45","caption":"국자 모양 별자리와 W 모양 별자리가 보인다. 노란 별들에 번호가 붙어 있다. 북극성은 어느 별일까?","tip":"북두칠성(국자 모양) 국자 끝의 두 별을 이은 거리의 5배만큼, 국자가 열린 쪽으로 쭉 가면 북극성이 있어요.","h":"북두칠성 국자 끝 두 별을 이은 거리의 5배만큼 가면 북극성이에요. W 모양 카시오페이아와 북두칠성 사이에 있어요."},"roster":{"html":"<b>승무원 3명: 민준, 서연, 지호</b><hr>역할: 선장, 과학자, 의사 (한 명씩) · 사물함: 1~3번 (한 명씩)<br>① 서연이는 의사이고, 1번이 아니다.<br>② 민준이는 3번 사물함을 쓴다.<br>③ 선장의 사물함 번호가 가장 작다.<hr>\"공구함 비밀번호: <b>선장, 과학자, 의사</b>의 사물함 번호를 차례로\"","ans":"132","h":"민준이가 3번이고 서연이는 1번이 아니면, 서연이는 몇 번?","tip":""},"valve":[2,6],"tank":{"html":"<b>\"채울 연료의 양 = 탱크의 부피(m³)를 입력하세요.<br>탱크: 가로 2m · 세로 3m · 높이 1m 직육면체\"</b>","ans":6,"h":"연료: 직육면체의 부피 = 가로 × 세로 × 높이.","tip":"","ph":"숫자","label":"가로 2m · 세로 3m · 높이 1m"},"quiz":{"q":"전구를 더 밝게 하려면 전지 2개를 어떻게 연결할까?","opts":["전지 2개를 직렬로 연결한다","전지 2개를 병렬로 연결한다","전지를 하나 빼낸다","전선 하나를 끊는다"],"ans":0,"h":"시동 질문: 전지를 한 줄로 이어 붙이는 연결이에요."},"comm":{"mode":"morse","word":"STAR","h":"신호는 영어 4글자예요. · 과 − 를 종이에 적고 아래 표에서 찾아요."},"manual":{"html":"· 포드는 <b>1시간에 250km</b>를 이동한다.<br>· 현재 위치에서 지구 착륙 지점까지 거리: <b>1500km</b>","what":"착륙까지 걸리는 시간(몇 시간)","ans":6,"h":"매뉴얼: 1500 ÷ 250.","tip":""},"sudoku":{"sol":[[3,4,1,2],[2,1,4,3],[4,3,2,1],[1,2,3,4]],"grid":[[3,0,1,2],[2,1,4,0],[4,3,2,0],[1,0,3,0]],"stars":[[3,1],[1,3],[2,3],[0,1]],"h":"스도쿠는 가로·세로·굵은 2×2 칸에 1~4가 한 번씩! 빈칸이 하나뿐인 줄부터 채워요."},"simon":["Y","G","R","G","R"],"magic":{"grid":[8,3,4,1,5,9,6,7,2],"stars":[1,5],"rule":"가로, 세로, 대각선에 있는 세 수의 합은 모두 <b>15</b>이다.","h":"한 줄의 세 수를 더하면 15예요. 빈칸 = 15 − (나머지 두 수)."},"count":15},"normal":{"intro":"수학·과학 지식 + 논리·암호·패턴 퍼즐","seq":{"terms":[2,6,12,20,30],"ans":42,"h":"수열은 1×2, 2×3, 3×4… 규칙이에요.","tip":"","note":""},"suit":{"html":"<b>규칙을 찾아라</b><table><tr><td class=\"c\">8</td><td>→ 2</td><td class=\"c\">1111</td><td>→ 0</td></tr><tr><td class=\"c\">6</td><td>→ 1</td><td class=\"c\">2580</td><td>→ 3</td></tr><tr><td class=\"c\">9</td><td>→ 1</td><td class=\"c\">7000</td><td>→ 3</td></tr><tr><td class=\"c\">88</td><td>→ 4</td><td class=\"c\">8096</td><td>→ <b>?</b></td></tr></table>","ans":5,"h":"우주복 퍼즐은 숫자 모양 속 \"동그란 구멍\"의 개수예요(8은 2개, 6·9·0은 1개).","tip":""},"cipher":{"mode":"caesar","word":"ORBIT","shift":3},"note":{"html":"· 영양액은 <b>물 : 영양제 = 5 : 2</b> 비율로 섞는다.<br>· 오늘 남은 영양제: <b>14mL</b> (전부 사용할 것)<br>· 재배기에는 <b>섞은 영양액 전체의 양(mL)</b>을 입력한다.","ans":49,"h":"물 : 영양제 = 5 : 2, 영양제가 14mL면 2가 14이니 1은 7. 물은 35mL!","ask":"영양액 주입량(mL)을 입력하세요","tip":""},"scope":{"mode":"polaris","labels":[1,2,3,4,5,6],"q":"<b>북극성으로 쓰인 별의 번호</b>, 그다음 <b>북두칠성으로 북극성을 찾을 때 쓰는 거리의 배수</b>","ans":"25","caption":"국자 모양 별자리와 W 모양 별자리가 보인다. 노란 별들에 번호가 붙어 있다. 북극성은 어느 별일까?","tip":"북두칠성(국자 모양) 국자 끝의 두 별을 이은 거리의 5배만큼, 국자가 열린 쪽으로 쭉 가면 북극성이 있어요.","h":"북두칠성 국자 끝 두 별을 이은 거리의 5배만큼 가면 북극성이에요. W 모양 카시오페이아와 북두칠성 사이에 있어요."},"roster":{"html":"<b>승무원 4명: 민준, 서연, 지호, 하은</b><hr>역할: 선장, 엔지니어, 과학자, 의사 (한 명씩) · 사물함: 1번, 2번, 3번, 4번 (한 명씩)<br>① 서연이는 의사이고, 사물함 번호는 짝수다.<br>② 하은이는 과학자도 선장도 아니다.<br>③ 지호의 사물함 번호는 엔지니어의 번호보다 1 크다.<br>④ 민준이는 1번 사물함을 쓴다.<br>⑤ 선장의 사물함 번호가 가장 크다.<hr>\"공구함 비밀번호: <b>선장, 엔지니어, 과학자, 의사</b>의 사물함 번호를 차례로\"","ans":"4312","h":"하은이는 의사(서연)도, 과학자도, 선장도 아니니 엔지니어예요. 민준이는 1번이고, 선장 번호가 가장 크니 민준이는 선장이 아니에요.","tip":""},"valve":[0,4,8],"tank":{"html":"<b>\"채울 연료의 양 = 탱크의 부피(m³)를 입력하세요.<br>탱크 옆면: 가로 2m · 세로 1.5m · 높이 0.8m 직육면체\"</b>","ans":2.4,"h":"탱크 부피는 가로 × 세로 × 높이.","tip":"","ph":"예: 1.5","label":"가로 2m · 세로 1.5m · 높이 0.8m"},"quiz":{"q":"전자석의 세기를 더 세게 만드는 방법은?","opts":["전지를 병렬로 연결한다","에나멜선을 감은 횟수를 줄인다","전지를 직렬로 더 연결한다","철심을 빼낸다"],"ans":2,"h":"전자석은 전류가 셀수록, 감은 횟수가 많을수록 세져요."},"comm":{"mode":"morse","word":"EARTH","h":"신호는 영어 5글자예요. · 과 − 를 종이에 적고 아래 표에서 찾아요."},"manual":{"html":"· 탈출 포드는 <b>1시간에 300km</b>를 이동한다.<br>· 현재 위치에서 지구 착륙 지점까지 거리: <b>1500km</b>","what":"착륙까지 걸리는 시간(시간)","ans":5,"h":"1500 ÷ 300.","tip":""},"sudoku":{"sol":[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]],"grid":[[1,0,0,4],[0,4,1,0],[2,0,0,3],[0,3,2,0]],"stars":[[0,2],[1,3],[2,1],[3,0]],"h":"스도쿠는 가로·세로·굵은 2×2 칸에 1~4가 한 번씩! 빈칸이 하나뿐인 줄부터 채워요."},"simon":["R","B","Y","B","G","R","G"],"magic":{"grid":[2,7,6,9,5,1,4,3,8],"stars":[1,3,5,7],"rule":"가로, 세로, 대각선의 세 수의 합이 모두 같다.","h":"마방진의 합은 대각선 2 + 5 + 8 = 15예요."},"count":15},"hard":{"intro":"비례배분·부피·계절·속력·논리·암호 퍼즐","seq":{"terms":[1,2,6,24,120],"ans":720,"h":"상자 뚜껑: ×2, ×3, ×4, ×5… 곱하는 수가 1씩 커져요.","tip":"","note":""},"suit":{"html":"<b>규칙을 찾아라</b><table><tr><td class=\"c\">6890</td><td>→ 5</td><td class=\"c\">1888</td><td>→ 6</td></tr><tr><td class=\"c\">7531</td><td>→ 0</td><td class=\"c\">9906</td><td>→ <b>?</b></td></tr></table>","ans":4,"h":"우주복 쪽지: 숫자 모양 속을 잘 들여다봐요.","tip":""},"cipher":{"mode":"caesar","word":"GALAXY","shift":7},"note":{"html":"· 영양액은 <b>물 : 영양제 = 7 : 3</b>으로 섞는다.<br>· 영양액 전체 <b>60mL</b>를 만든다.<br>· 재배기에는 <b>필요한 물의 양(mL)</b>을 입력한다.","ans":42,"h":"재배기: 60mL를 7 : 3으로 비례배분해요.","ask":"필요한 물의 양(mL)을 입력하세요","tip":""},"scope":{"mode":"polaris","labels":[3,5,1,6,2,4],"q":"<b>북극성으로 쓰인 별의 번호</b>, 그다음 <b>북두칠성으로 북극성을 찾을 때 쓰는 거리의 배수</b>","ans":"55","caption":"국자 모양 별자리와 W 모양 별자리가 보인다. 노란 별들에 번호가 붙어 있다. 북극성은 어느 별일까?","tip":"북두칠성(국자 모양) 국자 끝의 두 별을 이은 거리의 5배만큼, 국자가 열린 쪽으로 쭉 가면 북극성이 있어요.","h":"북두칠성 국자 끝 두 별을 이은 거리의 5배만큼 가면 북극성이에요. W 모양 카시오페이아와 북두칠성 사이에 있어요."},"roster":{"html":"<b>승무원 4명: 민재, 소윤, 태양, 하람</b><hr>역할: 선장, 엔지니어, 과학자, 의사 (한 명씩) · 사물함: 1~4번 (한 명씩)<br>① 선장과 과학자의 사물함 번호는 2만큼 차이 난다.<br>② 소윤이는 의사 아니면 엔지니어다.<br>③ 사물함 번호는 민재 &lt; 하람 &lt; 태양 순서로 크다.<br>④ 의사는 4번 사물함을 쓴다.<br>⑤ 민재도 태양이도 선장이 아니다.<hr>\"공구함 비밀번호: <b>선장, 엔지니어, 과학자, 의사</b>의 사물함 번호를 차례로\"","ans":"3214","h":"④와 ③을 함께 보면 4번을 쓸 수 있는 사람은 태양이나 소윤이에요. 경우를 나눠 따져 봐요.","tip":""},"valve":[0,2,4,6,8],"tank":{"html":"<b>\"채울 연료의 양 = 탱크의 부피(m³)를 입력하세요.<br>탱크: 가로 1.5m · 세로 1.2m · 높이 0.5m 직육면체\"</b>","ans":0.9,"h":"연료: 가로 × 세로 × 높이, 소수의 곱셈.","tip":"","ph":"예: 1.5","label":"가로 1.5m · 세로 1.2m · 높이 0.5m"},"quiz":{"q":"계절이 바뀌는 까닭으로 옳은 것은?","opts":["지구와 태양 사이의 거리가 달라지기 때문","지구의 자전축이 기울어진 채 태양 주위를 공전하기 때문","지구가 하루에 한 바퀴씩 자전하기 때문","달이 지구 주위를 돌기 때문"],"ans":1,"h":"시동 질문: 기울어진 채로 도는 지구를 떠올려 봐요."},"comm":{"mode":"morse","word":"PLANET","h":"신호는 영어 6글자예요. · 과 − 를 종이에 적고 아래 표에서 찾아요."},"manual":{"html":"· 포드는 <b>1분에 6km</b>를 이동한다.<br>· 지구까지 <b>2880km</b>","what":"착륙까지 걸리는 시간(몇 시간)","ans":8,"h":"매뉴얼: 몇 분 걸리는지 구한 뒤 60분씩 묶어요.","tip":""},"sudoku":{"sol":[[1,3,4,2],[2,4,3,1],[3,1,2,4],[4,2,1,3]],"grid":[[0,0,0,0],[2,4,3,0],[3,0,2,0],[0,0,0,3]],"stars":[[0,1],[3,1],[2,3],[1,3]],"h":"스도쿠는 가로·세로·굵은 2×2 칸에 1~4가 한 번씩! 빈칸이 하나뿐인 줄부터 채워요."},"simon":["B","Y","R","B","R","Y","G","Y"],"magic":{"grid":[6,7,2,1,5,9,8,3,4],"stars":[3,1,4,7,5],"rule":"1부터 9까지의 수가 한 번씩 들어 있고, 가로·세로·대각선에 있는 세 수의 합이 모두 같다.","h":"1부터 9까지 모두 더하면 45! 세 줄(가로 3줄)로 똑같이 나누면 한 줄의 합이 나와요."},"count":15}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const D=DATA[LV];
+const KEY=LV==='normal'?'space-escape-v1':'space-escape-v1-'+LV;
+const ITEMS={
+  flash:{e:'🔦',n:'손전등'},
+  driver:{e:'🪛',n:'드라이버'},
+  card:{e:'💳',n:'파란 카드키'},
+  fuel:{e:'🧪',n:'연료 샘플'},
+  wrench:{e:'🔧',n:'렌치'}
+};
+const paper=html=>`<div class="paper">${html}</div>`;
+const box=html=>`<div class="box">${html}</div>`;
+const tip=t=>LV==='easy'&&t?`<div class="tipbox">🧭 도움말: ${t}</div>`:'';
+const has=id=>S.inv.includes(id);
+const SMALL=GRADE<=2;
+
+/* ---------- 공통 그림 ---------- */
+function panelWall(c1,c2){let s=R(0,0,1600,660,c1);for(let x=0;x<1600;x+=200)s+=`<line x1="${x}" x2="${x}" y1="0" y2="660" stroke="${c2}" stroke-width="4"/>`;s+=`<line x1="0" x2="1600" y1="330" y2="330" stroke="${c2}" stroke-width="3"/>`;for(let x=10;x<1600;x+=200)for(const y of [12,318,342,648])s+=`<circle cx="${x}" cy="${y}" r="4" fill="${c2}"/><circle cx="${x+180}" cy="${y}" r="4" fill="${c2}"/>`;return s}
+function metalFloor(c1,c2){let s=R(0,660,1600,340,c1);for(let x=0;x<1600;x+=40)s+=`<line x1="${x}" x2="${x}" y1="660" y2="1000" stroke="${c2}" stroke-width="2"/>`;for(let y=660;y<1000;y+=40)s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="2"/>`;return s+R(0,650,1600,16,'#111')}
+function stars(x,y,w,h,n,seed=3){let s='';for(let i=0;i<n;i++){seed=(seed*9301+49297)%233280;const a=seed/233280;seed=(seed*9301+49297)%233280;const b=seed/233280;s+=`<circle cx="${x+a*w}" cy="${y+b*h}" r="${1+((i*7)%3)}" fill="#fff" opacity="${.5+((i*3)%5)/10}"/>`}return s}
+function hatch(x,label,c='#5a6b80'){return `${R(x,150,150,500,c,'rx="20" stroke="#222" stroke-width="5"')}${R(x+20,180,110,150,'#1a2433','rx="14"')}<line x1="${x+75}" x2="${x+75}" y1="340" y2="640" stroke="#222" stroke-width="4"/>${R(x+10,110,130,32,'#ffcc00','rx="6"')}<text x="${x+75}" y="134" font-size="20" text-anchor="middle" font-family="Gowun Dodum">${label}</text>`}
+const lbl=(x,y,t,c='#9fe8ff',fs=18)=>`<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" fill="${c}" font-family="Gowun Dodum">${t}</text>`;
+
+/* ---------- 퍼즐 그림 ---------- */
+const SU=D.sudoku;
+const sudokuCode=()=>SU.stars.map(([r,c])=>SU.sol[r][c]).join('');
+function sudokuHTML(){
+  const star={};SU.stars.forEach(([r,c],i)=>star[r+','+c]=i+1);
+  let h='<div style="display:inline-grid;grid-template-columns:repeat(4,58px);gap:0;border:4px solid #222;margin:8px auto">';
+  SU.grid.forEach((row,r)=>row.forEach((v,c)=>{const st=star[r+','+c];h+=`<div style="height:58px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;color:#222;background:${st?'#ffe9a8':'#fff'};border-right:${c===1?4:1}px solid #222;border-bottom:${r===1?4:1}px solid #222;position:relative">${v||''}${st?`<span style="position:absolute;top:2px;left:4px;font-size:13px;color:#c0392b">★${st}</span>`:''}</div>`}));
+  return h+'</div>';
+}
+function starChart(){
+  const P=D.scope;
+  const dip=[[390,370],[400,420],[470,425],[480,375],[530,360],[575,355],[620,372]];
+  const pos=[[150,90],[340,120],[520,100],[250,250],[600,210],[180,390]];
+  const cas=[[60,180],[90,140],[115,175],[145,135],[170,170]];
+  let s=stars(0,0,680,470,60,11);
+  s+=dip.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="7" fill="#fff8d6"/>`).join('')+`<polyline points="${[3,0,1,2,3,4,5,6].map(i=>dip[i].join(',')).join(' ')}" stroke="#8fb3ff" stroke-width="2" fill="none" opacity=".6"/>`;
+  s+=cas.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="#fff8d6"/>`).join('')+`<polyline points="${cas.map(p=>p.join(',')).join(' ')}" stroke="#8fb3ff" stroke-width="2" fill="none" opacity=".6"/>`;
+  s+=pos.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="8" fill="#ffe680"/><text x="${x+14}" y="${y-10}" font-size="20" fill="#ffcc00" font-weight="bold">${P.labels[i]}</text>`).join('');
+  return `<svg viewBox="0 0 680 470" width="100%" style="background:#050b24;border-radius:50%/20%;display:block">${s}</svg>`;
+}
+function countView(){
+  // 망원경 속 우주: 무리(그룹) 단위로 배치
+  const P=D.scope;let seed=17;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+  let cells=[];P.items.forEach(it=>{for(let g=0;g<it.groups;g++)cells.push(it)});
+  // 섞기
+  for(let i=cells.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}
+  const cols=Math.ceil(Math.sqrt(cells.length*1.6));
+  let h=`<div style="background:radial-gradient(circle,#0d1b4a,#050b24);border-radius:50%/22%;padding:28px 22px;display:grid;grid-template-columns:repeat(${cols},1fr);gap:10px;justify-items:center;align-items:center">`;
+  cells.forEach(it=>{const per=it.per||1;h+=`<div style="${per>1?'background:rgba(143,179,255,.12);border:1px dashed #8fb3ff;border-radius:12px;':''}padding:4px 6px;font-size:${per>4?18:24}px;line-height:1.1;text-align:center;max-width:${per>4?90:120}px">${it.e.repeat(per)}</div>`});
+  return h+'</div>';
+}
+function tableView(){return `<div class="paper">${D.scope.html}</div>`}
+function scopeView(){const m=D.scope.mode;return m==='polaris'?starChart():m==='count'?countView():tableView()}
+function magicHTML(){
+  const M=D.magic;const st={};M.stars.forEach((i,k)=>st[i]='★'+(k+1));
+  return `<div style="display:inline-grid;grid-template-columns:repeat(3,64px);gap:4px;margin:10px auto">${M.grid.map((v,i)=>{const s=st[i];return `<div style="height:64px;display:flex;align-items:center;justify-content:center;font-size:${s?18:30}px;font-weight:bold;background:${s?'#ffe9a8':'#e3f2fd'};color:${s?'#c0392b':'#0d47a1'};border-radius:8px">${s||v}</div>`}).join('')}</div>`;
+}
+const magicCode=()=>D.magic.stars.map(i=>D.magic.grid[i]).join('');
+const launchCode=()=>magicCode()+String(D.manual.ans);
+
+/* ---------- 상호작용 퍼즐 ---------- */
+function simonPanel(ok){
+  const C=[['R','#e53935',262],['B','#1e88e5',330],['Y','#fdd835',392],['G','#43a047',523]];
+  const SEQ=D.simon;let step=0,playing=false;
+  openModal('출입문 보안 패널',box(`패널 화면: <b>"재생되는 빛의 순서를 그대로 따라 누르시오."</b><br><span class="muted">순서는 ${SEQ.length}칸이다.${SEQ.length>=6?' 한 번만 보고 기억하기는 어려울 수도…':''}</span>`)+tip('"순서 보기"는 몇 번이든 다시 볼 수 있어요. 색깔 첫 글자(빨·파·노·초)를 종이에 적어 두세요.')+
+  `<div style="display:grid;grid-template-columns:repeat(2,110px);gap:12px;justify-content:center;margin:12px 0">${C.map(([k,c])=>`<div class="pad" data-k="${k}" style="height:110px;border-radius:18px;background:${c};opacity:.45;cursor:pointer;border:4px solid #0006"></div>`).join('')}</div>
+  <div class="center"><button class="btn" id="playSeq">▶ 순서 보기</button></div><div class="dots" id="sdots">${SEQ.map(()=>'<i></i>').join('')}</div><div class="msg" id="sm"></div>`,()=>{
+    const pads=[...document.querySelectorAll('.pad')];const flash=(k)=>{const p=pads.find(x=>x.dataset.k===k);const f=C.find(x=>x[0]===k)[2];p.style.opacity=1;tone(f);setTimeout(()=>p.style.opacity=.45,380)};
+    const gap=LV==='hard'?520:LV==='easy'?800:650;
+    $('playSeq').onclick=()=>{if(playing)return;playing=true;step=0;[...$('sdots').children].forEach(d=>d.className='');SEQ.forEach((k,i)=>setTimeout(()=>{flash(k);if(i===SEQ.length-1)setTimeout(()=>playing=false,400)},i*gap))};
+    pads.forEach(p=>p.onclick=()=>{if(playing)return;flash(p.dataset.k);const d=$('sdots').children;
+      if(p.dataset.k===SEQ[step]){d[step].className='on';step++;if(step===SEQ.length){$('sm').className='msg good';$('sm').textContent='✅ 출입문이 열립니다!';setTimeout(ok,1000)}}
+      else{step=0;[...d].forEach(x=>x.className='');$('sm').className='msg bad';$('sm').textContent='❌ 순서 오류! 처음부터 다시';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}})});
+}
+function valvePuzzle(ok){
+  let st=S.f.valveState;
+  if(!st){st=[1,1,1,1,1,1,1,1,1];D.valve.forEach(i=>press(i));S.f.valveState=st;save()}
+  function press(i){const r=Math.floor(i/3),c=i%3;[[r,c],[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([a,b])=>{if(a>=0&&a<3&&b>=0&&b<3){const k=a*3+b;st[k]=st[k]?0:1}})}
+  const draw=()=>{$('vg').innerHTML=st.map((v,i)=>`<div class="valve" data-i="${i}" style="height:84px;border-radius:50%;background:${v?'#43a047':'#e53935'};border:6px solid #333;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25)">${v?'✓':'!'}</div>`).join('');
+    document.querySelectorAll('.valve').forEach(v=>v.onclick=()=>{press(+v.dataset.i);tone(200+ +v.dataset.i*30);S.f.valveState=st;save();draw();
+      if(st.every(x=>x)){$('vm').className='msg good';$('vm').textContent='✅ 냉각수 압력 정상! 밸브 퍼즐 완료';setTimeout(ok,1100)}})};
+  openModal('냉각수 밸브 패널',box('경고: 냉각수 압력 이상! <b>모든 밸브를 초록색으로</b> 만들어라.<br><span class="muted">밸브 하나를 돌리면 그 밸브와 위·아래·왼쪽·오른쪽 밸브가 함께 바뀐다.</span>')+tip(`빨간 밸브가 + 모양으로 모여 있으면 그 한가운데를 눌러 보세요. 같은 밸브를 두 번 누르면 원래대로 돌아와요. (누를 밸브: ${D.valve.length}개)`)+`<div id="vg" style="display:grid;grid-template-columns:repeat(3,84px);gap:12px;justify-content:center;margin:12px 0"></div><div class="center"><button class="ghost" id="vreset" style="font-size:14px">처음 상태로</button></div><div class="msg" id="vm"></div>`,()=>{draw();$('vreset').onclick=()=>{S.f.valveState=null;save();valvePuzzle(ok)}});
+}
+const MT={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..'};
+function commAnswer(){return D.comm.word}
+function morsePanel(ok){
+  const C=D.comm,blink=C.mode==='blink';
+  // 신호 만들기: [[기호들], ...] 글자(숫자)별
+  const groups=blink?String(C.word).split('').map(d=>{d=+d;const a=[];if(C.long){for(let i=0;i<Math.floor(d/5);i++)a.push('-');for(let i=0;i<d%5;i++)a.push('.')}else for(let i=0;i<d;i++)a.push('.');return a}):C.word.split('').map(ch=>MT[ch].split(''));
+  const legend=blink?`<div class="paper" style="text-align:center">램프가 <b>깜빡인 횟수</b>가 숫자 하나예요. 숫자와 숫자 사이에는 <b>오래 쉬어요</b>.${C.long?'<br>💡 <b>길게 1번 = 5</b>, 짧게 1번 = 1 (예: 길게 1번 + 짧게 2번 = 7)':''}</div>`
+    :`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-family:monospace;font-size:14px;margin-top:12px">${Object.keys(MT).map(l=>`<div style="background:#161925;border-radius:4px;padding:3px;text-align:center"><b style="color:var(--gold)">${l}</b> ${MT[l].replace(/\./g,'·').replace(/-/g,'−')}</div>`).join('')}</div>`;
+  openModal('통신기',box(blink?'지구에서 신호가 들어온다! 램프가 깜빡이며 <b>숫자</b>를 보내고 있다.':'지구에서 신호가 들어온다! 램프가 깜빡이는 방식으로 메시지를 보내고 있다.<br><span class="muted">짧게 = 점(·), 길게 = 선(−), 글자 사이엔 잠깐 쉰다.</span>')+tip(blink?'한 번 볼 때 첫 숫자만 세고, 다시 재생해서 다음 숫자를 세 보세요.':'신호를 여러 번 재생하면서 · 과 − 를 종이에 적고, 아래 표에서 찾아보세요.')+
+  `<div class="center"><div id="lamp" style="width:90px;height:90px;border-radius:50%;background:#3a2a00;margin:10px auto;border:6px solid #555;transition:background .05s"></div><button class="btn" id="playM">▶ 신호 재생</button></div>`+legend+lock({label:blink?'받은 숫자를 차례로 입력하세요':'해독한 영어 단어를 입력하세요',placeholder:blink?'숫자':'영어 단어',maxlen:10}),()=>{
+    let busy=false;$('playM').onclick=()=>{if(busy)return;busy=true;const lamp=$('lamp');let t=300;const U=LV==='hard'?260:LV==='easy'?400:320;
+      groups.forEach(g=>{g.forEach(sym=>{const d=sym==='.'?U:U*3;setTimeout(()=>{lamp.style.background='#ffd84d';tone(660)},t);setTimeout(()=>lamp.style.background='#3a2a00',t+d);t+=d+U});t+=U*(blink?5:3)});
+      setTimeout(()=>busy=false,t)};
+    bindLock(String(C.word),ok)});
+}
+function cipherPoster(){
+  const C=D.cipher;
+  if(C.mode==='pict')return paper(`<b>정거장 그림 암호표</b><br>"그림 하나가 글자 하나를 뜻한다."${C.reverse?'<br>⚠️ <b>X의 메모: 암호는 거꾸로(오른쪽 → 왼쪽) 적어 두었다.</b>':''}`)+`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px">${C.table.map(([e,k])=>`<div class="box" style="margin:0;padding:8px"><span style="font-size:30px">${e}</span><br><b style="font-size:22px">${k}</b></div>`).join('')}</div>`;
+  const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ',sh=C.shift,f=i=>A[(i+sh)%26];
+  return paper(`<b>정거장 비밀 암호 규칙</b><br>"모든 알파벳을 순서대로 <b>${sh}칸씩 뒤로</b> 밀어서 적는다."<br><br>A → ${f(0)}, B → ${f(1)}, C → ${f(2)}, … , Z → ${f(25)}`)+box('<div style="font-family:monospace;font-size:17px;line-height:1.9">A B C D E F G H I J K L M<br>N O P Q R S T U V W X Y Z</div>');
+}
+function cipherText(){
+  const C=D.cipher;
+  if(C.mode==='pict'){const map={};C.table.forEach(([e,k])=>map[k]=e);let a=[...C.word].map(k=>map[k]);if(C.reverse)a=a.reverse();return a.join(' ')}
+  const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';return C.word.split('').map(ch=>A[(A.indexOf(ch)+C.shift)%26]).join(' ');
+}
+
+/* ---------- 장면 1: 수면실 ---------- */
+function sceneSleep(){
+  let s=panelWall('#2f3a4d','#243042')+metalFloor('#3c4658','#323b4c');
+  s+=hot('window',`<circle cx="1180" cy="170" r="110" fill="#0a1030" stroke="#8a97ab" stroke-width="16"/>${stars(1090,80,180,180,25,5)}<circle cx="1230" cy="215" r="45" fill="#2e86de"/><path d="M1205 195 q15 -10 25 5 t20 10" stroke="#55c46a" stroke-width="10" fill="none"/>`);
+  s+=hot('locker',`${R(70,140,200,500,'#6b7a90','rx="8" stroke="#222" stroke-width="4"')}${R(85,160,170,460,'#7d8ca3','rx="6"')}${R(110,190,120,10,'#5a6880')}${R(110,210,120,10,'#5a6880')}${R(195,360,46,64,'#1b2533','rx="6"')}${[0,1,2].map(r=>[0,1].map(c=>R(201+c*20,368+r*18,14,12,'#4fc3f7','rx="2"')).join('')).join('')}`);
+  let wb=R(320,110,320,250,'#e8edf2','rx="8" stroke="#8a97ab" stroke-width="6"');for(let r=0;r<4;r++)for(let c=0;c<4;c++)wb+=R(400+c*40,150+r*40,40,40,'none','stroke="#333" stroke-width="'+((c===2||r===2)?3:1)+'"');
+  SU.grid.forEach((row,r)=>row.forEach((v,c)=>{if(v)wb+=`<text x="${420+c*40}" y="${178+r*40}" font-size="24" text-anchor="middle">${v}</text>`}));
+  wb+=lbl(480,340,'규칙: 가로·세로·굵은 칸에 1~4 한 번씩','#555',16);
+  s+=hot('wb',wb);
+  const C=D.cipher;
+  const ps=C.mode==='pict'?[`${C.table[0][0]} → ${C.table[0][1]}`,`${C.table[1][0]} → ${C.table[1][1]}`]:['A → '+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[C.shift%26],'B → '+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[(1+C.shift)%26]];
+  s+=hot('cipher',`${R(680,100,200,180,'#ffeb3b','rx="6"')}${lbl(780,140,'암호 규칙','#333',22)}${lbl(780,185,ps[0],'#c0392b',30)}${lbl(780,225,ps[1],'#c0392b',30)}${lbl(780,262,'…','#333',22)}`);
+  s+=hot('suit',`<line x1="770" x2="770" y1="300" y2="330" stroke="#888" stroke-width="5"/><circle cx="770" cy="360" r="38" fill="#ddd" stroke="#999" stroke-width="4"/><circle cx="770" cy="362" r="24" fill="#1e3a5f"/>${R(720,395,100,150,'#eee','rx="20" stroke="#aaa" stroke-width="3"')}${R(690,405,32,110,'#e6e6e6','rx="14"')}${R(818,405,32,110,'#e6e6e6','rx="14"')}${R(730,540,36,90,'#e6e6e6','rx="12"')}${R(774,540,36,90,'#e6e6e6','rx="12"')}${R(740,430,60,40,'#ff7043','rx="6"')}`);
+  s+=hot('vent',`${R(400,460,170,110,'#55627a','rx="6" stroke="#222" stroke-width="4"')}${[480,500,520,540].map(y=>`<line x1="415" x2="555" y1="${y}" y2="${y}" stroke="#222" stroke-width="5"/>`).join('')}${[[410,470],[560,470],[410,560],[560,560]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#ccc"/>`).join('')}`);
+  s+=R(930,330,420,180,'#8a97ab','rx="60"')+R(950,345,380,150,'#a9d7ff','rx="50" opacity=".5"')+R(980,420,250,60,'#5c6bc0','rx="20"');
+  s+=hot('bed',`${R(930,520,420,130,'#6b7a90','rx="20"')}${R(950,540,380,50,'#a9d7ff','rx="20" opacity=".5"')}${R(960,600,360,40,'#11161f','rx="8"')}`);
+  s+=R(300,700,160,16,'#8a97ab','rx="4"')+R(370,716,20,90,'#6b7a90');
+  s+=hot('mug',`<path d="M350 660 h36 l-4 40 h-28 z" fill="#ff7043"/><path d="M386 668 q14 6 0 20" stroke="#ff7043" stroke-width="5" fill="none"/>`);
+  s+=hot('plant',`${R(560,760,70,70,'#8a97ab','rx="8"')}<ellipse cx="580" cy="720" rx="14" ry="45" fill="#4caf50" transform="rotate(-15 580 740)"/><ellipse cx="610" cy="715" rx="14" ry="48" fill="#66bb6a" transform="rotate(15 610 740)"/>`);
+  s+=hot('door',hatch(1420,'연구실 방향')+`${R(1385,360,30,60,'#1b2533','rx="4"')}${R(1390,368,20,12,'#4fc3f7')}`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 2: 연구실 ---------- */
+function sceneLab2(){
+  let s=panelWall('#26413a','#1d3530')+metalFloor('#38483f','#2e3d35');
+  s+=R(880,60,520,250,'#050b24','rx="30" stroke="#8a97ab" stroke-width="14"')+stars(890,70,500,230,50,21);
+  const grown=S.f.grow;
+  s+=hot('grow',`${R(70,180,300,450,'#56706a','rx="16" stroke="#222" stroke-width="4"')}${R(90,200,260,320,'#bff5d8','rx="10" opacity=".35"')}${R(110,470,220,40,'#6d4c41','rx="6"')}<line x1="220" x2="220" y1="470" y2="${grown?260:420}" stroke="#2e7d32" stroke-width="8"/><ellipse cx="195" cy="${grown?330:430}" rx="28" ry="12" fill="#43a047"/><ellipse cx="248" cy="${grown?300:440}" rx="28" ry="12" fill="#66bb6a"/>${grown?'<circle cx="220" cy="255" r="22" fill="#42a5f5"/>':''}${R(110,540,220,60,'#1b2533','rx="6"')}${lbl(220,578,'영양액 주입','#9fe8ff',18)}`);
+  s+=R(420,560,620,24,'#8a97ab','rx="4"')+R(440,584,580,90,'#6b7a90');
+  s+=hot('note',`${R(470,520,150,40,'#2e7d32','rx="3" transform="rotate(-4 545 540)"')}${R(476,515,140,36,'#fff','transform="rotate(-4 545 540)"')}${lbl(546,540,'연구 노트','#333',16)}`);
+  s+=hot('micro',`${R(700,540,90,20,'#333','rx="6"')}<path d="M770 540 v-70 q0 -16 -16 -24" stroke="#333" stroke-width="16" fill="none"/>${R(712,425,22,70,'#444','rx="6" transform="rotate(-20 723 460)"')}`);
+  s+=hot('coat',`<line x1="440" x2="440" y1="120" y2="150" stroke="#888" stroke-width="5"/><path d="M400 160 L480 160 L500 400 L380 400 Z" fill="#f5f5f5" stroke="#bbb" stroke-width="3"/><line x1="440" x2="440" y1="160" y2="400" stroke="#ccc" stroke-width="3"/>`);
+  s+=hot('scope',`<line x1="1110" y1="640" x2="1150" y2="470" stroke="#333" stroke-width="7"/><line x1="1190" y1="640" x2="1150" y2="470" stroke="#333" stroke-width="7"/><line x1="1150" y1="640" x2="1150" y2="470" stroke="#333" stroke-width="7"/>${R(1080,400,200,56,'#cfd8dc','rx="20" transform="rotate(-28 1180 428)"')}${R(1250,350,40,74,'#90a4ae','rx="8" transform="rotate(-28 1270 387)"')}${R(1120,470,60,30,'#1565c0','rx="6"')}`);
+  s+=hot('fridge',`${R(1280,330,130,320,'#e0f2f1','rx="12" stroke="#90a4ae" stroke-width="4"')}${R(1295,350,100,150,'#b2dfdb','rx="6"')}${R(1385,520,10,60,'#90a4ae','rx="4"')}${R(1300,600,60,30,'#1b2533','rx="4"')}${lbl(1347,520,'표본','#00695c',18)}`);
+  s+=hot('door',hatch(1440,'엔진실 방향','#4d6a62')+[['#e53935',0,0],['#1e88e5',1,0],['#fdd835',0,1],['#43a047',1,1]].map(([c,a,b])=>R(1465+a*55,360+b*55,45,45,c,'rx="8"')).join(''));
+  return svgWrap(s);
+}
+
+/* ---------- 장면 3: 엔진실 ---------- */
+function sceneEngine(){
+  let s=panelWall('#3d2b22','#2f2019')+metalFloor('#3a332d','#2e2823');
+  s+=hot('pipes',`<path d="M0 90 H1600" stroke="#8d6e63" stroke-width="30"/><path d="M0 90 H1600" stroke="#a1887f" stroke-width="10"/><path d="M300 90 V140 M760 90 V150 M1220 90 V140" stroke="#8d6e63" stroke-width="24"/><circle cx="560" cy="90" r="22" fill="#d84315"/>`);
+  s+=hot('roster',`${R(70,170,170,220,'#8d6e63','rx="6"')}${R(82,195,146,185,'#fffbe6')}${R(125,160,60,24,'#bdbdbd','rx="5"')}${lbl(155,225,'승무원 명단','#333',18)}${[255,280,305,330,355].map(y=>`<line x1="95" x2="215" y1="${y}" y2="${y}" stroke="#aaa" stroke-width="4"/>`).join('')}`);
+  let vp=R(320,150,360,320,'#4e4e4e','rx="10" stroke="#222" stroke-width="5"')+lbl(500,190,'냉각수 밸브','#ffcc80',22);
+  for(let r=0;r<3;r++)for(let c=0;c<3;c++){const x=400+c*100,y=245+r*80;vp+=`<circle cx="${x}" cy="${y}" r="28" fill="${S.f.valves?'#43a047':(r+c)%2?'#43a047':'#e53935'}" stroke="#222" stroke-width="5"/><line x1="${x-18}" x2="${x+18}" y1="${y}" y2="${y}" stroke="#222" stroke-width="6"/>`}
+  if(!S.f.panelOpen)vp+=R(330,210,340,250,'#5f5f5f','opacity=".92" rx="6"')+lbl(500,345,'🔩 볼트로 잠긴 덮개','#ddd',22);
+  s+=hot('valves',vp);
+  s+=hot('tank',`${R(780,180,360,460,'#b0bec5','rx="30" stroke="#455a64" stroke-width="6"')}${R(800,230,40,360,'#263238','rx="10"')}${R(806,S.f.fuelDone?260:520,28,S.f.fuelDone?324:64,'#ffb300','rx="8"')}${lbl(960,300,'연료 탱크','#263238',30)}${lbl(960,345,D.tank.label||'','#37474f',20)}<circle cx="1070" cy="520" r="30" fill="#455a64"/>${R(1050,505,40,30,'#1b2533','rx="4"')}`);
+  s+=hot('ext',`${R(1200,470,50,150,'#d32f2f','rx="18"')}${R(1210,450,30,24,'#333')}<path d="M1240 460 q40 0 30 60" stroke="#333" stroke-width="6" fill="none"/>`);
+  s+=hot('robot',`${R(560,760,120,90,'#90a4ae','rx="14"')}${R(585,710,70,55,'#b0bec5','rx="10"')}<circle cx="605" cy="737" r="8" fill="#4fc3f7"/><circle cx="635" cy="737" r="8" fill="#4fc3f7"/><circle cx="585" cy="860" r="16" fill="#333"/><circle cx="655" cy="860" r="16" fill="#333"/><line x1="620" x2="620" y1="710" y2="690" stroke="#555" stroke-width="4"/><circle cx="620" cy="686" r="6" fill="#e53935"/>`);
+  s+=hot('tools',`${R(90,760,240,130,'#c62828','rx="10" stroke="#7f0000" stroke-width="5"')}${R(150,735,120,30,'#7f0000','rx="10"')}${R(185,800,50,40,'#1b2533','rx="6"')}${lbl(210,870,'TOOLS','#ffcdd2',20)}`);
+  s+=hot('door',hatch(1400,'조종실 방향','#6d4c41')+`${R(1415,360,120,70,'#1b2533','rx="8"')}${lbl(1475,390,'엔진 시동','#ffcc80',16)}${lbl(1475,415,S.f.valves&&S.f.fuelDone?'준비 완료':'준비 안 됨',S.f.valves&&S.f.fuelDone?'#69f0ae':'#ff5252',16)}`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 4: 조종실 ---------- */
+function sceneCockpit(){
+  let s=panelWall('#1f2a3a','#18212e')+metalFloor('#2b3546','#232c3b');
+  s+=hot('earth',`<clipPath id="winclip"><rect x="180" y="50" width="1240" height="360" rx="60"/></clipPath>${R(180,50,1240,360,'#050b24','rx="60"')}<g clip-path="url(#winclip)">${stars(200,60,1200,340,90,31)}<circle cx="800" cy="560" r="300" fill="#1e88e5"/><path d="M600 330 q80 -40 150 10 t120 -20 q60 40 20 70 t-150 10 q-80 -20 -140 -70z" fill="#43a047"/><path d="M880 300 q60 10 90 50 t60 40" stroke="#2e7d32" stroke-width="40" fill="none"/></g>${R(180,50,1240,360,'none','rx="60" stroke="#8a97ab" stroke-width="18"')}`);
+  s+=R(0,410,1600,250,'#1f2a3a');
+  s+=R(150,470,1300,190,'#37474f','rx="20" stroke="#222" stroke-width="5"');
+  s+=hot('radio',`${R(200,490,300,140,'#263238','rx="10"')}<circle cx="260" cy="560" r="34" fill="#3a2a00" stroke="#777" stroke-width="5"/>${R(320,515,150,30,'#0b1a12','rx="4"')}${lbl(395,537,'COMM','#69f0ae',18)}${[0,1,2].map(i=>`<circle cx="${340+i*45}" cy="590" r="12" fill="#90a4ae"/>`).join('')}`);
+  s+=hot('nav',`${R(620,485,360,150,'#0d1b2a','rx="10" stroke="#4fc3f7" stroke-width="4"')}${lbl(800,525,S.f.nav?'항로 데이터 열림':'🔒 통신 확인 필요','#4fc3f7',22)}<path d="M660 600 q140 -60 280 0" stroke="#4fc3f7" stroke-width="3" fill="none" stroke-dasharray="8 6"/><circle cx="660" cy="600" r="6" fill="#fff"/><circle cx="940" cy="600" r="8" fill="#43a047"/>`);
+  s+=hot('manual',`${R(520,500,80,110,'#ff8f00','rx="4" transform="rotate(-6 560 555)"')}${lbl(560,560,'비상','#3e2723',18)}${lbl(560,582,'매뉴얼','#3e2723',16)}`);
+  const n=launchCode().length;
+  s+=hot('launch',`${R(1040,490,360,140,'#263238','rx="10"')}<circle cx="1130" cy="560" r="44" fill="#d32f2f" stroke="#7f0000" stroke-width="8"/>${lbl(1130,568,'발사','#fff',22)}${R(1200,520,170,40,'#0b1a12','rx="4"')}${lbl(1285,547,Array(n).fill('_').join(' '),'#69f0ae',n>6?16:22)}${lbl(1285,600,'탈출 포드','#ffcc00',20)}`);
+  [520,1080].forEach(x=>s+=`${R(x-80,720,160,130,'#455a64','rx="24"')}${R(x-70,690,140,50,'#546e7a','rx="20"')}${R(x-10,850,20,80,'#333')}`);
+  s+=hot('food',`${R(800,820,120,80,'#8d6e63','rx="6"')}${lbl(860,868,'우주식량','#fff3e0',18)}`);
+  return svgWrap(s);
+}
+
+/* ---------- 방 정의 ---------- */
+const bedCode=()=>String(D.seq.ans)+String(D.suit.ans);
+const cipherPh=()=>D.cipher.mode==='pict'?`한글 ${D.cipher.word.length}글자`:`영어 ${D.cipher.word.length}글자`;
+const L=n=>`숫자 ${n}자리`;
+const plen=v=>String(v).length;
+function roomHints(parts,answers){
+  // parts: 방법 힌트 두 개, answers: 정답 공개 힌트
+  if(LV==='hard')return parts;
+  return [...parts,'정답 공개 — '+answers];
+}
+const rooms=[
+{
+  name:'수면실',scene:sceneSleep,
+  objects:[
+    {id:'wb',click(){openModal('화이트보드',box('누군가 스도쿠를 풀다 말았다. ★ 표시가 된 칸이 있다.<br>'+sudokuHTML()+'<br><b>규칙:</b> 가로줄, 세로줄, 굵은 선으로 나뉜 2×2 칸 안에 1~4가 한 번씩만 들어간다.')+tip('빈칸이 하나만 남은 줄(가로·세로·굵은 칸)부터 채우면 쉬워요.')+paper('구석 메모: "내 사물함 비밀번호는 ★1부터 ★4까지 칸의 숫자"'))}},
+    {id:'locker',click(){
+      if(S.f.locker){openModal('개인 사물함',box('사물함은 비어 있다.'));return}
+      openModal('개인 사물함',box('🔒 네 자리 숫자 키패드가 달려 있다.')+lock({placeholder:'숫자 4자리',maxlen:4}),()=>bindLock(sudokuCode(),()=>{S.f.locker=true;save();openModal('개인 사물함',box('사물함 안에 <b>손전등</b>이 있다!'));give('flash')}))}},
+    {id:'bed',click(){
+      if(!S.f.bedLit){
+        if(uses('flash')){S.f.bedLit=true;save()}
+        else{openModal('아래쪽 수면 캡슐',box('캡슐 아래 틈이 너무 어두워서 아무것도 보이지 않는다.')+tip('사물함에서 얻은 손전등을 아래 소지품 칸에서 눌러 선택한 뒤, 여기를 다시 눌러 보세요.'));return}
+      }
+      if(S.f.bedBox){openModal('캡슐 아래 상자',box('상자는 비어 있다.'));return}
+      const c=bedCode();
+      openModal('캡슐 아래 상자',box(`손전등으로 비추니 캡슐 밑에 작은 금고 상자가 있다! 🔒 ${c.length}자리 자물쇠.`)+paper(`상자 뚜껑: <b>${D.seq.terms.join(', ')}, □</b>${D.seq.note?`<br><span style="color:#777">${D.seq.note}</span>`:''}<hr>"비밀번호 = □ 안의 수, 그리고 <b>우주복 주머니 퍼즐</b>의 답"`)+tip(D.seq.tip)+lock({placeholder:L(c.length),maxlen:c.length}),()=>bindLock(c,()=>{S.f.bedBox=true;save();openModal('캡슐 아래 상자',box('상자 안에서 <b>드라이버</b>를 찾았다!'));give('driver')}))}},
+    {id:'suit',click(){openModal('우주복',box('우주복 가슴 주머니에 쪽지가 들어 있다.')+paper(D.suit.html)+tip(D.suit.tip))}},
+    {id:'vent',click(){
+      if(!S.f.vent){
+        if(uses('driver')){S.f.vent=true;save()}
+        else{openModal('환풍구',box('나사 네 개로 단단히 고정되어 있다. 맨손으로는 열 수 없다.'));return}
+      }
+      openModal('환풍구 안',box(`나사를 풀자 환풍구 안쪽 벽에 ${D.cipher.mode==='pict'?'그림이':'글자가'} 새겨져 있다.<br><div style="font-family:monospace;font-size:${D.cipher.mode==='pict'?40:44}px;letter-spacing:10px;margin:10px 0;color:var(--gold)">${cipherText()}</div><span class="muted">그 옆에 작은 글씨: "출입문 암호는 이걸 원래대로 되돌린 ${D.cipher.mode==='pict'?'낱말':'단어'}"</span>`)+tip(D.cipher.mode==='pict'?'노란 암호 포스터의 그림표에서 그림을 하나씩 찾아 글자로 바꿔요.':`암호는 ${D.cipher.shift}칸 뒤로 밀린 글자예요. 알파벳 표에서 ${D.cipher.shift}칸 앞으로 되돌려 보세요.`))}},
+    {id:'cipher',click(){openModal('암호 규칙 포스터',cipherPoster())}},
+    {id:'window',click(){openModal('둥근 창',box('창밖으로 파란 지구가 보인다. 빨리 돌아가야 한다!'))}},
+    {id:'mug',click(){openModal('머그컵',box('"세계 최고의 우주비행사" 라고 적혀 있다. 비어 있다.'))}},
+    {id:'plant',click(){openModal('화분',box('우주에서 키우는 상추. 별건 없다.'))}},
+    {id:'door',click(){openModal('출입문 터미널',box(`🔒 "${cipherPh()} 암호를 입력하세요"`)+lock({placeholder:cipherPh(),maxlen:D.cipher.word.length+2}),()=>bindLock(D.cipher.word,()=>nextRoom('출입문이 열렸다! 연구실로 이동')))}}
+  ],
+  hints:roomHints([D.sudoku.h,D.suit.h+' '+D.seq.h],`사물함 ${sudokuCode()} · 상자 ${bedCode()} · 출입문 ${D.cipher.word}`)
+},
+{
+  name:'연구실',scene:sceneLab2,
+  objects:[
+    {id:'note',click(){openModal('연구 노트',paper(`<b>우주 식물 재배 기록</b><br>${D.note.html}<hr>· 망원경은 보안상 카드키로만 작동.<br>· 표본 냉장고 비밀번호: ${D.scope.q}`)+tip(D.note.tip))}},
+    {id:'grow',click(){
+      if(S.f.grow){openModal('식물 재배기',box('식물이 쑥쑥 자랐다! 파란 열매는 이미 땄다.'));return}
+      openModal('식물 재배기',box(`재배기 화면: "${D.note.ask||'영양액 주입량을 입력하세요'}"`)+lock({placeholder:'숫자',maxlen:plen(D.note.ans)+2}),()=>bindLock(String(D.note.ans),()=>{S.f.grow=true;save();openModal('식물 재배기',box('영양액을 넣자 식물이 순식간에 자라 <b>파란 열매</b>가 열렸다. 열매를 갈라 보니 안에 <b>카드키</b>가!'));give('card')}))}},
+    {id:'scope',click(){
+      if(!S.f.scope){
+        if(uses('card')){S.f.scope=true;save()}
+        else{openModal('망원경',box('망원경 받침에 카드 투입구가 있다. "카드키를 넣으세요"'));return}
+      }
+      openModal('망원경으로 본 우주',scopeView()+`<p class="muted center">${D.scope.caption}</p>`+tip(D.scope.tip))}},
+    {id:'fridge',click(){
+      if(S.f.fridge){openModal('표본 냉장고',box('냉장고 안은 차갑고 비어 있다.'));return}
+      const a=String(D.scope.ans);
+      openModal('표본 냉장고',box(`🔒 ${a.length}자리 비밀번호`)+lock({placeholder:L(a.length),maxlen:a.length}),()=>bindLock(a,()=>{S.f.fridge=true;save();openModal('표본 냉장고',box('냉장고 안에 <b>연료 샘플</b> 병이 있다. 엔진실에 필요할 것 같다!'));give('fuel')}))}},
+    {id:'micro',click(){openModal('현미경',box('양파 표피 세포가 보인다. 네모난 세포벽이 촘촘하다. 별건 없다.'))}},
+    {id:'coat',click(){openModal('실험복',box('주머니에 사탕 껍질뿐이다.'))}},
+    {id:'door',click(){
+      if(!has('fuel')){openModal('출입문',box('문 옆 경고: "엔진실 출입 전 <b>연료 샘플</b>을 챙길 것"'));return}
+      simonPanel(()=>nextRoom('보안 패널 통과! 엔진실로 이동'))}}
+  ],
+  hints:roomHints([D.note.h,D.scope.h+' 열매에서 나온 카드키를 선택하고 망원경을 눌러요. 출입문 빛 순서는 몇 번이든 다시 볼 수 있어요.'],`재배기 ${D.note.ans} · 냉장고 ${D.scope.ans} · 빛 순서 ${D.simon.map(k=>({R:'빨',B:'파',Y:'노',G:'초'})[k]).join('-')}`)
+},
+{
+  name:'엔진실',scene:sceneEngine,
+  objects:[
+    {id:'roster',click(){openModal('승무원 명단',paper(D.roster.html)+tip(D.roster.tip))}},
+    {id:'tools',click(){
+      if(S.f.tools){openModal('공구함',box('공구함은 비어 있다.'));return}
+      const a=String(D.roster.ans);
+      openModal('공구함',box(`🔒 ${a.length}자리 비밀번호`)+lock({placeholder:L(a.length),maxlen:a.length}),()=>bindLock(a,()=>{S.f.tools=true;save();openModal('공구함',box('공구함 안에 커다란 <b>렌치</b>가 있다!'));give('wrench')}))}},
+    {id:'valves',click(){
+      if(S.f.valves){openModal('냉각수 밸브',box('모든 밸브가 초록색. 냉각수 압력 정상!'));return}
+      if(!S.f.panelOpen){
+        if(uses('wrench')){S.f.panelOpen=true;save()}
+        else{openModal('냉각수 밸브 패널',box('커다란 볼트로 덮개가 잠겨 있다. 맨손으로는 풀 수 없다.'));return}
+      }
+      valvePuzzle(()=>{S.f.valves=true;save();closeModal();toast('냉각수 정상화 완료!')})}},
+    {id:'tank',click(){
+      if(S.f.fuelDone){openModal('연료 탱크',box('연료가 가득 찼다!'));return}
+      if(!uses('fuel')){openModal('연료 탱크',box('연료가 바닥났다. 탱크 옆 화면: "연료 샘플을 넣으면 같은 연료를 자동으로 만들어 채웁니다."'));return}
+      openModal('연료 탱크',box('샘플을 넣자 화면이 바뀌었다.<br>'+D.tank.html)+tip(D.tank.tip)+lock({placeholder:D.tank.ph||'숫자',maxlen:plen(D.tank.ans)+3}),()=>bindLock(String(D.tank.ans),()=>{consume('fuel');S.f.fuelDone=true;save();closeModal();toast('연료 충전 완료!')}))}},
+    {id:'ext',click(){openModal('소화기',box('안전핀이 꽂혀 있다. 지금은 쓸 일이 없기를…'))}},
+    {id:'robot',click(){tone(880);openModal('청소 로봇',box('삐빅! "청소 중입니다. 비켜 주세요." 별건 없다.'))}},
+    {id:'pipes',click(){openModal('배관',box('뜨거운 파이프. 만지지 말 것!'))}},
+    {id:'door',click(){
+      if(!(S.f.valves&&S.f.fuelDone)){openModal('엔진 시동 장치',box('화면: <b>"시동 불가 — 냉각수 밸브와 연료 상태를 확인하세요."</b>'));return}
+      const Q=D.quiz;
+      openModal('엔진 시동 장치',box(`최종 안전 확인 질문이 떴다.<br><b>"${Q.q}"</b>`)+`<div style="display:grid;gap:8px;margin-top:10px">${Q.opts.map((t,i)=>`<button class="ghost qb" data-i="${i}" style="text-align:left">${'①②③④'[i]} ${t}</button>`).join('')}</div><div class="msg" id="qm"></div>`,()=>{
+        document.querySelectorAll('.qb').forEach(b=>b.onclick=()=>{if(+b.dataset.i===Q.ans){$('qm').className='msg good';$('qm').textContent='✅ 엔진 시동! 조종실 문이 열린다';setTimeout(()=>nextRoom('엔진 가동! 조종실로 이동'),1000)}else{$('qm').className='msg bad';$('qm').textContent='❌ 오답! 다시 생각해 보자'}})})}}
+  ],
+  hints:roomHints([D.roster.h+' 공구함에서 나온 렌치를 선택하고 밸브 패널을 눌러요.','밸브: 같은 밸브를 두 번 누르면 원래대로 돌아와요. '+D.tank.h+' '+D.quiz.h],`공구함 ${D.roster.ans} · 밸브 ${D.valve.map(i=>['왼쪽 위','위 가운데','오른쪽 위','왼쪽 가운데','한가운데','오른쪽 가운데','왼쪽 아래','아래 가운데','오른쪽 아래'][i]).join(', ')} 누르기 · 탱크 ${D.tank.ans} · 시동 ${'①②③④'[D.quiz.ans]}`)
+},
+{
+  name:'조종실',scene:sceneCockpit,
+  objects:[
+    {id:'radio',click(){
+      if(S.f.nav){openModal('통신기',box(`지구와 연결 완료: "${D.comm.word} — 돌아오라!"`));return}
+      morsePanel(()=>{S.f.nav=true;save();closeModal();toast('지구와 통신 성공! 항로 데이터가 열렸다')})}},
+    {id:'nav',click(){
+      if(!S.f.nav){openModal('항로 화면',box('🔒 "지구와의 통신을 먼저 확인하세요."'));return}
+      const n=D.magic.stars.length;
+      openModal('항로 화면',box('귀환 항로 데이터가 마방진 형태로 암호화되어 있다.<br>'+magicHTML()+`<br><b>${D.magic.rule}</b>`)+tip('★ 칸이 하나뿐인 줄(가로·세로·대각선)부터 찾아 계산해요.')+paper(`"발사 코드 앞 ${n}자리 = ${D.magic.stars.map((_,k)=>'★'+(k+1)).join(', ')} 칸의 숫자"`))}},
+    {id:'manual',click(){openModal('비상 매뉴얼',paper(`<b>탈출 포드 비상 매뉴얼</b><br>${D.manual.html}<hr>"발사 코드 마지막 한 자리 = ${D.manual.what}"`)+tip(D.manual.tip))}},
+    {id:'launch',click(){const c=launchCode();openModal('탈출 포드 발사 패널',box(`🚀 ${c.length}자리 발사 코드를 입력하세요.`)+lock({placeholder:L(c.length),maxlen:c.length}),()=>bindLock(c,()=>{closeModal();finish()}))}},
+    {id:'earth',click(){openModal('조종실 창',box('지구가 눈앞에 있다. 조금만 더!'))}},
+    {id:'food',click(){openModal('우주식량',box('동결건조 아이스크림. 탈출하고 먹자!'))}}
+  ],
+  hints:roomHints([D.comm.h,D.magic.h+' '+D.manual.h],`통신 ${D.comm.word} · 마방진 ★ ${magicCode().split('').join(', ')} · 매뉴얼 ${D.manual.ans} → 발사 코드 ${launchCode()}`)
+}];
+
+/* ---------- 시작 / 끝 ---------- */
+function renderIntro(app){
+  const nP=D.count||15;
+  const story=SMALL?`눈을 떠 보니 우주정거장 <b>오로라</b>의 잠자는 방이에요. 다른 친구들은 먼저 떠났고, 우리만 남았어요!<br><br>
+  방 4개를 지나 <b>탈출 로켓</b>을 타고 지구로 돌아가요. 방에 있는 물건을 눌러 보고, 수수께끼를 풀어 보세요!`
+  :`눈을 떠 보니 우주정거장 <b>오로라</b>의 수면실. 다른 승무원들은 모두 먼저 탈출했고, 정거장에는 나 혼자(아니, 우리 둘)만 남았다!<br><br>
+  수면실 → 연구실 → 엔진실 → 조종실을 지나 <b>탈출 포드</b>를 발사해야 지구로 돌아갈 수 있다. 정거장 곳곳에 숨겨진 단서를 찾고, 물건을 조합하고, 암호를 풀어라!`;
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🚀</div><h1>우주정거장 탈출</h1>
+  <div class="muted">${GRADE}학년 · ${LVN} · 방 4개 · 퍼즐 ${nP}개</div>
+  <div class="story">${story}</div>
+  <p class="muted">${D.intro||'수학·과학·국어·상식 + 논리·암호·패턴 퍼즐'} · 종이와 연필을 준비하면 좋아요 · 막히면 💡 힌트${LV==='easy'?' · 🧭 쉬움 단계는 문제마다 도움말이 나와요':LV==='hard'?' · 🔴 어려움 단계는 정답 힌트가 없어요':''}</p>
+  <button class="btn" id="startBtn" style="font-size:22px;padding:14px 40px">탈출 시작!</button></div>`;
+  $('startBtn').onclick=()=>{S.room=0;S.start=Date.now();save();render()};
+}
+function renderEnd(app){
+  const t=S.end&&S.start?fmt(S.end-S.start):'--:--';const h=S.hints.reduce((a,b)=>a+b,0);
+  const rank=h===0?'🏆 전설의 우주비행사':h<=3?'🥇 베테랑 우주비행사':h<=7?'🥈 우주비행사':'🥉 견습 우주비행사';
+  const nextLv=LV==='easy'?'normal':LV==='normal'?'hard':null;
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🌍</div><h1>탈출 성공!</h1>
+  <p>${GRADE}학년 · ${LVN} · 기록 <b style="color:var(--gold)">${t}</b> · 힌트 <b style="color:var(--gold)">${h}번</b></p>
+  <p style="font-size:24px">${rank}</p>
+  <div class="story">"발사!" 탈출 포드가 정거장을 벗어나 푸른 지구를 향해 날아간다.<br><br>스도쿠, 암호, 우주 관측, 논리 퍼즐, 밸브, 통신 신호, 마방진까지… 모든 수수께끼를 풀어낸 당신은 진정한 우주비행사다!</div>
+  ${nextLv?`<p><a class="btn" style="text-decoration:none;display:inline-block" href="space.html?lv=${nextLv}">다음 단계 (${nextLv==='normal'?'🟡 보통':'🔴 어려움'}) 도전하기 →</a></p>`:''}</div>`;
+}
+
+let S=load()||fresh();
+function fresh(){return{room:-1,inv:[],sel:null,f:{},seen:{},hints:[0,0,0,0],start:null,end:null}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const norm=s=>s.replace(/\s/g,'').toUpperCase();
+const $=id=>document.getElementById(id);
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2200)}
+function give(id){if(!S.inv.includes(id)){S.inv.push(id);save();toast(`${ITEMS[id].e} ${ITEMS[id].n} 획득!`);renderInv()}}
+function uses(id){return S.sel===id}
+function consume(id){S.inv=S.inv.filter(x=>x!==id);if(S.sel===id)S.sel=null;save();renderInv()}
+
+function openModal(title,html,setup){try{speechSynthesis.cancel()}catch(e){}$('mtitle').textContent=title;$('mbody').innerHTML=html;$('modal').classList.add('show');if(setup)setup()}
+function closeModal(){try{speechSynthesis.cancel()}catch(e){}$('modal').classList.remove('show');render()}
+$('mclose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+if($('speak'))$('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(($('mtitle').textContent+'. '+$('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){toast('이 기기에서는 읽어 주기를 쓸 수 없어요')}};
+
+function lock(opts){
+  return `<div class="muted" style="text-align:center">${opts.label||''}</div>
+  <form class="lockform" id="lf"><input id="li" maxlength="${opts.maxlen||8}" placeholder="${opts.placeholder||''}" autocomplete="off"><button class="btn">열기</button></form>
+  <div class="msg" id="lm"></div>`;
+}
+function bindLock(answer,ok){
+  const f=$('lf');if(!f)return;
+  f.onsubmit=e=>{e.preventDefault();const v=norm($('li').value);if(!v)return;
+    if(v===norm(answer)){$('lm').className='msg good';$('lm').textContent='✅ 철컥! 열렸다!';f.querySelectorAll('input,button').forEach(x=>x.disabled=true);setTimeout(ok,900)}
+    else{$('lm').className='msg bad';$('lm').textContent='❌ 열리지 않는다…';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+  };
+}
+
+/* ---------- 소리 ---------- */
+let actx=null;
+function tone(f){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.3,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+
+/* ---------- 장면 그리기 도우미 ---------- */
+const hot=(id,inner)=>`<g class="hot" data-id="${id}">${inner}</g>`;
+const R=(x,y,w,h,f,ex='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${ex}/>`;
+const DEFS=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc9ff"/><stop offset="1" stop-color="#d8efff"/></linearGradient></defs>`;
+const svgWrap=inner=>`<svg viewBox="0 0 1600 1000" width="100%" style="display:block">${DEFS}${inner}</svg>`;
+/* ---------- 진행 ---------- */
+function mx(){return Math.max(S.maxRoom||0,S.room)}
+function nextRoom(t){closeModal();S.room++;S.maxRoom=Math.max(mx(),S.room);S.sel=null;save();render();if(t)toast(t)}
+function goRoom(i){S.maxRoom=mx();S.room=i;S.sel=null;save();render()}
+function finish(){S.end=Date.now();S.room=rooms.length;save();render()}
+
+function renderInv(){
+  const el=$('inv');if(!el)return;
+  el.innerHTML=`<span class="lbl">🎒 소지품</span>`+(S.inv.length?S.inv.map(id=>`<div class="item ${S.sel===id?'sel':''}" data-id="${id}"><span>${ITEMS[id].e}</span>${ITEMS[id].n}</div>`).join(''):'<span class="muted">아직 없음</span>')+(S.sel?`<span class="selinfo">사용 중: ${ITEMS[S.sel].n} → 쓸 곳을 눌러 보세요</span>`:'');
+  el.querySelectorAll('.item').forEach(it=>it.onclick=()=>{const id=it.dataset.id;S.sel=S.sel===id?null:id;save();renderInv()});
+}
+
+function render(){
+  $('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);
+  const app=$('app');
+  if(S.room===-1)return renderIntro(app);
+  if(S.room>=rooms.length)return renderEnd(app);
+  const r=rooms[S.room];
+  app.innerHTML=`<div class="roombar"><h2>방 ${S.room+1} / ${rooms.length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<mx()?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
+  <div class="scene">${r.scene()}</div><div class="inv" id="inv"></div>
+  <p class="muted" style="text-align:center">방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 선택한 뒤 쓸 곳을 누르면 돼요.</p>`;
+  app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-6);h.setAttribute('y',b.y-6);h.setAttribute('width',b.width+12);h.setAttribute('height',b.height+12);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}});
+  app.querySelectorAll('.hot').forEach(el=>el.addEventListener('click',()=>{const o=r.objects.find(x=>x.id===el.dataset.id);if(!o)return;if(o.id==='door'&&S.room<mx()){goRoom(S.room+1);toast('이미 열어 둔 문이다. 다음 방으로!');return}o.click()}));
+  if($('prevBtn'))$('prevBtn').onclick=()=>goRoom(S.room-1);
+  if($('nextBtn'))$('nextBtn').onclick=()=>goRoom(S.room+1);
+  $('hintBtn').onclick=showHints;
+  renderInv();
+}
+function showHints(){
+  const r=rooms[S.room];const n=S.hints[S.room];
+  const html=r.hints.slice(0,n).map((h,i)=>`<div class="hint">💡 ${i+1}. ${h}</div>`).join('')+(n<r.hints.length?`<div class="center" style="margin-top:14px"><button class="btn" id="moreHint">힌트 ${n+1} 열기</button><div class="muted">힌트를 쓰면 기록에 남아요${LV==='hard'?' · 어려움 단계는 정답 힌트가 없어요':''}</div></div>`:'<p class="muted center">이 방의 힌트를 모두 열었어요.</p>');
+  openModal(`💡 ${r.name} 힌트`,html,()=>{const b=$('moreHint');if(b)b.onclick=()=>{S.hints[S.room]++;save();$('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);showHints()}});
+}
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+setInterval(()=>{$('timer').textContent=S.start?fmt((S.end||Date.now())-S.start):'00:00'},500);
+$('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="muted">지금까지 푼 기록이 모두 지워져요.</p><div class="center"><button class="btn" id="yesReset">다시 시작</button></div>',()=>{$('yesReset').onclick=()=>{S=fresh();save();closeModal()}});
+if($('lvPill'))$('lvPill').textContent=`${GRADE}학년 · ${LVN}`;
+render();
+
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 끝까지 깨면 게임 목록에 완료 표시 (난이도별) */
+setInterval(function(){try{var id='space@'+LV;var t=(S&&S.end)?(String(S.end)):null;if(t&&localStorage.getItem('class-done-skip-'+id)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d[id]){d[id]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

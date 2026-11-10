@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>떡볶이 가게 사장님 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff6ec;--card:#ffffff;--ink:#3b2416;--muted:#8a6e5c;--red:#e5482f;--red2:#c73a24;--yellow:#ffc845;--green:#2e9e5b;--line:#f0dcc8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:14px 14px 50px}
+h1,h2,.bh{font-family:'Black Han Sans',sans-serif;font-weight:400}
+h1{font-size:40px;color:var(--red);margin:0}
+h2{font-size:24px;margin:0 0 8px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{font-family:'Black Han Sans';font-size:22px;color:var(--red)}
+.stats{display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:#fff;border:2px solid var(--line);border-radius:999px;padding:3px 12px;font-size:15px;white-space:nowrap}
+.pill b{color:var(--red)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px;margin-top:12px;box-shadow:0 4px 0 var(--line)}
+.role{display:inline-flex;align-items:center;gap:6px;background:var(--yellow);border-radius:999px;padding:4px 14px;font-weight:bold;margin-bottom:8px}
+button{font-family:inherit;font-size:17px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+.btn{background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red2)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--red2)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+.ghost.on{border-color:var(--red);background:#ffece8;color:var(--red)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){.grid3{grid-template-columns:1fr}}
+.item{border:2px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:#fffaf4}
+.item .em{font-size:40px}
+.qty{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
+.qty button{width:40px;height:40px;padding:0;font-size:22px}
+.qty b{font-size:24px;min-width:30px}
+.muted{color:var(--muted);font-size:15px}
+.big{font-size:28px;font-weight:bold}
+.news{background:#2b2b38;color:#fff;border-radius:14px;padding:14px 16px;position:relative}
+.news .tag{position:absolute;top:-12px;left:14px;background:var(--red);padding:2px 10px;border-radius:6px;font-size:13px}
+.event{background:#fff3cd;border:2px dashed #e0a800;border-radius:12px;padding:10px 14px;margin-top:10px}
+input[type=range]{width:100%;accent-color:var(--red)}
+input[type=text],input[type=number]{font-family:inherit;font-size:22px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);width:180px;text-align:center}
+.shop{background:linear-gradient(#ffe3c4,#ffd2a6);border-radius:16px;height:180px;position:relative;overflow:hidden;margin-top:10px}
+.shop .stall{position:absolute;left:50%;bottom:0;transform:translateX(-50%);font-size:70px}
+.cust{position:absolute;bottom:8px;font-size:34px;transition:left 1.2s linear,opacity .4s}
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table td{padding:7px 8px;border-bottom:1px solid var(--line)}
+.table td:last-child{text-align:right;font-weight:bold}
+.msg{min-height:24px;font-weight:bold;margin-top:8px}
+.good{color:var(--green)}.bad{color:var(--red)}
+.center{text-align:center}
+.log{font-size:14px;color:var(--muted)}
+.shake{animation:shake .35s}@keyframes shake{25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+.fade{animation:fade .35s}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">🍢 떡볶이 가게 사장님</div>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div id="app"></div>
+  <div class="center" style="margin-top:24px"><button class="ghost" id="reset" style="font-size:13px;padding:5px 12px">처음부터 다시</button></div>
+</div>
+<script>
+/* ===== 떡볶이 가게 사장님 (학년·난이도 데이터형) ===== */
+const GRADE=6;
+const CFG={"easy":{"unit":"won","pack":{"tteok":{"n":"떡","e":"🍡","unit":"1kg 봉지","amt":1000,"u":"g","price":3000},"fish":{"n":"어묵","e":"🍢","unit":"10장 묶음","amt":10,"u":"장","price":2000},"sauce":{"n":"떡볶이 소스","e":"🥫","unit":"1L 통","amt":1000,"u":"mL","price":4000}},"per":{"tteok":200,"fish":2,"sauce":50},"price":{"min":2000,"max":6000,"step":500,"def":3500},"p0":3500,"disc":{"type":"pct","opts":[0,10,20,30]},"flyer":5000,"costUp":{"type":"mul","v":1.2},"rival":3000,"pricey":5000,"cheap":3000,"scale":1,"start":30000,"days":7,"spoilAll":false,"goal":350000,"rich":550000},"normal":{"unit":"won","pack":{"tteok":{"n":"떡","e":"🍡","unit":"1kg 봉지","amt":1000,"u":"g","price":3000},"fish":{"n":"어묵","e":"🍢","unit":"10장 묶음","amt":10,"u":"장","price":2000},"sauce":{"n":"떡볶이 소스","e":"🥫","unit":"1L 통","amt":1000,"u":"mL","price":4000}},"per":{"tteok":200,"fish":2,"sauce":50},"price":{"min":2000,"max":6000,"step":500,"def":3500},"p0":3500,"disc":{"type":"pct","opts":[0,10,20,30]},"flyer":5000,"costUp":{"type":"mul","v":1.2},"rival":3000,"pricey":5000,"cheap":3000,"scale":1,"start":30000,"days":10,"spoilAll":false,"goal":400000,"rich":600000},"hard":{"unit":"won","pack":{"tteok":{"n":"떡","e":"🍡","unit":"1kg 봉지","amt":1000,"u":"g","price":3000},"fish":{"n":"어묵","e":"🍢","unit":"10장 묶음","amt":10,"u":"장","price":2000},"sauce":{"n":"떡볶이 소스","e":"🥫","unit":"1L 통","amt":1000,"u":"mL","price":4000}},"per":{"tteok":200,"fish":2,"sauce":50},"price":{"min":2000,"max":6000,"step":500,"def":3500},"p0":3500,"disc":{"type":"pct","opts":[0,10,20,30]},"flyer":5000,"costUp":{"type":"mul","v":1.2},"rival":3000,"pricey":5000,"cheap":3000,"scale":1,"start":30000,"days":10,"spoilAll":true,"goal":550000,"rich":800000}};
+const QUIZ=[{"t":"수학","q":"원주율은 약 얼마일까요?","o":["2.14","3.14","4.14","1.41"],"a":1},{"t":"수학","q":"비 2 : 5를 비율(분수)로 나타내면?","o":["5/2","2/5","2/7","5/7"],"a":1},{"t":"과학","q":"식물이 빛을 받아 양분을 만드는 작용은?","o":["호흡","광합성","증산 작용","소화"],"a":1},{"t":"과학","q":"우리 몸에서 혈액을 온몸으로 보내는 기관은?","o":["폐","위","심장","콩팥"],"a":2},{"t":"사회","q":"법을 만드는 국가 기관은?","o":["법원","정부","국회","헌법재판소"],"a":2},{"t":"사회","q":"1919년 3월 1일에 일어난 독립운동은?","o":["4·19 혁명","3·1 운동","6월 민주 항쟁","동학 농민 운동"],"a":1},{"t":"수학","q":"한 모서리가 3cm인 정육면체의 부피는?","o":["9cm³","18cm³","27cm³","36cm³"],"a":2},{"t":"과학","q":"달이 지구 주위를 한 바퀴 도는 데 걸리는 시간은 약?","o":["하루","일주일","한 달","일 년"],"a":2},{"t":"사회","q":"지구본에서 적도를 기준으로 남북으로 나타낸 것은?","o":["경도","위도","본초 자오선","날짜 변경선"],"a":1},{"t":"상식","q":"올림픽 오륜기의 고리는 몇 개일까요?","o":["3개","4개","5개","6개"],"a":2}];
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const C=CFG[LV];
+const KEY=LV==='normal'?'tteok-shop-v1':'tteok-shop-v1-'+LV;
+const DAYS=C.days,START=C.start,GOAL=C.goal;
+const PACK=C.pack,PER=C.per;
+const COIN=C.unit==='coin';
+const won=n=>COIN?(n<0?'-':'')+Math.abs(Math.round(n)).toLocaleString('ko-KR')+'코인':(n<0?'-':'')+Math.abs(Math.round(n)).toLocaleString('ko-KR')+'원';
+const UNIT=COIN?'코인':'원';
+const $=id=>document.getElementById(id);
+const WEATHER={'맑음':{e:'☀️',base:24},'추움':{e:'🥶',base:32},'비':{e:'🌧️',base:16},'더움':{e:'🥵',base:18}};
+const upTxt=C.costUp.type==='add'?`재료 한 묶음 값이 ${won(C.costUp.v)}씩 올라요`:C.costUp.type==='frac'?`재료값이 원래 가격의 ${C.costUp.txt}만큼 올라요`:`모든 재료 가격이 ${Math.round((C.costUp.v-1)*100)}% 올라요`;
+const PLAN10=[
+ {w:'맑음'},
+ {w:'추움'},
+ {w:'맑음',up:1,ev:{t:'📈 재료값 인상!',d:`오늘부터 3일 동안(3~5일째) ${upTxt}.`}},
+ {w:'비',up:1},
+ {w:'맑음',up:1,mult:2,ev:{t:'🏃 학교 운동회 날!',d:'운동회가 끝나고 배고픈 학생들이 몰려와요. 손님이 2배!'}},
+ {w:'더움',ev:{t:'✅ 재료값 정상화',d:'오늘부터 재료 가격이 원래대로 돌아왔어요.'}},
+ {w:'맑음',rival:1,ev:{t:'⚔️ 옆 가게 할인 행사',d:`옆 떡볶이 가게가 1인분 ${won(C.rival)}에 팔아요! 우리 가격(할인 후)이 ${won(C.rival)}보다 비싸면 손님이 크게 줄어요.`}},
+ {w:'추움'},
+ {w:'비',mult:.8,ev:{t:'☔ 장마 시작',d:'비가 계속 와서 거리에 사람이 적어요. 손님이 조금 줄어요.'}},
+ {w:'맑음',mult:1.5,ev:{t:'🎉 동네 축제 마지막 날!',d:'축제 손님으로 북적여요. 손님이 1.5배!'}}
+];
+const PICK={5:[0,1,2,4,9],7:[0,1,2,4,5,6,9],10:[0,1,2,3,4,5,6,7,8,9]}[DAYS]||[0,1,2,3,4,5,6,7,8,9];
+const PLAN=PICK.map(i=>({...PLAN10[i]}));
+(()=>{const ups=PLAN.map((p,i)=>p.up?i+1:0).filter(Boolean);const a=ups[0],b=ups[ups.length-1];
+  PLAN.forEach((p,i)=>{if(i+1===a)p.ev={t:'📈 재료값 인상!',d:`오늘부터 ${ups.length}일 동안(${a}~${b}일째) ${upTxt}.`}});
+  const after=PLAN[b];if(after&&!after.up&&after.w==='더움')after.ev={t:'✅ 재료값 정상화',d:'오늘부터 재료 가격이 원래대로 돌아왔어요.'};
+  else if(after&&!after.up){after.ev=after.ev?{t:after.ev.t,d:after.ev.d+' (재료 가격도 원래대로 돌아왔어요.)'}:{t:'✅ 재료값 정상화',d:'오늘부터 재료 가격이 원래대로 돌아왔어요.'}}})();
+const isUp=d=>!!(PLAN[d-1]&&PLAN[d-1].up);
+function toast2(t){const m=document.querySelector('.msg.bad');if(m)m.textContent=t}
+const nm=i=>S.names[i]||(i?'매니저':'사장');
+
+/* ===== 상태 ===== */
+function fresh(){return{phase:'intro',names:['',''],day:1,money:START,stock:{tteok:0,fish:0,sauce:0},rep:0,cart:{tteok:0,fish:0,sauce:0},price:C.price.def,disc:0,flyer:false,today:null,hist:[]}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){S=fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const portions=st=>Math.min(Math.floor(st.tteok/PER.tteok),Math.floor(st.fish/PER.fish),Math.floor(st.sauce/PER.sauce));
+const packPrice=k=>{const p=PACK[k].price;if(!isUp(S.day))return p;const u=C.costUp;return u.type==='add'?p+u.v:Math.round(p*u.v)};
+const cartCost=()=>Object.keys(PACK).reduce((a,k)=>a+S.cart[k]*packPrice(k),0);
+const afterCart=()=>{const s={...S.stock};Object.keys(PACK).forEach(k=>s[k]+=S.cart[k]*PACK[k].amt);return s};
+const effPrice=()=>C.disc.type==='pct'?Math.round(S.price*(1-S.disc/100)):C.disc.type==='amt'?Math.max(0,S.price-S.disc):S.price;
+const perCost=()=>Object.keys(PACK).reduce((a,k)=>a+PER[k]/PACK[k].amt*packPrice(k),0);
+let actx=null;function tone(f,d=.15){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.2,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const stockTxt=st=>`${PACK.tteok.e}${st.tteok}${PACK.tteok.u} ${PACK.fish.e}${st.fish}${PACK.fish.u} ${PACK.sauce.e}${st.sauce}${PACK.sauce.u}`;
+
+function stats(){
+  if(S.phase==='intro'){$('stats').innerHTML=`<span class="pill">${GRADE}학년 · ${LVN}</span>`;return}
+  $('stats').innerHTML=`<span class="pill">${GRADE}학년 · ${LVN}</span><span class="pill">📅 <b>${Math.min(S.day,DAYS)}</b>/${DAYS}일</span><span class="pill">💰 <b>${(S.phase==='sell'||(S.phase==='ledger'&&!S.ledgerDone))?'정산 중…':won(S.money)}</b></span><span class="pill">⭐ 단골 ${S.rep}</span><span class="pill">${stockTxt(S.stock)}</span>`;
+}
+
+/* ===== 화면 ===== */
+function render(){stats();({intro,news,buy,price,sell,ledger,end})[S.phase]()}
+
+function intro(){
+  const perTxt=`${PACK.tteok.n} ${PER.tteok}${PACK.tteok.u}, ${PACK.fish.n} ${PER.fish}${PACK.fish.u}, ${PACK.sauce.n} ${PER.sauce}${PACK.sauce.u}`;
+  $('app').innerHTML=`<div class="card center fade"><div style="font-size:80px">🍢🏪</div><h1>떡볶이 가게 사장님</h1>
+  <p class="muted">${GRADE}학년 · ${LVN} · 2인 협동 경영 시뮬레이션 · ${DAYS}일</p>
+  <div style="text-align:left;background:#fffaf4;border-radius:14px;padding:14px 16px;margin:12px 0">
+  할머니께 작은 떡볶이 가게를 물려받았어요! 가진 돈은 <b>${won(START)}</b>${COIN?' (이 가게에서는 🪙 코인으로 사고팔아요)':''}.<br>
+  ${DAYS}일 동안 가게를 운영해서 <b>${won(GOAL)} 이상</b>을 모으면 성공이에요.<br><br>
+  🧑‍🍳 <b>사장</b>: 매일 아침 재료를 사요. (떡볶이 1인분 = ${perTxt})<br>
+  💁 <b>매니저</b>: 가격${C.disc.type!=='none'?', 할인':''}, 홍보 전단지를 정해요.<br>
+  📒 <b>둘이 함께</b>: 장사가 끝나면 장부를 정리하고, 단골손님의 퀴즈를 풀어요. 맞히면 <b>단골손님</b>이 늘어요!<br><br>
+  날씨와 사건에 따라 손님 수가 달라져요. 재료가 모자라면 손님을 놓치고, 남은 떡은 상해서 ${C.spoilAll?'<b>모두</b>':'절반을'} 버려야 해요. 둘이 의논해서 결정하세요!
+  ${LV==='easy'?'<br><br>🟢 <b>쉬움</b>: 재료 살 때 "필요한 만큼 담기" 버튼과 계산 도움말이 나와요.':LV==='hard'?'<br><br>🔴 <b>어려움</b>: 장부 문제는 기회가 한 번뿐이고, 남은 떡은 모두 상해요.':''}</div>
+  <div class="row" style="justify-content:center"><input type="text" id="n0" placeholder="사장 이름" maxlength="6"><input type="text" id="n1" placeholder="매니저 이름" maxlength="6"></div>
+  <p><button class="btn" id="go" style="font-size:22px;padding:12px 40px">가게 문 열기!</button></p></div>`;
+  $('go').onclick=()=>{S.names=[$('n0').value.trim(),$('n1').value.trim()];S.phase='news';save();render()};
+}
+
+function news(){
+  const p=PLAN[S.day-1],w=WEATHER[p.w];
+  $('app').innerHTML=`<div class="card fade"><h2>📅 ${S.day}일째 아침</h2>
+  <div class="news"><span class="tag">아침 뉴스</span><div style="font-size:40px">${w.e}</div>오늘의 날씨는 <b>${p.w}</b>입니다. ${p.w==='추움'?'추운 날엔 따끈한 떡볶이 생각이 나죠!':p.w==='더움'?'더운 날엔 뜨거운 음식을 덜 찾아요.':p.w==='비'?'비가 와서 밖에 나오는 사람이 적어요.':'나들이하기 좋은 날씨예요.'}</div>
+  ${p.ev?`<div class="event"><b>${p.ev.t}</b><br>${p.ev.d}</div>`:''}
+  ${S.day>1&&S.hist[S.day-2]?`<p class="muted">어제 장사 결과: 판매 ${S.hist[S.day-2].sold}그릇 · 이익 ${won(S.hist[S.day-2].profit)}</p>`:''}
+  <div class="center" style="margin-top:14px"><button class="btn" id="go">🧑‍🍳 재료 사러 가기</button></div></div>`;
+  $('go').onclick=()=>{S.phase='buy';save();render()};
+}
+
+function autoCart(n){for(let m=n;m>=0;m--){const c={};let cost=0;Object.keys(PACK).forEach(k=>{c[k]=Math.ceil(Math.max(0,m*PER[k]-S.stock[k])/PACK[k].amt);cost+=c[k]*packPrice(k)});if(cost<=S.money){S.cart=c;return m}}S.cart={tteok:0,fish:0,sauce:0};return 0}
+function guessNeed(){const p=PLAN[S.day-1];return Math.round(WEATHER[p.w].base*C.scale*(p.mult||1))}
+function buy(){
+  const draw=()=>{
+    const cost=cartCost(),after=afterCart(),pp=portions(after),ok=cost<=S.money;
+    $('app').innerHTML=`<div class="card fade"><span class="role">🧑‍🍳 ${nm(0)}의 차례 · 재료 구매</span>
+    <h2>시장에서 재료 사기 ${isUp(S.day)?'<span class="bad" style="font-size:16px">(재료값 인상 중!)</span>':''}</h2>
+    <p class="muted">떡볶이 <b>1인분</b>에는 ${PACK.tteok.n} ${PER.tteok}${PACK.tteok.u}, ${PACK.fish.n} ${PER.fish}${PACK.fish.u}, ${PACK.sauce.n} ${PER.sauce}${PACK.sauce.u}이 들어가요. 남은 떡은 장사가 끝나면 <b>${C.spoilAll?'모두':'절반이'} 상해요</b>.</p>
+    <div class="grid3">${Object.entries(PACK).map(([k,p])=>`<div class="item"><div class="em">${p.e}</div><b>${p.n}</b><div class="muted">${p.unit} · ${won(packPrice(k))}</div><div class="muted">가게 재고: ${S.stock[k]}${p.u}</div><div class="qty"><button class="ghost" data-k="${k}" data-d="-1">−</button><b>${S.cart[k]}</b><button class="ghost" data-k="${k}" data-d="1">+</button></div></div>`).join('')}</div>
+    <table class="table"><tr><td>장바구니 금액</td><td>${won(cost)}</td></tr><tr><td>가진 돈</td><td>${won(S.money)}</td></tr><tr><td>구매 후 만들 수 있는 떡볶이</td><td style="color:var(--red)">${pp}인분</td></tr></table>
+    ${LV==='easy'?`<div class="event">🧭 도움말: 오늘 날씨와 사건을 생각하면 손님은 <b>약 ${guessNeed()}명</b> 올 것 같아요. <button class="ghost" id="auto" style="font-size:14px;padding:4px 10px;margin-left:6px">${guessNeed()}인분 만큼 담기</button></div>`:''}
+    <div class="msg bad">${ok?'':'돈이 모자라요!'}</div>
+    <div class="row" style="justify-content:center"><button class="ghost" id="back">◀ 아침 뉴스 다시 보기</button><button class="btn" id="go" ${ok?'':'disabled'}>구매 완료 → 💁 매니저에게</button></div></div>`;
+    document.querySelectorAll('.qty button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;S.cart[k]=Math.max(0,S.cart[k]+ +b.dataset.d);tone(400);save();draw()});
+    if($('auto'))$('auto').onclick=()=>{const n=guessNeed(),m=autoCart(n);tone(500);save();draw();if(m<n)toast2(`돈이 모자라서 ${m}인분만 담았어요`)};
+    $('back').onclick=()=>{S.phase='news';save();render()};
+    $('go').onclick=()=>{S.prevStock={...S.stock};S.prevCart={...S.cart};S.money-=cost;S.spent=cost;S.stock=after;S.cart={tteok:0,fish:0,sauce:0};S.phase='price';save();render()};
+  };draw();
+}
+
+function price(){
+  const draw=()=>{
+    const ep=effPrice(),fl=C.flyer;
+    const D=C.disc;
+    $('app').innerHTML=`<div class="card fade"><span class="role">💁 ${nm(1)}의 차례 · 가격과 홍보</span>
+    <h2>오늘의 판매 전략</h2>
+    <p class="muted">오늘 만들 수 있는 떡볶이: <b>${portions(S.stock)}인분</b> · 1인분 재료비 약 ${won(perCost())}</p>
+    <div style="margin:10px 0"><b>1인분 가격</b> <span class="big" style="color:var(--red)">${won(S.price)}</span><input type="range" id="pr" min="${C.price.min}" max="${C.price.max}" step="${C.price.step}" value="${S.price}"><div class="row between muted"><span>${won(C.price.min)} (싸다)</span><span>${won(C.price.max)} (비싸다)</span></div></div>
+    ${D.type!=='none'?`<div style="margin:12px 0"><b>할인 행사</b><div class="row" style="margin-top:6px">${D.opts.map(d=>`<button class="ghost dc ${S.disc===d?'on':''}" data-d="${d}">${d?(D.type==='pct'?d+'% 할인':won(d)+' 할인'):'할인 없음'}</button>`).join('')}</div></div>`:''}
+    <div style="margin:12px 0"><b>홍보 전단지</b> <span class="muted">(${won(fl)} · 손님이 늘어나요)</span><div class="row" style="margin-top:6px"><button class="ghost fy ${S.flyer?'on':''}" data-f="1">📄 전단지 돌리기</button><button class="ghost fy ${!S.flyer?'on':''}" data-f="0">안 돌리기</button></div></div>
+    <div style="background:#fffaf4;border-radius:12px;padding:10px 14px">손님이 실제로 내는 가격: <b class="big" style="color:var(--red)">${won(ep)}</b>${LV==='easy'?`<div class="muted">🧭 가격이 너무 비싸면 손님이 줄고, 너무 싸면 남는 돈이 적어요. 1인분 재료비보다는 비싸게!</div>`:''}</div>
+    <div class="msg bad">${S.flyer&&S.money<fl?'전단지를 만들 돈이 모자라요!':''}</div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="ghost" id="back">◀ 재료 다시 사기</button><button class="btn" id="go" ${S.flyer&&S.money<fl?'disabled':''}>🏪 장사 시작!</button></div></div>`;
+    $('pr').oninput=e=>{S.price=+e.target.value;save();draw()};
+    document.querySelectorAll('.dc').forEach(b=>b.onclick=()=>{S.disc=+b.dataset.d;tone(500);save();draw()});
+    document.querySelectorAll('.fy').forEach(b=>b.onclick=()=>{S.flyer=b.dataset.f==='1';tone(500);save();draw()});
+    $('back').onclick=()=>{S.money+=S.spent;S.spent=0;S.stock=S.prevStock||S.stock;S.cart=S.prevCart||{tteok:0,fish:0,sauce:0};S.flyer=false;S.phase='buy';save();render()};
+    $('go').onclick=()=>{if(S.flyer){S.money-=fl;S.spent+=fl}simulate();S.phase='sell';save();render()};
+  };draw();
+}
+
+function simulate(){
+  const p=PLAN[S.day-1],ep=effPrice();
+  const P0=C.p0;let pf=Math.max(.15,Math.min(1.5,(2*P0-ep)/P0));
+  let mult=p.mult||1;if(p.rival&&ep>C.rival)mult=LV==='hard'?.35:.45;
+  const rnd=.9+((S.day*7919)%21)/100;
+  const demand=Math.max(0,Math.round(WEATHER[p.w].base*C.scale*pf*(S.flyer?1.3:1)*mult*(1+S.rep/100)*rnd));
+  const can=portions(S.stock),sold=Math.min(demand,can),missed=demand-sold;
+  Object.keys(PER).forEach(k=>S.stock[k]-=sold*PER[k]);
+  const g=PACK.tteok.amt>=100?10:1;
+  const spoiled=C.spoilAll?S.stock.tteok:Math.floor(S.stock.tteok/2/g)*g;S.stock.tteok-=spoiled;
+  const revenue=sold*ep;
+  S.money+=revenue;
+  let repChange=0,notes=[];
+  if(missed>=5){repChange-=3;notes.push(`재료가 떨어져서 손님 ${missed}명이 그냥 돌아갔어요 (단골 −3)`)}
+  if(ep>=C.pricey){repChange-=2;notes.push('너무 비싸다는 소문이 났어요 (단골 −2)')}
+  if(sold>0&&ep<=C.cheap){repChange+=1;notes.push('싸고 맛있다는 소문이 났어요 (단골 +1)')}
+  S.rep=Math.max(0,S.rep+repChange);
+  S.today={day:S.day,weather:p.w,price:ep,demand,sold,missed,revenue,spent:S.spent,profit:revenue-S.spent,spoiled,notes,flyer:S.flyer,disc:S.disc,money:S.money,stock:{...S.stock}};
+}
+
+function sell(){
+  const t=S.today;
+  $('app').innerHTML=`<div class="card fade"><h2>🏪 ${S.day}일째 장사 중…</h2>
+  <div class="shop" id="shop"><div class="stall">🏪</div></div>
+  <p class="center big" id="cnt">손님 0명</p>
+  <div id="res"></div></div>`;
+  const shop=$('shop'),faces=['🧒','👧','👦','🧑','👩','👨','👵','👴','🧑‍🎓'];
+  const show=Math.max(1,Math.min(t.demand,18));let i=0;
+  const iv=setInterval(()=>{
+    if(!$('shop')||!$('cnt')){clearInterval(iv);return}
+    if(i>=show){clearInterval(iv);finish();return}
+    const c=document.createElement('div');c.className='cust';c.textContent=faces[i%faces.length];c.style.left='-40px';shop.appendChild(c);
+    setTimeout(()=>{c.style.left=(42+Math.random()*10)+'%'},30);setTimeout(()=>{c.style.opacity=0;setTimeout(()=>c.remove(),400)},1300);
+    i++;$('cnt').textContent=`손님 ${Math.round(t.demand*i/show)}명`;tone(600+i*20,.08);
+  },220);
+  function finish(){
+    $('cnt').textContent=`손님 ${t.demand}명 방문!`;
+    $('res').innerHTML=`<table class="table fade"><tr><td>찾아온 손님</td><td>${t.demand}명</td></tr><tr><td>판매한 떡볶이</td><td>${t.sold}그릇</td></tr><tr><td>1그릇 가격 (할인 후)</td><td>${won(t.price)}</td></tr>${t.spoiled?`<tr><td>상해서 버린 떡</td><td class="bad">${t.spoiled}${PACK.tteok.u}</td></tr>`:''}</table>
+    ${t.notes.map(n=>`<div class="event" style="margin-top:6px">${n}</div>`).join('')}
+    <div class="center" style="margin-top:12px"><button class="btn" id="go">📒 장부 정리하기</button></div>`;
+    $('go').onclick=()=>{S.phase='ledger';S.qTry=0;S.ledgerDone=false;S.quizDone=false;save();render()};
+  }
+}
+
+/* ===== 장부 문제 (학년별) ===== */
+function ledgerQ(t){
+  const k=(t.day-1)%3, y=S.hist.length?S.hist[S.hist.length-1]:null;
+  const P=won(t.price);
+  const prof={q:`오늘의 <b>이익</b>은 얼마일까요?`,f:'이익 = 매출(판 돈) − 오늘 쓴 돈(재료 + 전단지)',a:t.revenue-t.spent,unit:UNIT,show:[['매출',won(t.revenue)],['오늘 쓴 돈',won(t.spent)]],w:`${t.revenue.toLocaleString()} − ${t.spent.toLocaleString()}`};
+  const rev={q:`오늘 <b>매출</b>은 얼마일까요?`,f:'매출 = 판매한 그릇 수 × 1그릇 가격',a:t.revenue,unit:UNIT,show:[['판매한 그릇',t.sold+'그릇'],['1그릇 가격',P]],w:`${t.sold} × ${t.price.toLocaleString()}`};
+  if(GRADE===1){
+    if(k===0)return {...prof,show:[['번 코인',won(t.revenue)],['쓴 코인',won(t.spent)]],q:'오늘 <b>남은 코인(이익)</b>은 몇 코인일까요?',f:'남은 코인 = 번 코인 − 쓴 코인 (쓴 게 더 많으면 0을 입력하고 다음엔 아껴 써요!)',a:Math.max(0,t.revenue-t.spent)};
+    if(k===1){if(t.demand>t.sold)return {q:'떡볶이를 <b>못 먹고 돌아간 손님</b>은 몇 명일까요?',f:'못 먹은 손님 = 찾아온 손님 − 판 그릇 수',a:t.demand-t.sold,unit:'명',show:[['찾아온 손님',t.demand+'명'],['판 그릇',t.sold+'그릇']],w:`${t.demand} − ${t.sold}`};
+      const pre=t.stock.tteok+t.spoiled+t.sold*PER.tteok;return {q:'떡볶이 1그릇에 떡이 1개 들어가요. 장사가 끝났을 때 <b>남은 떡</b>은 몇 개였을까요? <span class="muted">(상하기 전)</span>',f:'남은 떡 = 처음 떡 − 판 그릇 수',a:pre-t.sold,unit:'개',show:[['장사 전 떡',pre+'개'],['판 그릇',t.sold+'그릇']],w:`${pre} − ${t.sold}`}}
+    return y?{q:'어제 판 그릇과 오늘 판 그릇을 <b>더하면</b> 몇 그릇일까요?',f:'어제 + 오늘',a:y.sold+t.sold,unit:'그릇',show:[['어제 판 그릇',y.sold+'그릇'],['오늘 판 그릇',t.sold+'그릇']],w:`${y.sold} + ${t.sold}`}
+      :{q:'찾아온 손님과 판 그릇 수를 <b>더하면</b>?',f:'찾아온 손님 + 판 그릇',a:t.demand+t.sold,unit:'',show:[['찾아온 손님',t.demand+'명'],['판 그릇',t.sold+'그릇']],w:`${t.demand} + ${t.sold}`};
+  }
+  if(GRADE===2){
+    if(k===0)return {...prof,q:'오늘의 <b>이익</b>은 몇 코인일까요?',f:'이익 = 번 코인 − 쓴 코인 (쓴 게 더 많으면 앞에 −를 붙여요)'};
+    if(k===1)return {q:`어묵은 1그릇에 <b>${PER.fish}개</b>씩 들어가요. 오늘 쓴 <b>어묵은 모두 몇 개</b>일까요?`,f:`쓴 어묵 = 판 그릇 수 × ${PER.fish}`,a:t.sold*PER.fish,unit:'개',show:[['판 그릇',t.sold+'그릇'],['1그릇 어묵',PER.fish+'개']],w:`${t.sold} × ${PER.fish}`};
+    return y?{q:'어제보다 <b>몇 그릇 더(덜)</b> 팔았을까요?',f:'큰 수에서 작은 수를 빼요',a:Math.abs(t.sold-y.sold),unit:'그릇',show:[['어제 판 그릇',y.sold+'그릇'],['오늘 판 그릇',t.sold+'그릇']],w:`${Math.max(t.sold,y.sold)} − ${Math.min(t.sold,y.sold)}`}
+      :{q:'오늘 찾아온 손님과 판 그릇 수를 <b>더하면</b>?',f:'찾아온 손님 + 판 그릇',a:t.demand+t.sold,unit:'',show:[['찾아온 손님',t.demand+'명'],['판 그릇',t.sold+'그릇']],w:`${t.demand} + ${t.sold}`};
+  }
+  if(GRADE===3){
+    if(k===0)return rev;
+    if(k===1)return {q:`떡은 1그릇에 <b>${PER.tteok}g</b>씩 들어가요. 오늘 쓴 <b>떡은 모두 몇 g</b>일까요?`,f:`쓴 떡 = 판 그릇 수 × ${PER.tteok}g`,a:t.sold*PER.tteok,unit:'g',show:[['판 그릇',t.sold+'그릇'],['1그릇 떡',PER.tteok+'g']],w:`${t.sold} × ${PER.tteok}`};
+    return prof;
+  }
+  if(GRADE===4){
+    if(k===0)return prof;
+    if(k===1)return rev;
+    return {q:`목표 금액 <b>${won(GOAL)}</b>까지 <b>얼마가 더 필요</b>할까요? (이미 넘었으면 0)`,f:'더 필요한 돈 = 목표 금액 − 지금 가진 돈',a:Math.max(0,GOAL-t.money),unit:UNIT,show:[['목표 금액',won(GOAL)],['지금 가진 돈',won(t.money)]],w:`${GOAL.toLocaleString()} − ${t.money.toLocaleString()}`};
+  }
+  if(GRADE===5){
+    if(k===0)return prof;
+    if(k===1){const all=[...S.hist.map(h=>h.sold),t.sold];const avg=all.reduce((a,b)=>a+b,0)/all.length;
+      return {q:`지금까지 <b>하루 평균</b> 몇 그릇을 팔았을까요? <span class="muted">(소수 첫째 자리에서 반올림)</span>`,f:'평균 = 판 그릇 수의 합 ÷ 날수',a:Math.round(avg),unit:'그릇',show:[['날마다 판 그릇',all.join(', ')],['날수',all.length+'일']],w:`(${all.join(' + ')}) ÷ ${all.length}`}}
+    return {q:'오늘 매출의 <b>1/5</b>을 저금통에 넣기로 했어요. <b>얼마</b>를 넣을까요?',f:'저금 = 매출 × 1/5 = 매출 ÷ 5',a:t.revenue/5,unit:UNIT,show:[['오늘 매출',won(t.revenue)]],w:`${t.revenue.toLocaleString()} ÷ 5`};
+  }
+  // 6학년 (원래 문제)
+  if(k===0)return prof;
+  if(k===1&&t.demand>0)return {q:`찾아온 손님 중 떡볶이를 산 손님은 <b>몇 %</b>일까요? <span class="muted">(소수 첫째 자리에서 반올림)</span>`,f:'판매율(%) = 판 그릇 수 ÷ 찾아온 손님 수 × 100',a:Math.round(t.sold/t.demand*100),unit:'%',show:[['찾아온 손님',t.demand+'명'],['판매한 그릇',t.sold+'그릇']],w:`${t.sold} ÷ ${t.demand} × 100`};
+  return t.revenue>0?rev:prof;
+}
+function quizFor(t){const Q=QUIZ[(t.day-1)%QUIZ.length];let opts=Q.o.map((x,i)=>[x,i]);
+  if(LV==='easy'){const wrong=opts.filter(([,i])=>i!==Q.a);opts=opts.filter(o=>o!==wrong[(t.day)%wrong.length])}
+  return {q:Q.q,opts,a:Q.a,tag:Q.t||'상식'}}
+
+function ledger(){
+  const t=S.today,L=ledgerQ(t),tries=LV==='easy'?3:LV==='hard'?1:2;
+  $('app').innerHTML=`<div class="card fade"><span class="role">📒 ${nm(0)} + ${nm(1)} · 함께 장부 정리</span>
+  <h2>${S.day}일째 장부</h2>
+  <table class="table">${L.show.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')}</table>
+  <div style="background:#fffaf4;border-radius:12px;padding:12px 14px;margin-top:10px">${L.q}${LV!=='hard'?`<br><span class="muted">${L.f}</span>`:''}</div>
+  <div class="row" style="justify-content:center;margin-top:10px"><input type="number" id="ans" placeholder="답" step="any"><b>${L.unit}</b><button class="btn" id="chk">확인</button></div>
+  <div class="msg center" id="lm"></div><div id="quiz"></div><div id="after"></div></div>`;
+  const showAfter=()=>{
+    $('after').innerHTML=`<table class="table fade"><tr><td>매출</td><td>${won(t.revenue)}</td></tr><tr><td>쓴 돈</td><td>${won(t.spent)}</td></tr><tr><td>오늘 이익</td><td style="color:${t.profit>=0?'var(--green)':'var(--red)'}">${won(t.profit)}</td></tr><tr><td>가진 돈</td><td>${won(S.money)}</td></tr></table>
+    <div class="center" style="margin-top:12px"><button class="btn" id="next">${S.day<DAYS?'🌙 가게 문 닫고 다음 날로':'📊 결산 보기'}</button></div>`;
+    $('next').onclick=()=>{S.day++;S.flyer=false;S.disc=0;S.ledgerDone=false;S.quizDone=false;S.phase=S.day>DAYS?'end':'news';save();render()};
+  };
+  const showQuiz=()=>{
+    const Q=quizFor(t);
+    $('quiz').innerHTML=`<div class="event" style="margin-top:12px;background:#eef7ff;border-color:#5b9bd5"><b>🙋 단골손님의 퀴즈</b> <span class="muted">(${Q.tag})</span><br>${Q.q}<div class="row" style="margin-top:8px">${Q.opts.map(([o,i])=>`<button class="ghost qz" data-i="${i}">${o}</button>`).join('')}</div><div class="msg" id="qzm"></div></div>`;
+    const fin=(ok)=>{document.querySelectorAll('.qz').forEach(b=>b.disabled=true);if(!S.quizDone){S.quizDone=true;S.quizOk=ok;if(ok)S.rep+=3;save();stats()}showAfter()};
+    if(S.quizDone){$('qzm').className='msg '+(S.quizOk?'good':'bad');$('qzm').textContent=S.quizOk?'✅ 정답! (단골 +3)':`정답은 "${QUIZ[(t.day-1)%QUIZ.length].o[Q.a]}"`;fin(S.quizOk);return}
+    let qt=LV==='easy'?2:1;
+    document.querySelectorAll('.qz').forEach(b=>b.onclick=()=>{if(+b.dataset.i===Q.a){$('qzm').className='msg good';$('qzm').textContent='✅ 정답! 손님이 단골이 되었어요 (단골 +3)';tone(880,.3);fin(true)}
+      else{qt--;if(qt>0){$('qzm').className='msg bad';$('qzm').textContent='❌ 다시 골라 보세요! (기회 1번 남음)';b.disabled=true;tone(200)}else{$('qzm').className='msg bad';$('qzm').textContent=`아쉬워요! 정답은 "${QUIZ[(t.day-1)%QUIZ.length].o[Q.a]}"`;fin(false)}}});
+  };
+  const done=(correct)=>{
+    if(!S.ledgerDone){S.ledgerDone=true;S.ledgerOk=correct;if(correct)S.rep+=5;
+      S.hist.push({day:t.day,weather:t.weather,sold:t.sold,demand:t.demand,revenue:t.revenue,spent:t.spent,profit:t.profit,price:t.price,ok:correct});save()}
+    stats();$('chk').disabled=true;$('ans').disabled=true;showQuiz();
+  };
+  if(S.ledgerDone){$('lm').className='msg center '+(S.ledgerOk?'good':'bad');$('lm').textContent=S.ledgerOk?'✅ 장부 정리 완료!':`정답은 ${L.a.toLocaleString('ko-KR')}${L.unit}`;done(S.ledgerOk);return}
+  $('chk').onclick=()=>{const v=Number($('ans').value);if($('ans').value==='')return;
+    if(Math.abs(v-L.a)<1e-9){$('lm').className='msg center good';$('lm').textContent=`✅ 정답! 꼼꼼한 장부 덕분에 단골손님이 늘었어요 (단골 +5)`;tone(880,.3);done(true)}
+    else{S.qTry=(S.qTry||0)+1;save();if(S.qTry<tries){$('lm').className='msg center bad';$('lm').textContent=`❌ 다시 계산해 보세요! (기회 ${tries-S.qTry}번 남음)`+(LV==='easy'?` · 식: ${L.w}`:'');tone(200);const c=document.querySelector('.card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+    else{$('lm').className='msg center bad';$('lm').textContent=`아쉬워요! 정답은 ${L.a.toLocaleString('ko-KR')}${L.unit} (${L.w})`;done(false)}}};
+}
+
+function chart(){
+  const H=S.hist,max=Math.max(1,...H.map(h=>Math.abs(h.profit))),W=600,h0=120,bw=W/Math.max(1,H.length);
+  const lab=v=>COIN?Math.round(v):Math.round(v/1000)+'천';
+  return `<svg viewBox="0 0 ${W+60} 270" width="100%"><line x1="50" x2="${W+50}" y1="${h0+10}" y2="${h0+10}" stroke="#999"/>${H.map((d,i)=>{const hh=d.profit/max*100;return `<rect x="${55+i*bw}" y="${hh>=0?h0+10-hh:h0+10}" width="${bw-10}" height="${Math.abs(hh)}" fill="${hh>=0?'#2e9e5b':'#e5482f'}" rx="3"/><text x="${55+i*bw+(bw-10)/2}" y="262" font-size="13" text-anchor="middle">${d.day}일</text><text x="${55+i*bw+(bw-10)/2}" y="${hh>=0?h0+4-hh:h0+26-hh}" font-size="10" text-anchor="middle" fill="#555">${lab(d.profit)}</text>`}).join('')}<text x="44" y="${h0+14}" font-size="11" text-anchor="end">0</text></svg>`;
+}
+function end(){
+  const total=S.money,best=[...S.hist].sort((a,b)=>b.profit-a.profit)[0]||{day:'-',profit:0},correct=S.hist.filter(h=>h.ok).length,sold=S.hist.reduce((a,h)=>a+h.sold,0);
+  const rank=total>=C.rich?['👑','떡볶이 재벌','동네에 2호점을 낼 수 있겠어요!']:total>=GOAL?['🏆','성공한 사장님','목표 달성! 할머니가 뿌듯해하세요.']:total>=GOAL*.6?['👍','성장하는 가게','조금만 더 하면 목표 달성!']:['🌱','초보 사장님','재료와 가격 전략을 다시 세워 봐요.'];
+  const nextLv=LV==='easy'?'normal':LV==='normal'?'hard':null;
+  $('app').innerHTML=`<div class="card center fade"><div style="font-size:80px">${rank[0]}</div><h1>${rank[1]}</h1><p>${rank[2]}</p>
+  <p class="big">최종 금액 <span style="color:var(--red)">${won(total)}</span></p>
+  <p class="muted">처음 ${won(START)} → 지금 ${won(total)}${GRADE>=6?` · 늘어난 비율 <b>${Math.round((total-START)/START*100)}%</b>`:` · <b>${won(total-START)}</b> 늘었어요`}</p>
+  <table class="table" style="max-width:420px;margin:auto"><tr><td>${DAYS}일 동안 판 떡볶이</td><td>${sold}그릇</td></tr><tr><td>가장 많이 번 날</td><td>${best.day}일째 (${won(best.profit)})</td></tr><tr><td>장부 정답</td><td>${correct} / ${DAYS}번</td></tr><tr><td>최종 단골 점수</td><td>⭐ ${S.rep}</td></tr></table>
+  <h2 style="margin-top:16px">📊 날짜별 이익 그래프</h2>${chart()}
+  <div style="text-align:left;background:#fffaf4;border-radius:12px;padding:12px 16px;margin-top:10px"><b>🤔 함께 생각해 봐요</b><br>· 가장 이익이 많았던 날은 왜 그랬을까요? 날씨, 가격, 사건을 떠올려 보세요.<br>· 손해를 본 날이 있다면 무엇을 바꾸면 좋았을까요?<br>· 가격을 올리면 이익이 항상 늘어날까요?</div>
+  <p><button class="btn" id="again">다시 도전하기</button>${nextLv?` <a class="btn" style="text-decoration:none;display:inline-block" href="tteok.html?lv=${nextLv}">다음 단계 도전 →</a>`:''}</p></div>`;
+  $('again').onclick=()=>{const n=S.names;S=fresh();S.names=n;S.phase='news';save();render()};
+}
+
+$('reset').onclick=()=>{if($('reset').dataset.c){S=fresh();save();render();$('reset').textContent='처음부터 다시';delete $('reset').dataset.c}else{$('reset').dataset.c=1;$('reset').textContent='정말 처음부터? 한 번 더 누르세요'}};
+render();
+
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 끝까지 깨면 게임 목록에 완료 표시 (난이도별) */
+setInterval(function(){try{var id='tteok@'+LV;var t=(S&&S.phase==='end')?('m'+S.money):null;if(t&&localStorage.getItem('class-done-skip-'+id)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d[id]){d[id]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

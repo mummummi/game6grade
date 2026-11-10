@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사라진 타임캡슐 · 1일차 방탈출 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#12141c;--panel:#1e2130;--panel2:#282c40;--ink:#f3efe4;--muted:#a9a6b8;--gold:#f2c14e;--red:#e85d5d;--green:#5fd39a;--line:#3a3f57}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 50% 0%,#232842 0%,var(--bg) 60%);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:18px;line-height:1.6;-webkit-user-select:none;user-select:none}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .brand{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gold)}
+  .stats{display:flex;gap:8px;font-size:15px;flex-wrap:wrap}
+  .pill{background:var(--panel);border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+  h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:36px;margin:0 0 6px;color:var(--gold)}
+  h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .story{background:var(--panel2);border-left:4px solid var(--gold);padding:14px 16px;border-radius:10px;margin:14px 0;text-align:left}
+  .center{text-align:center}
+  .muted{color:var(--muted);font-size:15px}
+  button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+  .btn{background:var(--gold);color:#2a2100}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .roombar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 8px;gap:8px;flex-wrap:wrap}
+  .scene{position:relative;width:100%;border-radius:16px;overflow:hidden;border:2px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .hot{cursor:pointer}
+  .obj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;line-height:1;transition:transform .15s,filter .15s;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+  .obj:hover{transform:translate(-50%,-50%) scale(1.12);filter:drop-shadow(0 0 10px rgba(242,193,78,.8))}
+  .obj .seen{position:absolute;right:-4px;top:-4px;font-size:12px;background:var(--green);color:#000;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .inv{display:flex;gap:8px;align-items:center;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:62px;flex-wrap:wrap}
+  .inv .lbl{color:var(--muted);font-size:14px;margin-right:4px}
+  .item{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:15px}
+  .item span{font-size:24px}
+  .item.sel{border-color:var(--gold);background:#3b3420}
+  .selinfo{margin-left:auto;font-size:14px;color:var(--gold)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+  .modal.show{display:flex}
+  .modal .card{width:100%;max-width:620px;max-height:92vh;overflow:auto;animation:pop .2s}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .x{background:transparent;color:var(--muted);font-size:26px;padding:0 6px}
+  .box{background:#161925;border:1px dashed var(--line);border-radius:12px;padding:16px;margin:10px 0;text-align:center}
+  .paper{background:#fbf6e6;color:#2b2414;border-radius:6px;padding:16px 18px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:17px}
+  .paper table{border-collapse:collapse;margin:8px auto}
+  .paper td{padding:3px 10px;border-bottom:1px solid #d9cfb3}
+  .paper td.c{font-family:monospace;font-size:22px;font-weight:bold;letter-spacing:4px}
+  .lockform{display:flex;gap:8px;margin-top:12px}
+  .lockform input{flex:1;min-width:0;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#0e1018;color:var(--ink);font-family:monospace;letter-spacing:6px;text-align:center;-webkit-user-select:text;user-select:text}
+  .lockform input:focus{outline:none;border-color:var(--gold)}
+  .msg{min-height:26px;margin-top:8px;font-weight:bold;text-align:center}
+  .msg.bad{color:var(--red)}.msg.good{color:var(--green)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .chalk{background:#1f4d36;border:10px solid #7a5230;border-radius:6px;color:#eef;padding:18px;font-size:24px;text-align:center}
+  .poster{position:relative;height:240px;background:#fff;border-radius:6px;overflow:hidden;transition:background .4s}
+  .poster .msgtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a46ff;font-size:24px;font-weight:bold;line-height:1.5}
+  .poster .noise{position:absolute;font-weight:bold;color:#ff2a2a;pointer-events:none;transition:color .4s}
+  .poster.filtered{background:#ff9d9d}
+  .poster.filtered .noise{color:#ff9d9d;opacity:0}
+  .poster.filtered .msgtxt{color:#2a0010}
+  .ptable{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;font-size:13px}
+  .ptable div{background:#2f3a5c;border-radius:4px;padding:4px 0;text-align:center}
+  .ptable b{display:block;font-size:18px;color:#fff}
+  .ptable small{color:#9fb0e0}
+  .scale{font-size:30px;margin:6px 0;letter-spacing:4px}
+  .scope{width:220px;height:220px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#e8f3ff 0%,#a9c3dc 70%,#223 72%);display:flex;align-items:center;justify-content:center;color:#123;font-size:26px;font-weight:bold;letter-spacing:3px;border:8px solid #333}
+  .piano{position:relative;display:flex;justify-content:center;margin:12px auto 4px;height:170px;width:max-content;max-width:100%}
+  .wk{width:46px;height:170px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;cursor:pointer}
+  .wk:active,.wk.hit{background:#ffe9a8}
+  .bk{position:absolute;top:0;width:30px;height:105px;background:#111;border-radius:0 0 6px 6px;cursor:pointer;z-index:2}
+  .bk:active{background:#444}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .dots i{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+  .dots i.on{background:var(--gold)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#2a2100;padding:12px 22px;border-radius:999px;font-weight:bold;z-index:30;display:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .toast.show{display:block;animation:pop .25s}
+  .hint{background:#2b2a1f;border:1px solid #5c5330;color:#f5e6b0;padding:10px 14px;border-radius:10px;margin-top:8px;text-align:left}
+  .teaser{border:2px dashed var(--gold);border-radius:14px;padding:16px;margin-top:18px}
+  .big-emoji{font-size:70px;line-height:1}
+  @media (max-width:560px){.wk{width:30px}.bk{width:20px}.chalk{font-size:19px}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🔍 지산 탐정단</div>
+    <div class="stats">
+      <span class="pill" id="lvPill"></span>
+      <span class="pill">⏱ <span id="timer">00:00</span></span>
+      <span class="pill">💡 힌트 <span id="hintCount">0</span></span>
+      <button class="ghost" id="resetBtn" style="font-size:13px;padding:4px 10px">처음부터</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="mcard">
+  <div class="mhead"><h2 id="mtitle"></h2><div><button class="x" id="mclose">✕</button></div></div>
+  <div id="mbody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const GRADE=6;
+const DATA={"easy":{"seq":{"terms":[4,8,12,16],"ans":20,"txt":"4, 8, 12, 16, □","hh":8,"mm":0,"door":"81220","h1":"시계: 짧은 바늘은 8, 긴 바늘은 12을 가리켜요. 칠판 수열은 4씩 커져요.","tip":"<div class=\"tipbox\">🧭 도움말: 수와 수 사이의 차이를 적어 보면 규칙이 보여요.</div>"},"mm":{"html":"<b>교탁 서랍 비밀번호 (3자리)</b><table><tr><td class=\"c\">628</td><td>숫자 하나가 맞지만, 자리는 틀리다</td></tr><tr><td class=\"c\">802</td><td>숫자 두 개가 맞지만, 모두 자리가 틀리다</td></tr><tr><td class=\"c\">217</td><td>맞는 숫자가 하나도 없다</td></tr><tr><td class=\"c\">605</td><td>숫자 두 개가 맞지만, 모두 자리가 틀리다</td></tr></table>","ans":"580","L":3},"scale":{"html":"<div class=\"scale\">■ = 2g</div><div class=\"scale\">● = ■ ■</div><div class=\"scale\">▲ = ● ●</div><hr><div>시약장 비밀번호는 <b>▲ ● ■</b> 의 무게(g)를 차례로</div>","ans":"842","h":"저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요.","tip":"<div class=\"tipbox\">🧭 도움말: ■ 의 무게부터 알아내고, 같은 무게끼리 바꿔 넣어 보세요.</div>"},"code":{"mode":"abc","nums":"2 · 15 · 15 · 11","table":"<div class=\"ptable\"><div><small>1</small><b>A</b></div><div><small>2</small><b>B</b></div><div><small>3</small><b>C</b></div><div><small>4</small><b>D</b></div><div><small>5</small><b>E</b></div><div><small>6</small><b>F</b></div><div><small>7</small><b>G</b></div><div><small>8</small><b>H</b></div><div><small>9</small><b>I</b></div><div><small>10</small><b>J</b></div><div><small>11</small><b>K</b></div><div><small>12</small><b>L</b></div><div><small>13</small><b>M</b></div><div><small>14</small><b>N</b></div><div><small>15</small><b>O</b></div><div><small>16</small><b>P</b></div><div><small>17</small><b>Q</b></div><div><small>18</small><b>R</b></div><div><small>19</small><b>S</b></div><div><small>20</small><b>T</b></div><div><small>21</small><b>U</b></div><div><small>22</small><b>V</b></div><div><small>23</small><b>W</b></div><div><small>24</small><b>X</b></div><div><small>25</small><b>Y</b></div><div><small>26</small><b>Z</b></div></div>","cap":"알파벳 순서 번호표 (A=1, B=2 …)","ans":"BOOK","ph":"영어 4글자","note":"\"다음은 음악실이다. 악보도 결국 읽는 <b>책</b>이지. — X\"","h":"현미경 숫자는 알파벳 순서 번호예요. 벽의 번호표에서 글자를 찾아요.","tip":"<div class=\"tipbox\">🧭 도움말: A가 1번, B가 2번… 순서대로 세어요.</div>"},"mus":{"notes":["B4","A4","G4"],"ans":"BAG","ph":"영어 3글자","locker":"🔒 알파벳 3글자 자물쇠","h":"악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","h2":"검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요.","tip":"<div class=\"tipbox\">🧭 도움말: 계이름을 먼저 적고, 포스터에서 알파벳으로 바꿔요.</div>"},"hints":[["책상 위 쪽지부터! \"하나도 안 맞는다\"는 숫자는 지우고, 남은 숫자로 하나씩 따져 보세요. 서랍에서 나온 셀로판지를 선택한 채로 게시판 포스터를 눌러요.","시계: 짧은 바늘은 8, 긴 바늘은 12을 가리켜요. 칠판 수열은 4씩 커져요.","정답 공개 — 서랍 580 · 교실 문 81220"],["저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요. 시약장에서 나온 슬라이드 글라스를 선택한 채로 현미경을 눌러요.","현미경 숫자는 알파벳 순서 번호예요. 벽의 번호표에서 글자를 찾아요.","정답 공개 — 시약장 842 · 금고 BOOK"],["악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요.","정답 공개 — 피아노 시 라 솔 · 사물함 BAG"]]},"normal":{"seq":{"terms":[2,3,5,9,17],"ans":33,"txt":"2, 3, 5, 9, 17, □","hh":4,"mm":5,"door":"4133","h1":"시계: 짧은 바늘은 4, 긴 바늘은 1을 가리켜요. 칠판 수열은 차이가 1, 2, 4, 8… 로 두 배씩.","tip":""},"mm":{"html":"<b>교탁 서랍 비밀번호 (3자리)</b><table><tr><td class=\"c\">682</td><td>숫자 하나가 맞고, 자리도 맞다</td></tr><tr><td class=\"c\">614</td><td>숫자 하나가 맞지만, 자리는 틀리다</td></tr><tr><td class=\"c\">206</td><td>숫자 두 개가 맞지만, 모두 자리가 틀리다</td></tr><tr><td class=\"c\">738</td><td>맞는 숫자가 하나도 없다</td></tr><tr><td class=\"c\">780</td><td>숫자 하나가 맞지만, 자리는 틀리다</td></tr></table>","ans":"042","L":3},"scale":{"html":"<div class=\"scale\">▲ ▲ = ● ● ●</div><div class=\"scale\">● ● = ■ ■ ■ ■</div><div class=\"scale\">■ = 2g</div><hr><div>시약장 비밀번호는 <b>▲ ● ■</b> 의 무게(g)를 차례로</div>","ans":"642","h":"저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요.","tip":""},"code":{"mode":"pt","nums":"5 · 8 · 8 · 19","table":"<div class=\"ptable\"><div><small>1</small><b>H</b></div><div><small>2</small><b>He</b></div><div><small>3</small><b>Li</b></div><div><small>4</small><b>Be</b></div><div><small>5</small><b>B</b></div><div><small>6</small><b>C</b></div><div><small>7</small><b>N</b></div><div><small>8</small><b>O</b></div><div><small>9</small><b>F</b></div><div><small>10</small><b>Ne</b></div><div><small>11</small><b>Na</b></div><div><small>12</small><b>Mg</b></div><div><small>13</small><b>Al</b></div><div><small>14</small><b>Si</b></div><div><small>15</small><b>P</b></div><div><small>16</small><b>S</b></div><div><small>17</small><b>Cl</b></div><div><small>18</small><b>Ar</b></div><div><small>19</small><b>K</b></div><div><small>20</small><b>Ca</b></div></div>","cap":"원소 기호와 원자 번호 (1~20번)","ans":"BOOK","ph":"영어 4글자","note":"\"다음은 음악실이다. 악보도 결국 읽는 <b>책</b>이지. — X\"","h":"현미경 숫자는 원자 번호예요. 주기율표에서 원소 기호를 찾아 이어 붙이면 영어 단어가 돼요.","tip":""},"mus":{"notes":["F4","A4","C5","E5"],"ans":"FACE","ph":"영어 4글자","locker":"🔒 알파벳 4글자 자물쇠","h":"악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","h2":"검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요.","tip":""},"hints":[["책상 위 쪽지부터! \"하나도 안 맞는다\"는 숫자는 지우고, 남은 숫자로 하나씩 따져 보세요. 서랍에서 나온 셀로판지를 선택한 채로 게시판 포스터를 눌러요.","시계: 짧은 바늘은 4, 긴 바늘은 1을 가리켜요. 칠판 수열은 차이가 1, 2, 4, 8… 로 두 배씩.","정답 공개 — 서랍 042 · 교실 문 4133"],["저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요. 시약장에서 나온 슬라이드 글라스를 선택한 채로 현미경을 눌러요.","현미경 숫자는 원자 번호예요. 주기율표에서 원소 기호를 찾아 이어 붙이면 영어 단어가 돼요.","정답 공개 — 시약장 642 · 금고 BOOK"],["악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요.","정답 공개 — 피아노 파 라 도 미 · 사물함 FACE"]]},"hard":{"seq":{"terms":[2,5,11,23,47],"ans":95,"txt":"2, 5, 11, 23, 47, □","hh":11,"mm":10,"door":"11295","h1":"시계의 두 바늘이 가리키는 숫자를 읽고, 칠판 수열의 규칙을 찾아요.","tip":""},"mm":{"html":"<b>교탁 서랍 비밀번호 (3자리)</b><table><tr><td class=\"c\">785</td><td>숫자 두 개가 맞고, 자리도 모두 맞다</td></tr><tr><td class=\"c\">164</td><td>숫자 하나가 맞지만, 자리는 틀리다</td></tr><tr><td class=\"c\">185</td><td>숫자 두 개가 맞는데, 하나는 자리가 맞고 하나는 자리가 틀리다</td></tr><tr><td class=\"c\">278</td><td>숫자 두 개가 맞지만, 모두 자리가 틀리다</td></tr></table>","ans":"781","L":3},"scale":{"html":"<div class=\"scale\">■ ■ ■ = ● ●</div><div class=\"scale\">● = 3g</div><div class=\"scale\">▲ ▲ = ● ■ ■ ■ ■</div><hr><div>시약장 비밀번호는 <b>▲ ● ■</b> 의 무게(g)를 차례로</div>","ans":"532","h":"저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요.","tip":""},"code":{"mode":"pt","nums":"20 · 15 · 16","table":"<div class=\"ptable\"><div><small>1</small><b>H</b></div><div><small>2</small><b>He</b></div><div><small>3</small><b>Li</b></div><div><small>4</small><b>Be</b></div><div><small>5</small><b>B</b></div><div><small>6</small><b>C</b></div><div><small>7</small><b>N</b></div><div><small>8</small><b>O</b></div><div><small>9</small><b>F</b></div><div><small>10</small><b>Ne</b></div><div><small>11</small><b>Na</b></div><div><small>12</small><b>Mg</b></div><div><small>13</small><b>Al</b></div><div><small>14</small><b>Si</b></div><div><small>15</small><b>P</b></div><div><small>16</small><b>S</b></div><div><small>17</small><b>Cl</b></div><div><small>18</small><b>Ar</b></div><div><small>19</small><b>K</b></div><div><small>20</small><b>Ca</b></div></div>","cap":"원소 기호와 원자 번호 (1~20번)","ans":"CAPS","ph":"영어 4글자","note":"\"다음은 음악실이다. 악보도 결국 읽는 <b>책</b>이지. — X\"","h":"현미경 숫자는 원자 번호예요. 주기율표에서 원소 기호를 찾아 이어 붙이면 영어 단어가 돼요.","tip":""},"mus":{"notes":["C5","A4","B4","B4","A4","G4","E5"],"ans":"CABBAGE","ph":"영어 7글자","locker":"🔒 알파벳 7글자 자물쇠","h":"악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","h2":"검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요.","tip":""},"hints":[["책상 위 쪽지부터! \"하나도 안 맞는다\"는 숫자는 지우고, 남은 숫자로 하나씩 따져 보세요. 서랍에서 나온 셀로판지를 선택한 채로 게시판 포스터를 눌러요.","시계의 두 바늘이 가리키는 숫자를 읽고, 칠판 수열의 규칙을 찾아요."],["저울: g으로 적힌 모양부터 시작해서 거꾸로 계산해요. 시약장에서 나온 슬라이드 글라스를 선택한 채로 현미경을 눌러요.","현미경 숫자는 원자 번호예요. 주기율표에서 원소 기호를 찾아 이어 붙이면 영어 단어가 돼요."],["악보를 계이름으로 읽어 보세요. 높은음자리표에서 아래 첫째 칸은 \"파\"예요.","검은 건반 두 개 묶음 바로 왼쪽 흰 건반이 \"도\"예요. 사물함 비밀번호는 연주한 계이름을 벽 포스터의 알파벳으로 바꾼 단어예요."]]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'timecapsule-day1-v2':'timecapsule-day1-v2-'+LV;
+const ITEMS={
+  cello:{e:'🟥',n:'빨간 셀로판지'},
+  slide:{e:'🧫',n:'슬라이드 글라스'},
+  mkey:{e:'🗝️',n:'음악실 열쇠'},
+  lkey:{e:'🔑',n:'작은 사물함 열쇠'}
+};
+let S=load()||fresh();
+function fresh(){return{room:-1,inv:[],sel:null,f:{},seen:{},hints:[0,0,0],start:null,end:null}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const norm=s=>s.replace(/\s/g,'').toUpperCase();
+const $=id=>document.getElementById(id);
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2200)}
+function give(id){if(!S.inv.includes(id)){S.inv.push(id);save();toast(`${ITEMS[id].e} ${ITEMS[id].n} 획득!`);renderInv()}}
+function uses(id){return S.sel===id}
+function consume(id){S.inv=S.inv.filter(x=>x!==id);if(S.sel===id)S.sel=null;save();renderInv()}
+
+function openModal(title,html,setup){$('mtitle').textContent=title;$('mbody').innerHTML=html;$('modal').classList.add('show');if(setup)setup()}
+function closeModal(){$('modal').classList.remove('show');render()}
+$('mclose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function lock(opts){
+  // opts: {label, placeholder, answer, ok(), maxlen}
+  return `<div class="muted" style="text-align:center">${opts.label||''}</div>
+  <form class="lockform" id="lf"><input id="li" maxlength="${opts.maxlen||8}" placeholder="${opts.placeholder||''}" autocomplete="off"><button class="btn">열기</button></form>
+  <div class="msg" id="lm"></div>`;
+}
+function bindLock(answer,ok){
+  const f=$('lf');if(!f)return;
+  f.onsubmit=e=>{e.preventDefault();const v=norm($('li').value);if(!v)return;
+    if(v===norm(answer)){$('lm').className='msg good';$('lm').textContent='✅ 철컥! 열렸다!';f.querySelectorAll('input,button').forEach(x=>x.disabled=true);setTimeout(ok,900)}
+    else{$('lm').className='msg bad';$('lm').textContent='❌ 열리지 않는다…';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+  };
+}
+
+/* ---------- 소리 ---------- */
+let actx=null;
+function tone(f){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.3,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+
+/* ---------- 그림 조각 ---------- */
+function clockSVG(){
+  let nums='';for(let i=1;i<=12;i++){const a=(i*30-90)*Math.PI/180;nums+=`<text x="${100+72*Math.cos(a)}" y="${100+72*Math.sin(a)+7}" text-anchor="middle" font-size="20" font-weight="bold" fill="#222">${i}</text>`}
+  let ticks='';for(let i=0;i<60;i++){const a=(i*6-90)*Math.PI/180,r1=i%5?86:82;ticks+=`<line x1="${100+r1*Math.cos(a)}" y1="${100+r1*Math.sin(a)}" x2="${100+90*Math.cos(a)}" y2="${100+90*Math.sin(a)}" stroke="#555" stroke-width="${i%5?1:3}"/>`}
+  const hand=(deg,len,w,c)=>{const a=(deg-90)*Math.PI/180;return `<line x1="100" y1="100" x2="${100+len*Math.cos(a)}" y2="${100+len*Math.sin(a)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};
+  return `<svg viewBox="0 0 200 200" width="230" height="230"><circle cx="100" cy="100" r="95" fill="#fffdf5" stroke="#7a5230" stroke-width="8"/>${ticks}${nums}${hand(DD.seq.hh%12*30+DD.seq.mm/2,48,8,'#111')}${hand(DD.seq.mm*6,78,5,'#c0392b')}<circle cx="100" cy="100" r="6" fill="#111"/></svg>`;
+}
+function posterHTML(filtered){
+  let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+  const chars='시계바늘칠판답문비밀번호짧은먼저그다음교실0123456789#@%&';
+  let noise='';
+  for(let i=0;i<190;i++){noise+=`<span class="noise" style="left:${rnd()*100}%;top:${rnd()*100}%;font-size:${16+rnd()*18}px;transform:translate(-50%,-50%) rotate(${rnd()*80-40}deg)">${chars[Math.floor(rnd()*chars.length)]}</span>`}
+  for(let i=0;i<30;i++){noise+=`<span class="noise" style="left:${rnd()*100}%;top:${rnd()*100}%;font-size:40px;transform:translate(-50%,-50%) rotate(${rnd()*180}deg)">〰</span>`}
+  return `<div class="poster ${filtered?'filtered':''}"><div class="msgtxt"><div>시계의 두 바늘이 가리키는 숫자</div><div>(짧은 바늘 먼저)</div><div>그 뒤에 칠판의 답</div><div>= 교실 문 비밀번호</div></div>${noise}</div>`;
+}
+function staffSVG(){
+  const lines=[40,50,60,70,80].map(y=>`<line x1="10" x2="390" y1="${y}" y2="${y}" stroke="#222" stroke-width="1.5"/>`).join('');
+  const PY={C4:90,D4:85,E4:80,F4:75,G4:70,A4:65,B4:60,C5:55,D5:50,E5:45};const nn=DD.mus.notes;const notes=nn.map((p,i)=>[100+i*Math.min(70,270/Math.max(1,nn.length-1)),PY[p]]);
+  const n=notes.map(([x,y])=>(y>=90?`<line x1="${x-14}" x2="${x+14}" y1="90" y2="90" stroke="#222" stroke-width="1.5"/>`:'')+`<ellipse cx="${x}" cy="${y}" rx="8" ry="6" fill="#111" transform="rotate(-20 ${x} ${y})"/><line x1="${x+7}" y1="${y}" x2="${x+7}" y2="${y-34}" stroke="#111" stroke-width="2"/>`).join('');
+  return `<svg viewBox="0 0 400 110" width="100%" style="background:#fbf6e6;border-radius:6px"><text x="22" y="86" font-size="62" fill="#111">𝄞</text>${lines}${n}<line x1="388" x2="388" y1="40" y2="80" stroke="#222" stroke-width="3"/></svg>`;
+}
+
+/* ---------- 장면 그리기 도우미 ---------- */
+const hot=(id,inner)=>`<g class="hot" data-id="${id}">${inner}</g>`;
+const R=(x,y,w,h,f,ex='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${ex}/>`;
+function woodFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let y=690;y<1000;y+=45){s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="3"/>`;for(let x=((y/45)%2)*120;x<1600;x+=240)s+=`<line x1="${x}" x2="${x}" y1="${y-45}" y2="${y}" stroke="${c2}" stroke-width="2"/>`}return s}
+function lamps(){return [300,800,1300].map(x=>R(x-100,10,200,16,'#fffef5','rx="6" stroke="#ddd"')).join('')}
+function windowPane(x,y,w,h){return `${R(x-8,y-8,w+16,h+16,'#fff')}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sky)"/><line x1="${x+w/2}" x2="${x+w/2}" y1="${y}" y2="${y+h}" stroke="#fff" stroke-width="8"/><line x1="${x}" x2="${x+w}" y1="${y+h/2}" y2="${y+h/2}" stroke="#fff" stroke-width="8"/><ellipse cx="${x+w*0.3}" cy="${y+h*0.25}" rx="28" ry="12" fill="#fff" opacity=".8"/>`}
+function studentDesk(x,y,sc=1){const w=200*sc,h=16*sc;return `<g>${R(x-w/2,y,w,h,'#ddb983','rx="3"')}${R(x-w/2+8,y+h,w-16,40*sc,'#b98f5a')}${R(x-w/2+6,y+h+40*sc,8*sc,60*sc,'#666')}${R(x+w/2-14,y+h+40*sc,8*sc,60*sc,'#666')}${R(x-55*sc,y+90*sc,110*sc,14*sc,'#3d6fb0','rx="4"')}${R(x-50*sc,y+50*sc,100*sc,40*sc,'#4a7fc1','rx="6"')}${R(x-48*sc,y+104*sc,7*sc,40*sc,'#555')}${R(x+41*sc,y+104*sc,7*sc,40*sc,'#555')}</g>`}
+function clockFace(cx,cy,r){const a=(deg,len,w,c)=>{const t=(deg-90)*Math.PI/180;return `<line x1="${cx}" y1="${cy}" x2="${cx+len*Math.cos(t)}" y2="${cy+len*Math.sin(t)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};let ticks='';for(let i=0;i<12;i++){const t=i*30*Math.PI/180;ticks+=`<line x1="${cx+r*.8*Math.cos(t)}" y1="${cy+r*.8*Math.sin(t)}" x2="${cx+r*.92*Math.cos(t)}" y2="${cy+r*.92*Math.sin(t)}" stroke="#333" stroke-width="3"/>`}return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fffdf5" stroke="#6b4a2a" stroke-width="7"/>${ticks}${a(DD.seq.hh%12*30+DD.seq.mm/2,r*.5,6,'#111')}${a(DD.seq.mm*6,r*.78,4,'#c0392b')}<circle cx="${cx}" cy="${cy}" r="4" fill="#111"/>`}
+const DEFS=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc9ff"/><stop offset="1" stop-color="#d8efff"/></linearGradient></defs>`;
+const svgWrap=inner=>`<svg viewBox="0 0 1600 1000" width="100%" style="display:block">${DEFS}${inner}</svg>`;
+
+function sceneClass(){
+  let s=R(0,0,1600,650,'#efe3c8')+R(0,0,1600,36,'#f8f3e6')+lamps()+R(0,620,1600,30,'#8b6b4a')+woodFloor('#c39563','#a97b4c');
+  // 창문 2개 + 커튼
+  s+=windowPane(55,130,120,290)+hot('window',windowPane(215,130,120,290))+R(20,110,30,330,'#b5523b','rx="8"');
+  // 사물함 선반 (타임캡슐 보관함)
+  let cub=R(40,470,320,150,'#c9a26b','rx="4"');const cols=['#e57373','#64b5f6','#81c784','#ffd54f','#ba68c8','#4db6ac','#ff8a65'];
+  for(let r=0;r<2;r++)for(let c=0;c<4;c++){const x=50+c*78,y=480+r*70;cub+=R(x,y,70,62,'#8b6a40');if(!(r===0&&c===2))cub+=R(x+10,y+16,50,46,cols[(r*4+c)%7],'rx="8"');else cub+=R(x+20,y+40,30,18,'#fff','transform="rotate(-8 '+(x+35)+' '+(y+49)+')"')}
+  s+=hot('locker',cub);
+  // 칠판
+  s+=hot('board',`${R(410,95,660,320,'#6b4a2a','rx="6"')}${R(425,110,630,290,'#2f5d46')}<text x="470" y="200" font-size="38" fill="#e8f0e8" font-family="Gowun Dodum">오늘의 수수께끼</text><text x="470" y="270" font-size="44" fill="#fff" font-family="Gowun Dodum" letter-spacing="4">${DD.seq.txt}</text><text x="900" y="160" font-size="26" fill="#cfe" font-family="Gowun Dodum">11월 9일</text><text x="900" y="200" font-size="26" fill="#cfe" font-family="Gowun Dodum">주번: ???</text>${R(420,405,640,12,'#8b6a40')}${R(500,398,30,8,'#fff')}${R(560,398,26,8,'#f9e79f')}`);
+  // 시계
+  s+=hot('clock',clockFace(1165,115,46));
+  // 게시판
+  s+=`${R(1110,205,300,250,'#7a5230','rx="6"')}${R(1122,217,276,226,'#c99a62')}`;
+  s+=`<g transform="rotate(-4 1170 280)">${R(1135,235,95,120,'#fffbe6')}<line x1="1148" x2="1215" y1="260" y2="260" stroke="#999" stroke-width="4"/><line x1="1148" x2="1205" y1="280" y2="280" stroke="#bbb" stroke-width="4"/><line x1="1148" x2="1215" y1="300" y2="300" stroke="#bbb" stroke-width="4"/></g>${R(1150,370,80,60,'#bde0fe','transform="rotate(5 1190 400)"')}<circle cx="1182" cy="240" r="6" fill="#e74c3c"/>`;
+  s+=hot('poster',`${R(1255,228,130,190,'#fff','transform="rotate(3 1320 320)"')}<path d="M1265 260 q20 -20 40 5 t40 -5 t30 10 M1268 300 q25 25 50 -5 t50 10 M1262 340 q30 -30 60 0 t50 -10 M1270 380 q20 15 45 -10 t55 15" stroke="#e53935" stroke-width="5" fill="none"/><circle cx="1320" cy="232" r="6" fill="#2e86de"/>`);
+  // 문
+  s+=hot('door',`${R(1450,165,130,475,'#9c6b3f','rx="4"')}${R(1475,200,80,110,'#cfe8ff')}<circle cx="1465" cy="430" r="9" fill="#d4af37"/>${R(1478,410,30,40,'#333','rx="4"')}`)+R(1470,125,90,30,'#fff','rx="4"')+`<text x="1515" y="148" font-size="20" text-anchor="middle" font-family="Gowun Dodum">6학년 1반</text>`;
+  // 화분
+  s+=hot('plant',`<path d="M375 575 L435 575 L425 650 L385 650 Z" fill="#b5651d"/><ellipse cx="390" cy="520" rx="22" ry="55" fill="#3e8e41" transform="rotate(-25 390 540)"/><ellipse cx="420" cy="515" rx="22" ry="60" fill="#4caf50" transform="rotate(20 420 540)"/><ellipse cx="405" cy="500" rx="18" ry="62" fill="#388e3c"/>`);
+  // 교탁
+  s+=hot('drawer',`${R(620,470,300,20,'#8b5e34','rx="4"')}${R(630,490,280,160,'#a87b4f')}${R(655,510,230,48,'#946b42','stroke="#6b4a2a" stroke-width="3"')}${R(750,528,40,10,'#d4af37','rx="4"')}`)+`${R(650,440,70,30,'#c0392b')}${R(655,425,60,16,'#2980b9')}<rect x="840" y="440" width="34" height="30" fill="#fff" rx="4"/>`;
+  // 학생 책상
+  s+=studentDesk(300,700)+studentDesk(1100,700)+studentDesk(240,850,1.15)+studentDesk(1160,850,1.15)+studentDesk(700,850,1.15);
+  s+=hot('desk',studentDesk(700,700)+R(650,688,70,48,'#fff','transform="rotate(-10 685 712)"')+`<line x1="660" x2="705" y1="700" y2="692" stroke="#999" stroke-width="3"/>`);
+  // 쓰레기통
+  s+=hot('trash',`<path d="M1380 700 L1460 700 L1450 800 L1390 800 Z" fill="#7f8c8d"/>${R(1374,690,92,14,'#95a5a6','rx="4"')}<circle cx="1405" cy="688" r="12" fill="#fff"/>`);
+  return svgWrap(s);
+}
+
+function sceneLab(){
+  let s=R(0,0,1600,650,'#d6e7ea')+R(0,0,1600,36,'#f2f7f8')+lamps()+R(0,620,1600,30,'#5d6b73');
+  s+=R(0,650,1600,350,'#a3adb4');for(let x=0;x<1600;x+=80)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="#8b959c" stroke-width="2"/>`;for(let y=650;y<1000;y+=60)s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="#8b959c" stroke-width="2"/>`;
+  // 시약장
+  let cab=R(60,120,330,500,'#6f8591','rx="6"')+R(75,135,145,320,'#cfe6f2','opacity=".75"')+R(230,135,145,320,'#cfe6f2','opacity=".75"');
+  const bc=['#e74c3c','#f1c40f','#2ecc71','#9b59b6','#3498db','#e67e22'];
+  [230,330,430].forEach((y,ri)=>{cab+=R(75,y,300,6,'#566d78');for(let i=0;i<6;i++){const x=88+i*48;cab+=R(x,y-48,26,48,bc[(i+ri)%6],'rx="4" opacity=".85"')+R(x+6,y-58,14,10,'#333')}});
+  cab+=R(75,470,300,135,'#5b6f79')+`<line x1="225" x2="225" y1="470" y2="605" stroke="#455" stroke-width="3"/><rect x="205" y="340" width="40" height="34" rx="6" fill="#d4af37"/><path d="M213 340 v-12 a12 12 0 0 1 24 0 v12" stroke="#d4af37" stroke-width="6" fill="none"/>`;
+  s+=hot('cabinet',cab);
+  // 주기율표
+  let pt=R(430,110,360,230,'#fff','stroke="#2c3e50" stroke-width="4"')+`<text x="610" y="145" font-size="26" text-anchor="middle" font-family="Gowun Dodum">주기율표</text>`;
+  const pc=['#f8c291','#82ccdd','#b8e994','#f6b93b','#e55039','#60a3bc'];
+  for(let i=0;i<20;i++){const r=Math.floor(i/10),c=i%10;pt+=R(448+c*33,165+r*42,29,36,pc[(i*7)%6])}
+  for(let i=0;i<10;i++)pt+=R(448+i*33,255+(i%3)*0,29,28,'#dfe4ea');
+  s+=hot('ptable',pt);
+  // 안전 수칙 포스터 (장식)
+  s+=R(820,120,170,240,'#fffbe6','stroke="#c0392b" stroke-width="4"')+`<text x="905" y="160" font-size="22" text-anchor="middle" fill="#c0392b" font-family="Gowun Dodum">안전 수칙</text>`+[190,220,250,280,310,340].map(y=>`<line x1="840" x2="970" y1="${y}" y2="${y}" stroke="#bbb" stroke-width="5"/>`).join('');
+  // 해골 모형
+  s+=hot('skel',`<line x1="1060" x2="1060" y1="160" y2="640" stroke="#555" stroke-width="6"/><path d="M1020 640 L1100 640" stroke="#555" stroke-width="8"/><circle cx="1060" cy="190" r="32" fill="#f5f0e1" stroke="#999" stroke-width="2"/><circle cx="1048" cy="186" r="7" fill="#333"/><circle cx="1072" cy="186" r="7" fill="#333"/>${[250,270,290,310,330].map(y=>`<path d="M1030 ${y} q30 14 60 0" stroke="#e8e1cc" stroke-width="7" fill="none"/>`).join('')}<line x1="1060" x2="1060" y1="222" y2="420" stroke="#e8e1cc" stroke-width="8"/><path d="M1030 250 L1000 360 L1010 440 M1090 250 L1130 330 L1170 340" stroke="#e8e1cc" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M1045 420 L1035 560 M1075 420 L1085 560" stroke="#e8e1cc" stroke-width="9" stroke-linecap="round"/>`);
+  // 창문 + 수조
+  s+=windowPane(1150,120,220,200);
+  s+=R(1130,470,260,150,'#a0764a')+hot('tank',`${R(1145,370,230,105,'#7ec8e3','opacity=".7" stroke="#cde" stroke-width="5"')}<path d="M1200 420 q20 -15 40 0 q-20 15 -40 0 l-14 -10 v20 z" fill="#ff8c1a"/><path d="M1290 440 q16 -12 32 0 q-16 12 -32 0 l-10 -8 v16 z" fill="#ffb347"/>${R(1145,462,230,13,'#c8b48a')}`);
+  // 문
+  s+=hot('door',`${R(1450,165,130,475,'#7d8f99','rx="4"')}${R(1475,200,80,110,'#cfe8ff')}<circle cx="1465" cy="420" r="11" fill="#c9c9c9"/><circle cx="1465" cy="420" r="4" fill="#333"/>`)+`${R(1470,125,90,30,'#fff','rx="4"')}<text x="1515" y="148" font-size="20" text-anchor="middle" font-family="Gowun Dodum">과학실</text>`;
+  // 실험대
+  s+=R(240,610,1040,34,'#2b2f33','rx="4"')+R(255,644,1010,190,'#e9e4da')+[380,505,630,755,880,1005,1130].map(x=>`<line x1="${x}" x2="${x}" y1="650" y2="830" stroke="#c9c2b4" stroke-width="3"/>`).join('');
+  s+=R(820,598,130,14,'#9aa','rx="4"')+`<path d="M885 598 v-50 h30 v14" stroke="#9aa" stroke-width="8" fill="none"/>`;
+  s+=hot('scale',`${R(330,592,160,18,'#555','rx="4"')}${R(402,500,16,92,'#666')}${R(330,495,160,10,'#777','rx="4"')}<path d="M335 505 l-25 45 h70 z" fill="#b0b8bf"/><path d="M485 505 l-25 45 h70 z" fill="#b0b8bf"/><circle cx="410" cy="495" r="9" fill="#d4af37"/>`);
+  s+=hot('scope',`${R(570,588,110,22,'#333','rx="6"')}<path d="M650 588 v-80 q0 -20 -20 -30" stroke="#333" stroke-width="18" fill="none"/>${R(588,450,26,80,'#444','rx="6" transform="rotate(-20 600 490)"')}${R(585,540,70,10,'#222')}<circle cx="618" cy="560" r="8" fill="#888"/>`);
+  s+=hot('beaker',`<path d="M1030 540 h40 v60 a6 6 0 0 1 -6 6 h-28 a6 6 0 0 1 -6 -6 z" fill="#d6f0ff" opacity=".85" stroke="#9cc" stroke-width="3"/><rect x="1032" y="570" width="36" height="34" fill="#7fd1ff" opacity=".7"/><path d="M1100 520 l-20 80 h56 l-20 -80 z" fill="#ffe0f0" opacity=".85" stroke="#d9a" stroke-width="3"/>`);
+  // 의자
+  [380,620,860,1100].forEach(x=>s+=`<ellipse cx="${x}" cy="880" rx="50" ry="14" fill="#34495e"/><line x1="${x}" x2="${x}" y1="890" y2="960" stroke="#555" stroke-width="8"/><ellipse cx="${x}" cy="965" rx="40" ry="8" fill="#555"/>`);
+  // 금고
+  s+=hot('safe',`${R(1300,770,170,170,'#4a4f55','rx="10"')}${R(1315,785,140,140,'#5c6269','rx="6"')}<circle cx="1385" cy="840" r="34" fill="#2f3337" stroke="#aab" stroke-width="5"/><line x1="1385" x2="1385" y1="812" y2="828" stroke="#fff" stroke-width="4"/>${R(1360,890,50,12,'#aab','rx="4"')}`);
+  return svgWrap(s);
+}
+
+function sceneMusic(){
+  let s=R(0,0,1600,650,'#e6dcef')+R(0,0,1600,36,'#f6f1fa')+lamps()+R(0,620,1600,30,'#6a4a5a')+woodFloor('#a0714f','#87593b');
+  s+=windowPane(50,140,240,260)+R(20,120,30,320,'#6c5ce7','rx="8"');
+  // 졸업 사진 액자
+  let ph=R(400,110,240,160,'#7a5230','rx="4"')+R(414,124,212,132,'#dfe6e9');
+  for(let r=0;r<2;r++)for(let c=0;c<6;c++){const x=440+c*32+(r?16:0),y=170+r*45;ph+=`<circle cx="${x}" cy="${y}" r="11" fill="#f0c8a0"/>`+R(x-13,y+11,26,22,['#0984e3','#d63031','#00b894','#fdcb6e'][(r+c)%4],'rx="6"')}
+  s+=hot('photo',ph);
+  // 장식 포스터
+  s+=R(680,130,180,110,'#fff','rx="6"')+`<text x="770" y="200" font-size="40" text-anchor="middle" fill="#6c5ce7">♪ ♫ ♬</text>`;
+  // 계이름 포스터
+  s+=hot('names',`${R(900,110,250,180,'#fbf6e6','stroke="#6c5ce7" stroke-width="4"')}<text x="1025" y="150" font-size="22" text-anchor="middle" font-family="Gowun Dodum">계이름 · 음이름</text><text x="1025" y="200" font-size="22" text-anchor="middle" font-family="Gowun Dodum" textLength="190" lengthAdjust="spacing">도 레 미 파 솔 라 시</text><text x="1025" y="245" font-size="22" text-anchor="middle" font-family="monospace" textLength="190" lengthAdjust="spacing">C D E F G A B</text>`);
+  // 피아노
+  let pi=R(380,380,440,300,'#2b1d14','rx="6"')+R(370,370,460,20,'#3d2a1d','rx="4"')+R(395,400,410,110,'#3a281b')+R(390,520,420,45,'#fff');
+  for(let i=1;i<14;i++)pi+=`<line x1="${390+i*30}" x2="${390+i*30}" y1="520" y2="565" stroke="#aaa" stroke-width="2"/>`;
+  [0,1,3,4,5,7,8,10,11,12].forEach(i=>pi+=R(390+i*30+21,520,18,27,'#111'));
+  pi+=R(395,565,410,18,'#3d2a1d')+R(410,640,20,40,'#1e140d')+R(770,640,20,40,'#1e140d');
+  s+=hot('piano',pi);
+  s+=R(470,700,260,30,'#3d2a1d','rx="6"')+R(490,730,14,60,'#2b1d14')+R(696,730,14,60,'#2b1d14');
+  // 메트로놈
+  s+=hot('metro',`<path d="M700 370 L730 290 L760 370 Z" fill="#8e5a2b"/><line x1="730" y1="360" x2="742" y2="300" stroke="#eee" stroke-width="4"/>`);
+  // 보면대
+  s+=hot('score',`<line x1="950" x2="950" y1="490" y2="700" stroke="#333" stroke-width="7"/><path d="M915 720 L950 690 L985 720" stroke="#333" stroke-width="6" fill="none"/>${R(880,410,140,90,'#fff','stroke="#333" stroke-width="5"')}${[430,445,460,475,490].map(y=>`<line x1="890" x2="1010" y1="${y}" y2="${y}" stroke="#555" stroke-width="2"/>`).join('')}<circle cx="930" cy="468" r="5" fill="#111"/><circle cx="960" cy="460" r="5" fill="#111"/><circle cx="990" cy="452" r="5" fill="#111"/>`);
+  // 북
+  s+=hot('drum',`<ellipse cx="210" cy="760" rx="85" ry="26" fill="#f5f5f5" stroke="#999" stroke-width="3"/>${R(125,760,170,80,'#c0392b')}<ellipse cx="210" cy="840" rx="85" ry="26" fill="#a93226"/><path d="M130 770 L170 835 L210 770 L250 835 L290 770" stroke="#f1c40f" stroke-width="4" fill="none"/><line x1="300" y1="700" x2="250" y2="745" stroke="#d4a373" stroke-width="7"/>`);
+  // 실로폰
+  s+=hot('xylo',`${R(1040,820,260,14,'#6d4c41')}${R(1040,880,260,14,'#6d4c41')}${['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#e84393'].map((c,i)=>R(1050+i*35,800-i*3,28,110-i*6,c,'rx="4"')).join('')}`);
+  // 의자
+  [560,700,840].forEach(x=>s+=`${R(x-45,850,90,14,'#e17055','rx="4"')}${R(x-40,790,80,60,'#fab1a0','rx="8"')}${R(x-38,864,8,70,'#555')}${R(x+30,864,8,70,'#555')}`);
+  // 사물함
+  s+=R(1330,260,250,380,'#95a5a6','rx="4"');
+  for(let r=0;r<2;r++)for(let c=0;c<3;c++){const x=1340+c*80,y=270+r*182;const door=R(x,y,72,172,'#b2bec3','stroke="#7f8c8d" stroke-width="3"')+R(x+10,y+20,40,6,'#7f8c8d')+R(x+10,y+32,40,6,'#7f8c8d')+`<circle cx="${x+58}" cy="${y+95}" r="6" fill="#636e72"/>`;s+=(r===1&&c===1)?hot('locker',door+`<circle cx="${x+58}" cy="${y+115}" r="5" fill="#2d3436"/>`):hot('locker2',door)}
+  return svgWrap(s);
+}
+
+/* ---------- 방 정의 ---------- */
+const rooms=[
+{
+  name:'6학년 교실',scene:sceneClass,wall:'linear-gradient(#d9c9a3,#c6b48a)',floor:'linear-gradient(#8a6a45,#6d5236)',
+  objects:[
+    {id:'board',e:'🟩',x:30,y:28,s:88,name:'칠판',click(){openModal('칠판',`<div class="chalk">오늘의 수수께끼<br><br><b style="font-size:30px;letter-spacing:3px">${DD.seq.txt}</b><br><br><span style="font-size:16px;opacity:.75">□ 를 꼭 기억해 둘 것 — X</span></div>`)}},
+    {id:'clock',e:'🕰️',x:58,y:18,s:52,name:'벽시계',click(){openModal('벽시계',`<div class="box">${clockSVG()}<div class="muted">시계가 멈춰 있다. 건전지를 누가 빼 간 것 같다.</div></div>`)}},
+    {id:'poster',e:'🖼️',x:80,y:30,s:62,name:'게시판 포스터',click(){
+      const f=uses('cello');
+      openModal('게시판 포스터',`${posterHTML(f)}<p class="muted" style="text-align:center">${f?'🟥 빨간 셀로판지를 대 보니 숨은 글씨가 드러났다!':'빨간 낙서 때문에 뭐가 쓰여 있는지 알아볼 수가 없다…'}</p>`)}},
+    {id:'desk',e:'📝',x:38,y:74,s:54,name:'학생 책상',click(){openModal('학생 책상 위 쪽지',`<div class="paper">${DD.mm.html}<div style="text-align:right">— X</div></div>`+(LV==='easy'?'<div class="tipbox">🧭 도움말: "하나도 맞지 않는다"는 줄의 숫자부터 지워 보세요.</div>':''))}},
+    {id:'drawer',e:'🗃️',x:62,y:66,s:58,name:'교탁 서랍',click(){
+      if(S.f.drawer){openModal('교탁 서랍','<div class="box">서랍은 이제 비어 있다.</div>');return}
+      openModal('교탁 서랍',`<div class="box">🔒 숫자 자물쇠가 걸려 있다.</div>${lock({placeholder:'숫자 '+DD.mm.L+'자리',maxlen:DD.mm.L})}`,()=>bindLock(DD.mm.ans,()=>{S.f.drawer=true;save();closeModal();give('cello')}))}},
+    {id:'plant',e:'🪴',x:9,y:70,s:46,name:'화분',click(){openModal('화분','<div class="box">흙이 촉촉하다. 누군가 오늘 아침에 물을 준 것 같다.<br><span class="muted">…범인은 아침 일찍 학교에 온 사람일까?</span></div>')}},
+    {id:'window',e:'🪟',x:9,y:28,s:56,name:'창문',click(){openModal('창문','<div class="box">텅 빈 운동장이 보인다.<br>창틀에 누군가 손톱으로 긁은 <b>X</b> 자국이 있다.</div>')}},
+    {id:'locker',e:'🧺',x:84,y:72,s:52,name:'타임캡슐 보관함',click(){openModal('타임캡슐 보관함','<div class="box">타임캡슐이 있던 자리. 텅 비어 있다.<br><div class="paper" style="margin-top:10px">"찾을 수 있으면 찾아봐. 문은 숫자 네 개로 잠가 두었지. — X"</div></div>')}},
+    {id:'trash',name:'쓰레기통',click(){openModal('쓰레기통','<div class="box">구겨진 받아쓰기 시험지뿐이다. 별건 없다.</div>')}},
+    {id:'door',e:'🚪',x:94,y:50,s:70,name:'교실 문',click(){
+      openModal('교실 문',`<div class="box">🔒 숫자 번호키가 달려 있다.</div>${lock({placeholder:'숫자',maxlen:8})}`,()=>bindLock(DD.seq.door,()=>{nextRoom('교실 문이 열렸다! 복도 끝 과학실 불이 켜져 있다…')}))}}
+  ],
+  hints:DD.hints[0]
+},
+{
+  name:'과학실',scene:sceneLab,wall:'linear-gradient(#b9d3d6,#9bbcc0)',floor:'linear-gradient(#5d6b73,#46525a)',
+  objects:[
+    {id:'scale',e:'⚖️',x:22,y:60,s:60,name:'저울',click(){openModal('실험대 위 저울',`<div class="paper" style="text-align:center">${DD.scale.html}</div>`+DD.scale.tip)}},
+    {id:'cabinet',e:'🧪',x:44,y:34,s:64,name:'시약장',click(){
+      if(S.f.cabinet){openModal('시약장','<div class="box">시약병들만 남아 있다.</div>');return}
+      openModal('시약장',`<div class="box">🔒 유리문에 세 자리 자물쇠가 걸려 있다.<br><span class="muted">안쪽에 작은 유리 조각 같은 게 보인다.</span></div>${lock({placeholder:'숫자 3자리',maxlen:3})}`,()=>bindLock(DD.scale.ans,()=>{S.f.cabinet=true;save();closeModal();give('slide')}))}},
+    {id:'scope',e:'🔬',x:62,y:62,s:58,name:'현미경',click(){
+      if(uses('slide')||S.f.scope){S.f.scope=true;save();openModal('현미경',`<div class="box"><div class="scope" style="font-size:${DD.code.nums.length>14?18:26}px">${DD.code.nums}</div><p class="muted">슬라이드 구석에 아주 작은 글씨: "벽의 번호표가 금고를 열어 줄 것이다."</p></div>`);return}
+      openModal('현미경','<div class="box">현미경이다. 관찰할 슬라이드가 없다.</div>')}},
+    {id:'ptable',e:'📊',x:78,y:26,s:66,name:'주기율표 포스터',click(){
+      openModal('번호표 포스터',DD.code.table+`<p class="muted" style="text-align:center">${DD.code.cap}</p>`+DD.code.tip)}},
+    {id:'safe',e:'🔐',x:84,y:68,s:60,name:'금고',click(){
+      if(S.f.safe){openModal('금고','<div class="box">금고는 비어 있다.</div>');return}
+      openModal('금고',`<div class="box">🔒 글자를 입력하는 금고다.</div>${lock({placeholder:DD.code.ph,maxlen:10})}`,()=>bindLock(DD.code.ans,()=>{S.f.safe=true;save();openModal('금고',`<div class="box">금고 안에 열쇠와 쪽지가 들어 있다.<div class="paper" style="margin-top:10px">${DD.code.note}</div></div>`);give('mkey')}))}},
+    {id:'tank',e:'🐠',x:8,y:40,s:50,name:'수조',click(){openModal('수조','<div class="box">금붕어가 헤엄치고 있다.<br>바닥 돌에 이렇게 적혀 있다: <b>"저울은 거짓말을 하지 않는다."</b></div>')}},
+    {id:'skel',e:'💀',x:28,y:26,s:48,name:'해골 모형',click(){openModal('해골 모형','<div class="box">해골 모형의 손가락이 오른쪽 시약장을 가리키고 있다. 으스스하다…</div>')}},
+    {id:'beaker',name:'비커',click(){openModal('비커','<div class="box">물만 들어 있다. 별건 없다.</div>')}},
+    {id:'door',e:'🚪',x:95,y:45,s:68,name:'과학실 뒷문',click(){
+      if(uses('mkey')){consume('mkey');nextRoom('열쇠로 뒷문을 열었다! 계단 위 음악실에서 피아노 소리가…');return}
+      openModal('과학실 뒷문','<div class="box">🔒 열쇠 구멍이 있다. 열쇠가 필요하다.</div>')}}
+  ],
+  hints:DD.hints[1]
+},
+{
+  name:'음악실',scene:sceneMusic,wall:'linear-gradient(#d8c3e3,#bea5cc)',floor:'linear-gradient(#7a4f3a,#5e3c2c)',
+  objects:[
+    {id:'score',e:'🎼',x:30,y:28,s:64,name:'보면대 악보',click(){openModal('보면대 위 악보',`<div class="box">${staffSVG()}${DD.mus.tip}<p class="muted">악보 아래: "이 선율을 피아노로 연주하라. 그리고 그 이름을 기억하라."</p></div>`)}},
+    {id:'piano',e:'🎹',x:50,y:66,s:76,name:'피아노',click(){
+      if(S.f.piano){openModal('피아노','<div class="box">피아노 뚜껑이 열려 있다. 안은 비어 있다.</div>');return}
+      openModal('피아노',`<div class="muted" style="text-align:center">건반에 이름표가 하나도 없다…</div><div class="piano" id="piano"></div><div class="dots" id="pdots">${DD.mus.notes.map(()=>'<i></i>').join('')}</div><div class="msg" id="pm"></div>`,setupPiano)}},
+    {id:'names',e:'📜',x:76,y:26,s:54,name:'벽 포스터',click(){openModal('음악실 벽 포스터',`<div class="paper" style="text-align:center;font-size:20px"><b>계이름과 음이름</b><table style="margin-top:8px"><tr>${['도','레','미','파','솔','라','시'].map(x=>`<td><b>${x}</b></td>`).join('')}</tr><tr>${['C','D','E','F','G','A','B'].map(x=>`<td class="c" style="font-size:20px">${x}</td>`).join('')}</tr></table></div>`)}},
+    {id:'metro',e:'⏲️',x:12,y:60,s:46,name:'메트로놈',click(){openModal('메트로놈','<div class="box">똑딱, 똑딱…<br>받침대 밑에 쪽지: <b>"높은음자리표를 잊지 마라."</b></div>')}},
+    {id:'drum',e:'🥁',x:24,y:78,s:50,name:'작은북',click(){tone(110);openModal('작은북','<div class="box">둥! 북 안은 비어 있다.</div>')}},
+    {id:'photo',e:'🖼️',x:56,y:22,s:50,name:'졸업 사진 액자',click(){openModal('졸업 사진 액자','<div class="box">역대 졸업생들의 사진이다. 다들 환하게 웃고 있다.<br>액자 뒤에 적힌 글씨: <b>"얼굴을 기억해."</b></div>')}},
+    {id:'xylo',name:'실로폰',click(){tone(784);openModal('실로폰','<div class="box">띵~ 실로폰 채가 하나 없어졌다. 별건 없다.</div>')}},
+    {id:'locker2',name:'사물함',click(){openModal('사물함','<div class="box">잠겨 있지 않다. 안은 텅 비어 있다.</div>')}},
+    {id:'locker',e:'🗄️',x:86,y:66,s:62,name:'음악실 사물함',click(){
+      if(!S.f.locker){
+        if(uses('lkey')){consume('lkey');S.f.locker=true;save()}
+        else{openModal('음악실 사물함','<div class="box">🔒 작은 열쇠 구멍이 있다.</div>');return}
+      }
+      openModal('음악실 사물함',`<div class="box">사물함 안에 작은 상자가 있다.<br>${DD.mus.locker}가 달려 있다.</div>${lock({placeholder:DD.mus.ph,maxlen:10})}`,()=>bindLock(DD.mus.ans,()=>{closeModal();finish()}))}}
+  ],
+  hints:DD.hints[2]
+}];
+
+/* ---------- 피아노 ---------- */
+function setupPiano(){
+  const W=[['C4',261.6],['D4',293.7],['E4',329.6],['F4',349.2],['G4',392],['A4',440],['B4',493.9],['C5',523.3],['D5',587.3],['E5',659.3]];
+  const target=DD.mus.notes;let step=0;
+  const p=$('piano');const kw=window.innerWidth<560?30:46;
+  W.forEach(([n,f])=>{const k=document.createElement('div');k.className='wk';k.onclick=()=>press(n,f,k);p.appendChild(k)});
+  [0,1,3,4,5,7,8].forEach(i=>{const b=document.createElement('div');b.className='bk';b.style.left=(kw*(i+1)-(kw<40?10:15))+'px';b.onclick=()=>press('black',300+i*20,b);p.appendChild(b)});
+  function press(n,f,k){
+    tone(f);if(k.classList.contains('wk')){k.classList.add('hit');setTimeout(()=>k.classList.remove('hit'),180)}
+    const dots=$('pdots').children;
+    if(n===target[step]){dots[step].className='on';step++;
+      if(step===target.length){$('pm').className='msg good';$('pm').textContent='🎵 아름다운 선율! 피아노 뚜껑 안에서 뭔가 떨어졌다!';S.f.piano=true;save();setTimeout(()=>{closeModal();give('lkey')},1400)}}
+    else{step=0;[...dots].forEach(d=>d.className='');$('pm').className='msg bad';$('pm').textContent='삐걱… 틀린 음이다. 처음부터!'}
+  }
+}
+
+/* ---------- 진행 ---------- */
+function mx(){return Math.max(S.maxRoom||0,S.room)}
+function nextRoom(t){closeModal();S.room++;S.maxRoom=Math.max(mx(),S.room);S.sel=null;save();render();if(t)toast(t)}
+function goRoom(i){S.maxRoom=mx();S.room=i;S.sel=null;save();render()}
+function finish(){S.end=Date.now();S.room=rooms.length;save();render()}
+
+function renderInv(){
+  const el=$('inv');if(!el)return;
+  el.innerHTML=`<span class="lbl">🎒 소지품</span>`+(S.inv.length?S.inv.map(id=>`<div class="item ${S.sel===id?'sel':''}" data-id="${id}"><span>${ITEMS[id].e}</span>${ITEMS[id].n}</div>`).join(''):'<span class="muted">아직 없음</span>')+(S.sel?`<span class="selinfo">사용 중: ${ITEMS[S.sel].n} → 쓸 곳을 눌러 보세요</span>`:'');
+  el.querySelectorAll('.item').forEach(it=>it.onclick=()=>{const id=it.dataset.id;S.sel=S.sel===id?null:id;save();renderInv()});
+}
+
+function render(){
+  $('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);
+  const app=$('app');
+  if(S.room===-1)return renderIntro(app);
+  if(S.room>=rooms.length)return renderEnd(app);
+  const r=rooms[S.room];
+  app.innerHTML=`<div class="roombar"><h2>방 ${S.room+1} / ${rooms.length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<mx()?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
+  <div class="scene">${r.scene()}</div><div class="inv" id="inv"></div>
+  <p class="muted" style="text-align:center">방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 선택한 뒤 쓸 곳을 누르면 돼요.</p>`;
+  app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-6);h.setAttribute('y',b.y-6);h.setAttribute('width',b.width+12);h.setAttribute('height',b.height+12);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}});
+  app.querySelectorAll('.hot').forEach(el=>el.addEventListener('click',()=>{const o=r.objects.find(x=>x.id===el.dataset.id);if(!o)return;if(o.id==='door'&&S.room<mx()){goRoom(S.room+1);toast('이미 열어 둔 문이다. 다음 방으로!');return}o.click()}));
+  if($('prevBtn'))$('prevBtn').onclick=()=>goRoom(S.room-1);
+  if($('nextBtn'))$('nextBtn').onclick=()=>goRoom(S.room+1);
+  $('hintBtn').onclick=showHints;
+  renderInv();
+}
+function showHints(){
+  const r=rooms[S.room];const n=S.hints[S.room];
+  const html=r.hints.slice(0,n).map((h,i)=>`<div class="hint">💡 ${i+1}. ${h}</div>`).join('')+(n<r.hints.length?`<div class="center" style="margin-top:14px"><button class="btn" id="moreHint">힌트 ${n+1} 열기</button><div class="muted">힌트를 쓰면 기록에 남아요</div></div>`:'<p class="muted center">이 방의 힌트를 모두 열었어요.</p>');
+  openModal(`💡 ${r.name} 힌트`,html,()=>{const b=$('moreHint');if(b)b.onclick=()=>{S.hints[S.room]++;save();$('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);showHints()}});
+}
+function renderIntro(app){
+  app.innerHTML=`<div class="card center"><div class="big-emoji">⏳</div><h1>사라진 타임캡슐</h1><div class="muted" style="font-weight:bold">${GRADE}학년 · ${LVN}${LV==='easy'?' · 🧭 문제마다 도움말이 나와요':LV==='hard'?' · 정답 힌트 없음':''}</div>
+  <div class="muted">3일 연속 방탈출 · 1일차 「단서를 쫓아라」</div>
+  <div class="story">졸업식을 앞둔 지산초등학교 6학년. 6년 동안의 추억을 담은 <b>타임캡슐</b>이 감쪽같이 사라졌다.<br><br>
+  범인 <b>X</b>는 교실, 과학실, 음악실 곳곳에 수수께끼를 숨겨 두었다. 방 안의 물건을 하나하나 조사하고, 단서를 조합해 잠긴 문을 열어라!</div>
+  <p class="muted">방 3개 · 물건을 눌러 조사 · 얻은 물건은 선택해서 사용 · 막히면 💡 힌트</p>
+  <button class="btn" id="startBtn" style="font-size:22px;padding:14px 40px">수사 시작!</button></div>`;
+  $('startBtn').onclick=()=>{S.room=0;S.start=Date.now();save();render()};
+}
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function renderEnd(app){
+  const t=S.end&&S.start?fmt(S.end-S.start):'--:--';const h=S.hints.reduce((a,b)=>a+b,0);
+  app.innerHTML=`<div class="card center"><div class="big-emoji">📦</div><h1>1일차 수사 완료!</h1>
+  <p>기록 <b style="color:var(--gold)">${t}</b> · 힌트 <b style="color:var(--gold)">${h}번</b></p>
+  <div class="story">상자 안에는 타임캡슐 대신 봉투 하나가 들어 있었다.<br><br>
+  <i>"제법이군, 탐정들. 하지만 타임캡슐은 내가 안전하게 보관하고 있다.<br>진짜 범인이 누구인지 알고 싶다면… 내일 다시 오너라.<br>힌트를 하나 주지. 나는 너희를 아주 잘 아는 사람이다."</i>
+  <div style="text-align:right;margin-top:8px">— X</div></div>
+  <div class="teaser"><b style="color:var(--gold)">📅 2일차 예고 「용의자는 셋」</b><br>범인 X는 누구일까? 내일은 용의자들의 진술과 알리바이를 파헤친다!</div>${LV!=='hard'?`<p><a class="btn" style="text-decoration:none;display:inline-block" href="${location.pathname.split('/').pop()}?lv=${LV==='easy'?'normal':'hard'}">다음 단계 (${LV==='easy'?'🟡 보통':'🔴 어려움'}) 도전하기 →</a></p>`:''}</div>`;
+}
+
+setInterval(()=>{$('timer').textContent=S.start?fmt((S.end||Date.now())-S.start):'00:00'},500);
+$('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="muted">지금까지 푼 기록이 모두 지워져요.</p><div class="center"><button class="btn" id="yesReset">다시 시작</button></div>',()=>{$('yesReset').onclick=()=>{S=fresh();save();closeModal()}});
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 게임을 끝까지 깨면 게임 목록에 완료 표시 */
+setInterval(function(){try{var t=(S&&S.end)?String(S.end):null;if(t&&localStorage.getItem('class-done-skip-timecapsule-1@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['timecapsule-1@'+LV]){d['timecapsule-1@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

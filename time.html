@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시간 여행 연구소 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#12141c;--panel:#1e2130;--panel2:#282c40;--ink:#f3efe4;--muted:#a9a6b8;--gold:#f2c14e;--red:#e85d5d;--green:#5fd39a;--line:#3a3f57}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 50% 0%,#232842 0%,var(--bg) 60%);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:18px;line-height:1.6;-webkit-user-select:none;user-select:none}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .brand{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gold)}
+  .stats{display:flex;gap:8px;font-size:15px;flex-wrap:wrap}
+  .pill{background:var(--panel);border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+  h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:36px;margin:0 0 6px;color:var(--gold)}
+  h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .story{background:var(--panel2);border-left:4px solid var(--gold);padding:14px 16px;border-radius:10px;margin:14px 0;text-align:left}
+  .center{text-align:center}
+  .muted{color:var(--muted);font-size:15px}
+  button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+  .btn{background:var(--gold);color:#2a2100}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .roombar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 8px;gap:8px;flex-wrap:wrap}
+  .scene{position:relative;width:100%;border-radius:16px;overflow:hidden;border:2px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .hot{cursor:pointer}
+  .obj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;line-height:1;transition:transform .15s,filter .15s;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+  .obj:hover{transform:translate(-50%,-50%) scale(1.12);filter:drop-shadow(0 0 10px rgba(242,193,78,.8))}
+  .obj .seen{position:absolute;right:-4px;top:-4px;font-size:12px;background:var(--green);color:#000;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .inv{display:flex;gap:8px;align-items:center;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:62px;flex-wrap:wrap}
+  .inv .lbl{color:var(--muted);font-size:14px;margin-right:4px}
+  .item{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:15px}
+  .item span{font-size:24px}
+  .item.sel{border-color:var(--gold);background:#3b3420}
+  .selinfo{margin-left:auto;font-size:14px;color:var(--gold)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+  .modal.show{display:flex}
+  .modal .card{width:100%;max-width:620px;max-height:92vh;overflow:auto;animation:pop .2s}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .x{background:transparent;color:var(--muted);font-size:26px;padding:0 6px}
+  .box{background:#161925;border:1px dashed var(--line);border-radius:12px;padding:16px;margin:10px 0;text-align:center}
+  .paper{background:#fbf6e6;color:#2b2414;border-radius:6px;padding:16px 18px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:17px}
+  .paper table{border-collapse:collapse;margin:8px auto}
+  .paper td{padding:3px 10px;border-bottom:1px solid #d9cfb3}
+  .paper td.c{font-family:monospace;font-size:22px;font-weight:bold;letter-spacing:4px}
+  .lockform{display:flex;gap:8px;margin-top:12px}
+  .lockform input{flex:1;min-width:0;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#0e1018;color:var(--ink);font-family:monospace;letter-spacing:6px;text-align:center;-webkit-user-select:text;user-select:text}
+  .lockform input:focus{outline:none;border-color:var(--gold)}
+  .msg{min-height:26px;margin-top:8px;font-weight:bold;text-align:center}
+  .msg.bad{color:var(--red)}.msg.good{color:var(--green)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .chalk{background:#1f4d36;border:10px solid #7a5230;border-radius:6px;color:#eef;padding:18px;font-size:24px;text-align:center}
+  .poster{position:relative;height:240px;background:#fff;border-radius:6px;overflow:hidden;transition:background .4s}
+  .poster .msgtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a46ff;font-size:24px;font-weight:bold;line-height:1.5}
+  .poster .noise{position:absolute;font-weight:bold;color:#ff2a2a;pointer-events:none;transition:color .4s}
+  .poster.filtered{background:#ff9d9d}
+  .poster.filtered .noise{color:#ff9d9d;opacity:0}
+  .poster.filtered .msgtxt{color:#2a0010}
+  .ptable{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;font-size:13px}
+  .ptable div{background:#2f3a5c;border-radius:4px;padding:4px 0;text-align:center}
+  .ptable b{display:block;font-size:18px;color:#fff}
+  .ptable small{color:#9fb0e0}
+  .scale{font-size:30px;margin:6px 0;letter-spacing:4px}
+  .scope{width:220px;height:220px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#e8f3ff 0%,#a9c3dc 70%,#223 72%);display:flex;align-items:center;justify-content:center;color:#123;font-size:26px;font-weight:bold;letter-spacing:3px;border:8px solid #333}
+  .piano{position:relative;display:flex;justify-content:center;margin:12px auto 4px;height:170px;width:max-content;max-width:100%}
+  .wk{width:46px;height:170px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;cursor:pointer}
+  .wk:active,.wk.hit{background:#ffe9a8}
+  .bk{position:absolute;top:0;width:30px;height:105px;background:#111;border-radius:0 0 6px 6px;cursor:pointer;z-index:2}
+  .bk:active{background:#444}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .dots i{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+  .dots i.on{background:var(--gold)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#2a2100;padding:12px 22px;border-radius:999px;font-weight:bold;z-index:30;display:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .toast.show{display:block;animation:pop .25s}
+  .hint{background:#2b2a1f;border:1px solid #5c5330;color:#f5e6b0;padding:10px 14px;border-radius:10px;margin-top:8px;text-align:left}
+  .teaser{border:2px dashed var(--gold);border-radius:14px;padding:16px;margin-top:18px}
+  .big-emoji{font-size:70px;line-height:1}
+  @media (max-width:560px){.wk{width:30px}.bk{width:20px}.chalk{font-size:19px}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🕰️ 시간 여행 연구소</div>
+    <div class="stats">
+      <span class="pill" id="lvPill"></span>
+      <span class="pill">⏱ <span id="timer">00:00</span></span>
+      <span class="pill">💡 힌트 <span id="hintCount">0</span></span>
+      <button class="ghost" id="resetBtn" style="font-size:13px;padding:4px 10px">처음부터</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="mcard">
+  <div class="mhead"><h2 id="mtitle"></h2><div><button class="x" id="mclose">✕</button></div></div>
+  <div id="mbody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 시간 여행 연구소 ================= */
+const GRADE=6;
+const DATA={"easy":{"corr":{"top":[1,2,3,4,"…",10],"bot":[5,7,9,11,"…","?"],"ans":23,"h":"대응표: ○가 1 늘 때 □는 2씩 늘어요. □ = ○ × 2 + 3.","tip":"<div class=\"tipbox\">🧭 도움말: 표의 빈칸을 5, 6, 7… 하나씩 채워 가도 돼요.</div>"},"y1":{"memo":"'+DD.y1.memo+'","h":"첫 목적지 = 2026 − 580 = 1446년."},"y2":{"screen":"두 번째 목적지 = <b>지금 연도 + 473년</b><br>(그해 3월 1일, 온 겨레가 \"대한 독립 만세\"를 외쳤다)","h":"두 번째 목적지 = 1446 + 473 = 1919."},"y3":{"screen":"세 번째 목적지 = <b>지금 연도 + 131년</b><br>(탄소 중립을 이룬 미래 도시)","h":"세 번째 목적지 = 1919 + 131 = 2050."},"y4":{"screen":"마지막 목적지: <b>집으로!</b> = 지금 연도 − 24년","h":"집으로 = 2050 − 24 = 2026."},"circ":{"order":["가","나","다","라"],"ans":1,"h":"전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요."},"honor":{"html":"① 할머니께서 진지를 잡수신다.<br>② 선생님, 제가 말씀을 드릴게요.<br>③ 아버지가 집에 있다.","ans":"110","n":3,"h":"높임말: ① 바름, ② 바름, ③ 틀림.","tip":"<div class=\"tipbox\">🧭 도움말: 웃어른께 쓰는 말인지, 어색한 곳은 없는지 소리 내어 읽어 보세요.</div>"},"gah":{"q":"ㄱ에 획을 한 번, ㅁ에 획을 한 번 더한 글자를 차례로 쓰시오.","ans":"ㅋㅂ","h":"가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","tip":"<div class=\"tipbox\">🧭 도움말: 예를 따라 해 보세요: ㄴ에 한 번 → ㄷ, 두 번 → ㅌ</div>"},"sun":{"idx":3,"ans":"말","q":"\"해시계 그림자가 가리키는 시(時)는 어떤 동물의 시간인가?\"","h":"해시계 그림자는 \"오\"를 가리켜요. 십이지 병풍에서 같은 순서의 동물을 찾아요.","tip":"<div class=\"tipbox\">🧭 도움말: 병풍의 두 줄은 같은 순서예요: 자=쥐, 축=소, 인=호랑이 …</div>"},"rain":{"html":"<b>지난 5일 동안 측우기에 고인 빗물의 깊이</b><br>첫째 날 4cm · 둘째 날 2cm · 셋째 날 0cm · 넷째 날 5cm · 다섯째 날 4cm<hr>\"상자 비밀번호 = 하루 <b>평균</b> 빗물의 깊이(cm)는?\"","ans":3,"u":"cm","h":"측우기: (4 + 2 + 0 + 5 + 4) ÷ 5.","tip":"<div class=\"tipbox\">🧭 도움말: (4 + 2 + 0 + 5 + 4) ÷ 5</div>"},"press":{"html":"\"찍어야 할 독립선언서: <b>120장</b>. 이 인쇄기는 <b>1분에 6장</b>씩 찍는다.<br>모두 찍는 데 걸리는 시간(분)을(를) 맞춰야 인쇄기가 돌아간다.\"","ans":20,"u":"분","h":"인쇄기: 120 ÷ 6.","tip":"<div class=\"tipbox\">🧭 도움말: 120 ÷ 6</div>"},"bins":{"items":[["🧴 페트병","플라스틱"],["🥛 깨끗이 헹군 우유 팩","종이팩"],["🥫 음료 캔","캔"],["🍾 유리병","유리"]],"B":["플라스틱","종이","종이팩","캔","유리"],"h":"분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요."},"graph":{"q":"2050년 배출량은 2030년 배출량의 <b>몇 %</b>일까요?","ans":25,"u":"%","h":"그래프: 200 ÷ 800 = 0.25.","tip":"<div class=\"tipbox\">🧭 도움말: 그래프의 눈금을 손가락으로 따라 읽어요.</div>"},"robot":{"say":"🤖 \"Hello! I hid a time crystal. Follow my directions!\"","txt":"Start at the station. Go straight one block. Turn right. Go straight one block. The crystal is there!","opts":["Hospital","Library","Bakery","Museum","Park"],"ans":"Bakery","h":"Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸.","tip":"<div class=\"tipbox\">🧭 도움말: 지도 위에 손가락을 올리고 로봇처럼 움직여 보세요.</div>"},"globe":{"N":[["대한민국","아시아"],["이집트","아프리카"],["브라질","남아메리카"],["프랑스","유럽"]],"C":["아시아","유럽","아프리카","북아메리카","남아메리카","오세아니아"],"q":"'+DD.globe.q+'","h":"대륙: 대한민국-아시아, 이집트-아프리카, 브라질-남아메리카, 프랑스-유럽."},"hints":[["대응표: ○가 1 늘 때 □는 2씩 늘어요. □ = ○ × 2 + 3.","전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요. 첫 목적지 = 2026 − 580 = 1446년.","정답 공개 — 금고 23 · 회로 나 · 연도 1446"],["높임말: ① 바름, ② 바름, ③ 틀림. 가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","해시계 그림자는 \"오\"를 가리켜요. 십이지 병풍에서 같은 순서의 동물을 찾아요. 측우기: (4 + 2 + 0 + 5 + 4) ÷ 5. 두 번째 목적지 = 1446 + 473 = 1919.","정답 공개 — 신하 110 · 서고 ㅋㅂ · 창고 말 · 측우기 3 · 연도 1919"],["인쇄기: 120 ÷ 6. 시의 2번째 줄 4번째 낱말과 3번째 줄 1번째 낱말을 이어요.","태극기: 왼쪽 위(깃대 쪽)가 건 ☰, 오른쪽 아래가 곤 ☷, 오른쪽 위가 감 ☵, 왼쪽 아래가 리 ☲. 세 번째 목적지 = 1919 + 131 = 2050.","정답 공개 — 인쇄기 20 · 문서함 탑골공원 · 연도 2050"],["분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요. 그래프: 200 ÷ 800 = 0.25.","Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸. 대륙: 대한민국-아시아, 이집트-아프리카, 브라질-남아메리카, 프랑스-유럽. 집으로 = 2050 − 24 = 2026.","정답 공개 — 금고 25 · 로봇 Bakery · 연도 2026"]]},"normal":{"corr":{"top":[1,2,3,4,"…",20],"bot":[4,7,10,13,"…","?"],"ans":61,"h":"대응표: ○가 1 늘 때 □는 3씩 늘어요. □ = ○ × 3 + 1.","tip":""},"y1":{"memo":"'+DD.y1.memo+'","h":"첫 목적지 = 2026 − 580 = 1446년."},"y2":{"screen":"두 번째 목적지 = <b>지금 연도 + 473년</b><br>(그해 3월 1일, 온 겨레가 \"대한 독립 만세\"를 외쳤다)","h":"두 번째 목적지 = 1446 + 473 = 1919."},"y3":{"screen":"세 번째 목적지 = <b>지금 연도 + 131년</b><br>(탄소 중립을 이룬 미래 도시)","h":"세 번째 목적지 = 1919 + 131 = 2050."},"y4":{"screen":"마지막 목적지: <b>집으로!</b> = 지금 연도 − 24년","h":"집으로 = 2050 − 24 = 2026."},"circ":{"order":["가","나","다","라"],"ans":1,"h":"전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요."},"honor":{"html":"① 할머니께서 진지를 잡수신다.<br>② 선생님, 제가 말씀을 드릴게요.<br>③ 아버지가 집에 있다.<br>④ 사장님의 말씀이 계시겠습니다.","ans":"1100","n":4,"h":"높임말: 높여야 할 분에게 \"께서, -시-, 진지, 계시다\" 같은 높임 표현을 썼는지 살펴요. 사물은 높이지 않아요!","tip":""},"gah":{"q":"ㄱ에 획을 한 번, ㅁ에 획을 두 번, ㅅ에 획을 한 번 더한 글자를 차례로 쓰시오.","ans":"ㅋㅍㅈ","h":"가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","tip":""},"sun":{"idx":5,"ans":"원숭이","q":"\"해시계 그림자가 가리키는 시(時)는 어떤 동물의 시간인가?\"","h":"해시계 그림자는 \"신\"를 가리켜요. 십이지 병풍에서 같은 순서의 동물을 찾아요.","tip":""},"rain":{"html":"<b>지난 5일 동안 측우기에 고인 빗물의 깊이</b><br>첫째 날 2.4cm · 둘째 날 1.8cm · 셋째 날 0cm · 넷째 날 3.1cm · 다섯째 날 0.7cm<hr>\"상자 비밀번호 = 하루 <b>평균</b> 빗물의 깊이(cm)는?\"","ans":1.6,"u":"cm","h":"측우기: (2.4 + 1.8 + 0 + 3.1 + 0.7) ÷ 5.","tip":""},"press":{"html":"\"찍어야 할 독립선언서: <b>21,000장</b>. 이 인쇄기는 <b>1분에 35장</b>씩 찍는다.<br>모두 찍는 데 걸리는 시간(분)을(를) 맞춰야 인쇄기가 돌아간다.\"","ans":600,"u":"분","h":"인쇄기: 21000 ÷ 35.","tip":""},"bins":{"items":[["🧴 페트병","플라스틱"],["🥛 깨끗이 헹군 우유 팩","종이팩"],["🥫 음료 캔","캔"],["🍾 유리병","유리"],["📰 신문지","종이"],["🥤 요구르트 병","플라스틱"]],"B":["플라스틱","종이","종이팩","캔","유리"],"h":"분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요."},"graph":{"q":"2030년과 비교하여 2050년에 탄소 배출량이 <b>몇 %</b> 줄었는지 입력하시오.","ans":75,"u":"%","h":"그래프: 800에서 200으로 600만큼 줄었어요. 600 ÷ 800 = 0.75.","tip":""},"robot":{"say":"🤖 \"Hello! I hid a time crystal. Follow my directions!\"","txt":"Start at the station. Go straight two blocks. Turn right. Go straight one block. Turn left. Go straight one block. The crystal is there!","opts":["Hospital","Library","Bakery","Museum","Park"],"ans":"Library","h":"Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸.","tip":""},"globe":{"N":[["이집트","아프리카"],["브라질","남아메리카"],["오스트레일리아","오세아니아"],["캐나다","북아메리카"],["프랑스","유럽"]],"C":["아시아","유럽","아프리카","북아메리카","남아메리카","오세아니아"],"q":"'+DD.globe.q+'","h":"대륙: 이집트-아프리카, 브라질-남아메리카, 오스트레일리아-오세아니아, 캐나다-북아메리카, 프랑스-유럽."},"hints":[["대응표: ○가 1 늘 때 □는 3씩 늘어요. □ = ○ × 3 + 1.","전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요. 첫 목적지 = 2026 − 580 = 1446년.","정답 공개 — 금고 61 · 회로 나 · 연도 1446"],["높임말: 높여야 할 분에게 \"께서, -시-, 진지, 계시다\" 같은 높임 표현을 썼는지 살펴요. 사물은 높이지 않아요! 가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","해시계 그림자는 \"신\"를 가리켜요. 십이지 병풍에서 같은 순서의 동물을 찾아요. 측우기: (2.4 + 1.8 + 0 + 3.1 + 0.7) ÷ 5. 두 번째 목적지 = 1446 + 473 = 1919.","정답 공개 — 신하 1100 · 서고 ㅋㅍㅈ · 창고 원숭이 · 측우기 1.6 · 연도 1919"],["인쇄기: 21000 ÷ 35. 시의 2번째 줄 4번째 낱말과 3번째 줄 1번째 낱말을 이어요.","태극기: 왼쪽 위(깃대 쪽)가 건 ☰, 오른쪽 아래가 곤 ☷, 오른쪽 위가 감 ☵, 왼쪽 아래가 리 ☲. 세 번째 목적지 = 1919 + 131 = 2050.","정답 공개 — 인쇄기 600 · 문서함 탑골공원 · 연도 2050"],["분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요. 그래프: 800에서 200으로 600만큼 줄었어요. 600 ÷ 800 = 0.75.","Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸. 대륙: 이집트-아프리카, 브라질-남아메리카, 오스트레일리아-오세아니아, 캐나다-북아메리카, 프랑스-유럽. 집으로 = 2050 − 24 = 2026.","정답 공개 — 금고 75 · 로봇 Library · 연도 2026"]]},"hard":{"corr":{"top":[1,2,3,4,"…",40],"bot":[9,14,19,24,"…","?"],"ans":204,"h":"대응표: ○가 1 늘 때 □가 얼마씩 느는지 보고, ○와 □ 사이의 식을 세워요.","tip":""},"y1":{"memo":"(메모: 훈민정음 반포 <b>600주년</b>은 <b>2046년</b>이다.)","h":"첫 목적지: 메모의 수를 계산해요."},"y2":{"screen":"두 번째 목적지 = <b>2026년에서 107년 전</b><br>(그해 3월 1일, 온 겨레가 \"대한 독립 만세\"를 외쳤다)","h":"두 번째 목적지 = 2026 − 107 = 1919."},"y3":{"screen":"세 번째 목적지 = <b>지금 연도 + 131년</b><br>(탄소 중립을 이룬 미래 도시)","h":"세 번째 목적지 = 1919 + 131 = 2050."},"y4":{"screen":"마지막 목적지: <b>집으로!</b> = 지금 연도 − 24년","h":"집으로 = 2050 − 24 = 2026."},"circ":{"order":["라","가","다","나"],"ans":3,"h":"전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요."},"honor":{"html":"① 할머니께서 진지를 잡수신다.<br>② 선생님, 제가 말씀을 드릴게요.<br>③ 아버지가 집에 있다.<br>④ 사장님의 말씀이 계시겠습니다.<br>⑤ 손님, 주문하신 음료 나오셨습니다.","ans":"11000","n":5,"h":"높임말: 높여야 할 분에게 \"께서, -시-, 진지, 계시다\" 같은 높임 표현을 썼는지 살펴요. 사물은 높이지 않아요!","tip":""},"gah":{"q":"ㄴ에 획을 두 번, ㅁ에 획을 두 번, ㅅ에 획을 두 번 더한 글자를 차례로 쓰시오.","ans":"ㅌㅍㅊ","h":"가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","tip":""},"sun":{"idx":1,"ans":"말","q":"\"해시계 그림자가 가리키는 시(時)에서 <b>두 시(時) 뒤</b>는 어떤 동물의 시간인가?\"","h":"해시계 그림자가 가리키는 글자를 십이지 병풍에서 찾아 순서를 세어요.","tip":""},"rain":{"html":"<b>지난 5일 동안 측우기에 고인 빗물의 깊이</b><br>첫째 날 2.4cm · 둘째 날 1.8cm · 셋째 날 0cm · 넷째 날 3.1cm · 다섯째 날 <b>?</b><hr>\"상자 비밀번호 = 다섯째 날 빗물의 깊이를 몰라요. 5일 동안 하루 <b>평균</b>이 <b>2cm</b>였다면, 다섯째 날은 몇 cm일까요?\"","ans":2.7,"u":"cm","h":"측우기: 평균 2cm × 5일 = 10cm, 나머지 넷을 빼요.","tip":""},"press":{"html":"\"찍어야 할 독립선언서: <b>21,000장</b>. <b>1분에 35장</b>씩 찍는 인쇄기 <b>2대</b>를 함께 돌린다.<br>모두 찍는 데 걸리는 시간(분)을(를) 맞춰야 인쇄기가 돌아간다.\"","ans":300,"u":"분","h":"인쇄기: 두 대면 1분에 70장.","tip":""},"bins":{"items":[["🧴 페트병","플라스틱"],["🥛 깨끗이 헹군 우유 팩","종이팩"],["🥫 음료 캔","캔"],["🍾 유리병","유리"],["📰 신문지","종이"],["🥤 요구르트 병","플라스틱"],["📦 테이프를 뗀 택배 상자","종이"],["🧃 헹군 주스 종이팩","종이팩"]],"B":["플라스틱","종이","종이팩","캔","유리"],"h":"분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요."},"graph":{"q":"<b>2040년</b>과 비교하여 2050년에 탄소 배출량이 <b>몇 %</b> 줄었을까요?","ans":60,"u":"%","h":"그래프: 500 → 200, 300 ÷ 500 = 0.6.","tip":""},"robot":{"say":"🤖 \"Hello! I hid a time crystal. Follow my directions!\"","txt":"Start at the station. Go straight one block. Turn right. Go straight one block. Turn left. Go straight one block. Turn right. Go straight one block. The crystal is there!","opts":["Hospital","Library","Bakery","Museum","Park"],"ans":"Museum","h":"Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸.","tip":""},"globe":{"N":[["이집트","아프리카"],["브라질","남아메리카"],["오스트레일리아","오세아니아"],["캐나다","북아메리카"],["프랑스","유럽"],["멕시코","북아메리카"]],"C":["아시아","유럽","아프리카","북아메리카","남아메리카","오세아니아"],"q":"'+DD.globe.q+'","h":"대륙: 세계지도에서 나라(동물)가 있는 곳을 떠올려 봐요."},"hints":[["대응표: ○가 1 늘 때 □가 얼마씩 느는지 보고, ○와 □ 사이의 식을 세워요.","전구에 불이 켜지려면 전지의 +극과 −극이 전구의 꼭지와 꼭지쇠에 각각 이어져야 해요. 끊기거나 같은 극에 두 줄이 이어지면 안 돼요. 첫 목적지: 메모의 수를 계산해요."],["높임말: 높여야 할 분에게 \"께서, -시-, 진지, 계시다\" 같은 높임 표현을 썼는지 살펴요. 사물은 높이지 않아요! 가획: ㄱ→ㅋ, ㄴ→ㄷ→ㅌ, ㅁ→ㅂ→ㅍ, ㅅ→ㅈ→ㅊ 순서로 획이 늘어요.","해시계 그림자가 가리키는 글자를 십이지 병풍에서 찾아 순서를 세어요. 측우기: 평균 2cm × 5일 = 10cm, 나머지 넷을 빼요. 두 번째 목적지 = 2026 − 107 = 1919."],["인쇄기: 두 대면 1분에 70장. 시의 2번째 줄 4번째 낱말과 3번째 줄 1번째 낱말을 이어요.","태극기: 왼쪽 위(깃대 쪽)가 건 ☰, 오른쪽 아래가 곤 ☷, 오른쪽 위가 감 ☵, 왼쪽 아래가 리 ☲. 세 번째 목적지 = 1919 + 131 = 2050."],["분리배출: 페트병·요구르트 병은 플라스틱, 신문지·상자는 종이, 우유 팩은 따로 모으는 종이팩이에요. 그래프: 500 → 200, 300 ÷ 500 = 0.6.","Go straight = 앞으로, Turn right = 오른쪽으로 돌기, Turn left = 왼쪽으로 돌기, block = 한 칸. 대륙: 세계지도에서 나라(동물)가 있는 곳을 떠올려 봐요. 집으로 = 2050 − 24 = 2026."]]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'time-escape-v1':'time-escape-v1-'+LV;
+const ITEMS={};
+for(let i=0;i<10;i++)ITEMS['cr'+i]={e:'💎',n:'시간 결정 '+['⓪','①','②','③','④','⑤','⑥','⑦','⑧','⑨'][i]};
+const paper=html=>`<div class="paper">${html}</div>`;
+const box=html=>`<div class="box">${html}</div>`;
+const has=id=>S.inv.includes(id);
+const lbl=(x,y,t,c='#333',fs=18,fw='normal')=>`<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" fill="${c}" font-weight="${fw}" font-family="Gowun Dodum">${t}</text>`;
+function bad(id,t){const m=$(id);m.className='msg bad';m.textContent=t;const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+function good(id,t){const m=$(id);m.className='msg good';m.textContent=t}
+function choiceQ(title,intro,opts,ans,okMsg,ok,cols=2){
+  openModal(title,intro+`<div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:6px;margin-top:10px">${opts.map((o,i)=>`<button class="ghost qopt" data-i="${i}" style="font-size:16px;text-align:left">${o}</button>`).join('')}</div><div class="msg" id="qm"></div>`,()=>{
+    document.querySelectorAll('.qopt').forEach(b=>b.onclick=()=>{if(+b.dataset.i===ans){good('qm',okMsg);setTimeout(ok,1000)}else bad('qm','❌ 아니다. 다시 생각해 보자')})});
+}
+
+/* ---------- 타임머신 (모든 방 공통) ---------- */
+function timeMachine(need,year,screen,onGo,extra){
+  if(extra&&!extra())return;
+  const sel=S.sel;
+  if(sel&&need.includes(sel)){consume(sel);S.f['in_'+sel]=true;save();render();toast('💎 시간 결정을 타임머신에 넣었다!');return}
+  const placed=need.filter(id=>S.f['in_'+id]).length;
+  if(placed<need.length){openModal('타임머신',box(`<div style="font-size:54px">🕰️</div>타임머신 계기판: <b>시간 결정 ${placed} / ${need.length}</b><br><span class="muted">이 시대에서 시간 결정을 모두 찾아, 선택한 뒤 타임머신을 누르면 넣을 수 있다.</span>`));return}
+  openModal('타임머신',box('<div style="font-size:54px">🕰️✨</div>시간 결정이 모두 충전되었다! 목적지 연도를 입력하라.')+paper(screen)+lock({placeholder:'연도 4자리',maxlen:4}),()=>bindLock(String(year),onGo));
+}
+
+/* ---------- 퍼즐 그림 ---------- */
+function circuits(){
+  const bulb=`<circle cx="50" cy="40" r="18" fill="#fff9c4" stroke="#999" stroke-width="2"/><rect x="42" y="56" width="16" height="16" fill="#bdbdbd" stroke="#777"/><circle cx="50" cy="76" r="3" fill="#555"/>`;
+  const bat=`<rect x="20" y="122" width="60" height="18" fill="#ffca28" stroke="#555" stroke-width="2"/><rect x="80" y="126" width="5" height="10" fill="#555"/><text x="72" y="136" font-size="12">+</text><text x="24" y="136" font-size="12">−</text>`;
+  const w=(d)=>`<path d="${d}" stroke="#e53935" stroke-width="3" fill="none"/>`;
+  const C0={
+    '가':w('M85 131 H92 V76 H53')+w('M20 131 H10 V100')+w('M10 88 V64 H42'),
+    '나':w('M85 131 H92 V76 H53')+w('M20 131 H10 V64 H42'),
+    '다':w('M20 128 H10 V64 H42')+w('M20 134 H6 V150 H96 V76 H53'),
+    '라':w('M85 131 H92 V64 H58')+w('M20 131 H10 V64 H42')
+  };
+  const C=Object.fromEntries(DD.circ.order.map((k,i)=>['가나다라'[i],C0[k]]));return `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${Object.entries(C).map(([k,v])=>`<div style="background:#fff;border-radius:8px;text-align:center;color:#333"><svg viewBox="0 0 104 158" width="100%">${bulb}${bat}${v}</svg><b>${k}</b></div>`).join('')}</div>`;
+}
+function sundial(){
+  const L=['묘','진','사','오','미','신','유'];let s='';
+  L.forEach((t,i)=>{const a=(180+i*30)*Math.PI/180;s+=`<line x1="${150+70*Math.cos(a)}" y1="${150+70*Math.sin(a)}" x2="${150+110*Math.cos(a)}" y2="${150+110*Math.sin(a)}" stroke="#5d4037" stroke-width="2"/><text x="${150+128*Math.cos(a)}" y="${150+128*Math.sin(a)+8}" text-anchor="middle" font-size="22" font-weight="bold" fill="#3e2723">${t}</text>`});
+  const sa=(180+DD.sun.idx*30)*Math.PI/180;
+  return `<svg viewBox="0 0 300 170" width="300"><path d="M30 150 A120 120 0 0 1 270 150 Z" fill="#c8a165" stroke="#5d4037" stroke-width="4"/>${s}<line x1="150" y1="150" x2="${150+105*Math.cos(sa)}" y2="${150+105*Math.sin(sa)}" stroke="#212121" stroke-width="6" stroke-linecap="round" opacity=".75"/><line x1="150" y1="150" x2="150" y2="60" stroke="#8d6e63" stroke-width="4"/><circle cx="150" cy="150" r="7" fill="#3e2723"/></svg>`;
+}
+function taegukFlag(corners,clickable){
+  const pos=[[18,18],[150,18],[18,98],[150,98]];
+  return `<div style="position:relative;width:240px;height:160px;margin:10px auto;background:#fff;border:3px solid #333">
+  <svg viewBox="0 0 240 160" width="240" height="160" style="position:absolute;left:0;top:0"><path d="M84 80 A36 36 0 0 1 156 80 A18 18 0 0 0 120 80 A18 18 0 0 1 84 80Z" fill="#cd2e3a"/><path d="M84 80 A36 36 0 0 0 156 80 A18 18 0 0 0 120 80 A18 18 0 0 1 84 80Z" fill="#0047a0"/></svg>
+  ${corners.map((c,i)=>`<button class="${clickable?'tg':''}" data-i="${i}" style="position:absolute;left:${pos[i][0]}px;top:${pos[i][1]}px;width:72px;height:44px;font-size:38px;line-height:40px;background:${clickable?'#f5f5f5':'transparent'};border:${clickable?'2px dashed #999':'none'};border-radius:6px;color:#111;padding:0">${c}</button>`).join('')}
+  <div style="position:absolute;left:-14px;top:-6px;width:8px;height:180px;background:#795548"></div></div>`;
+}
+function cityGrid(){
+  const P={'2,4':'🚉','3,1':'📚','1,1':'🏥','3,3':'🥐','4,2':'🏛️','2,1':'🌳','0,3':'🏪'};
+  let h='<div style="display:grid;grid-template-columns:repeat(5,52px);gap:3px;justify-content:center;background:#455a64;padding:6px;border-radius:10px">';
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++)h+=`<div style="height:52px;background:${P[c+','+r]?'#eceff1':'#78909c'};border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px">${P[c+','+r]||''}</div>`;
+  return h+'</div><p class="center muted">위쪽이 북쪽(↑). 로봇은 🚉 역에서 <b>북쪽을 보고</b> 서 있다. 한 칸 = 한 블록.</p>';
+}
+function carbonGraph(){
+  const d=[[2030,800],[2035,650],[2040,500],[2045,350],[2050,200]];
+  return `<svg viewBox="0 0 360 230" width="100%" style="max-width:380px;background:#0d1b2a;border-radius:8px"><line x1="40" y1="190" x2="350" y2="190" stroke="#4fc3f7"/><line x1="40" y1="20" x2="40" y2="190" stroke="#4fc3f7"/>${[0,200,400,600,800].map(v=>`<text x="34" y="${194-v*0.2}" font-size="11" fill="#9fe8ff" text-anchor="end">${v}</text><line x1="40" x2="350" y1="${190-v*0.2}" y2="${190-v*0.2}" stroke="#1e3a5f"/>`).join('')}${d.map(([y,v],i)=>`<rect x="${60+i*58}" y="${190-v*0.2}" width="36" height="${v*0.2}" fill="#69f0ae"/><text x="${78+i*58}" y="208" font-size="12" fill="#e0f7fa" text-anchor="middle">${y}</text>`).join('')}<text x="200" y="226" font-size="11" fill="#9fe8ff" text-anchor="middle">미래 도시 탄소 배출량 (단위: 만 톤)</text></svg>`;
+}
+
+/* ---------- 장면 1: 연구소 ---------- */
+function timeCapsule(x,y,glow){return `<ellipse cx="${x}" cy="${y+250}" rx="140" ry="22" fill="#00e5ff" opacity="${glow?.5:.15}"/>${R(x-110,y,220,260,'#cfd8dc','rx="100" stroke="#607d8b" stroke-width="6"')}${R(x-80,y+40,160,140,'#80deea','rx="70" opacity=".6"')}<circle cx="${x}" cy="${y+110}" r="34" fill="none" stroke="#00bcd4" stroke-width="6"/><line x1="${x}" y1="${y+110}" x2="${x}" y2="${y+86}" stroke="#006064" stroke-width="5"/><line x1="${x}" y1="${y+110}" x2="${x+18}" y2="${y+110}" stroke="#006064" stroke-width="5"/>${R(x-60,y+200,120,30,'#263238','rx="6"')}${lbl(x,y+221,'TIME MACHINE','#00e5ff',14,'bold')}`}
+function sceneLab(){
+  let s=R(0,0,1600,650,'#e0f2f1')+R(0,0,1600,40,'#b2dfdb')+R(0,640,1600,360,'#cfd8dc');for(let x=0;x<1600;x+=100)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="#b0bec5" stroke-width="2"/>`;
+  s+=hot('board',`${R(80,100,380,240,'#fff','rx="6" stroke="#90a4ae" stroke-width="6"')}${lbl(270,140,'에너지 대응표','#00695c',24,'bold')}${R(110,160,320,40,'#e0f2f1')}${R(110,205,320,40,'#e0f2f1')}${lbl(140,188,'○','#333',22)}${lbl(140,233,'□','#333',22)}${DD.corr.top.map((v,i)=>lbl(200+i*45,188,String(v),'#333',20)).join('')}${DD.corr.bot.map(v=>String(v)).map((v,i)=>lbl(200+i*45,233,v,i===5?'#c62828':'#333',20,i===5?'bold':'normal')).join('')}`);
+  s+=hot('circuit',`${R(520,110,260,200,'#263238','rx="10"')}${lbl(650,145,'전원 회로 선택','#69f0ae',20,'bold')}${[0,1,2,3].map(i=>R(540+i*60,165,50,110,'#37474f','rx="6"')).join('')}${[0,1,2,3].map(i=>`<circle cx="${565+i*60}" cy="195" r="12" fill="#fff59d" opacity=".6"/>`).join('')}`);
+  s+=hot('machine',timeCapsule(1050,200,S.f.power));
+  s+=R(1260,500,300,24,'#90a4ae','rx="4"')+R(1280,524,20,130,'#78909c')+R(1520,524,20,130,'#78909c');
+  s+=hot('notebook',`${R(1300,465,140,40,'#00796b','rx="4" transform="rotate(-4 1370 485)"')}${R(1306,460,130,34,'#fff','transform="rotate(-4 1370 485)"')}${lbl(1371,483,'연구 노트','#004d40',16)}`);
+  s+=hot('safe',`${R(120,480,170,170,'#546e7a','rx="10"')}${R(140,500,130,130,'#607d8b','rx="6"')}${R(170,540,70,40,'#102027','rx="4"')}${[0,1,2].map(i=>R(178+i*20,550,14,20,'#69f0ae','rx="2"')).join('')}`);
+  s+=hot('coffee',`${R(560,520,90,130,'#455a64','rx="8"')}${R(580,560,50,30,'#212121')}<path d="M590 600 h30 v24 h-30z" fill="#fff"/>`);
+  s+=hot('clock',`<circle cx="1450" cy="160" r="50" fill="#fff" stroke="#00796b" stroke-width="6"/>${lbl(1450,172,'2026','#00796b',22,'bold')}`);
+  s+=hot('robot',`<ellipse cx="800" cy="900" rx="60" ry="20" fill="#455a64"/><ellipse cx="800" cy="888" rx="56" ry="16" fill="#90a4ae"/><circle cx="800" cy="884" r="6" fill="#69f0ae"/>`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 2: 조선 궁궐 ---------- */
+function sceneJoseon(){
+  let s=R(0,0,1600,650,'#b3e5fc')+`<path d="M0 400 q300 -120 600 -40 t600 -30 t400 20 V650 H0z" fill="#81c784"/>`;
+  // 근정전풍 건물 (집현전)
+  s+=hot('hall',`<path d="M300 180 Q650 90 1000 180 L960 210 H340 Z" fill="#37474f"/><path d="M330 210 H970 V230 H330z" fill="#2e7d32"/>${[360,470,580,690,800,910].map(x=>R(x,230,26,240,'#c62828')).join('')}${R(340,230,620,30,'#1b5e20')}${R(330,470,640,40,'#bdbdbd')}${R(560,140,180,40,'#263238','rx="4"')}${lbl(650,168,'集賢殿','#ffd54f',24,'bold')}${S.f.hall?'':R(560,300,180,170,'#5d4037')+lbl(650,390,'문 닫힘','#ffe0b2',20)}`);
+  s+=R(0,520,1600,480,'#d7ccc8');for(let x=0;x<1600;x+=90)for(let y=520;y<1000;y+=60)s+=R(x+((y/60)%2)*45,y,88,58,'none','stroke="#bcaaa4" stroke-width="2"');
+  // 신하
+  s+=hot('guard',`<ellipse cx="200" cy="740" rx="50" ry="14" fill="#a1887f"/>${R(170,610,60,120,'#1565c0','rx="20"')}<circle cx="200" cy="590" r="26" fill="#ffe0b2"/>${R(170,552,60,18,'#212121','rx="4"')}${R(180,540,40,16,'#212121','rx="4"')}<line x1="166" y1="562" x2="150" y2="556" stroke="#212121" stroke-width="5"/><line x1="234" y1="562" x2="250" y2="556" stroke="#212121" stroke-width="5"/>${R(185,640,30,40,'#ffd54f')}`);
+  // 십이지 병풍
+  s+=hot('zodiac',`${[0,1,2,3,4,5].map(i=>R(1080+i*70,240,66,220,['#fff8e1','#ffecb3'][i%2],'stroke="#8d6e63" stroke-width="3"')).join('')}${['🐭🐮','🐯🐰','🐲🐍','🐴🐑','🐵🐔','🐶🐷'].map((e,i)=>`<text x="${1113+i*70}" y="360" font-size="24" text-anchor="middle">${e}</text>`).join('')}`);
+  // 앙부일구
+  s+=hot('sundial',`${R(470,720,120,90,'#8d6e63')}${R(450,700,160,24,'#6d4c41','rx="4"')}<path d="M460 700 A70 50 0 0 0 600 700 Z" fill="#c8a165" stroke="#5d4037" stroke-width="4"/><line x1="530" y1="700" x2="490" y2="680" stroke="#212121" stroke-width="4"/>`);
+  // 측우기
+  s+=hot('rain',`${R(820,720,100,90,'#9e9e9e')}${R(800,700,140,24,'#757575','rx="4"')}${R(840,600,60,100,'#455a64','rx="6"')}<ellipse cx="870" cy="600" rx="30" ry="8" fill="#81d4fa"/>`);
+  // 창고
+  s+=hot('store',`${R(1150,620,280,200,'#8d6e63')}<path d="M1130 620 L1290 560 L1450 620 Z" fill="#37474f"/>${R(1250,700,80,120,'#5d4037')}${R(1300,740,24,30,'#ffd54f','rx="4"')}`);
+  // 해태 (헛다리)
+  s+=hot('haetae',`<text x="1000" y="900" font-size="64">🦁</text>`);
+  // 타임머신
+  s+=hot('machine',`<g transform="translate(130,330) scale(.55)">${timeCapsule(200,0,true)}</g>`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 3: 1919 인쇄소 ---------- */
+function scenePress(){
+  let s=R(0,0,1600,650,'#5d4037');for(let y=0;y<650;y+=40)s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="#4e342e" stroke-width="3"/>`;
+  s+=R(0,640,1600,360,'#4e342e');for(let x=0;x<1600;x+=80)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="#3e2723" stroke-width="3"/>`;
+  s+=`<circle cx="800" cy="90" r="200" fill="#ffcc80" opacity=".08"/>`;
+  // 인쇄기
+  s+=hot('press',`${R(460,330,360,320,'#424242','rx="10"')}${R(500,280,280,60,'#616161','rx="8"')}<circle cx="560" cy="430" r="50" fill="#757575" stroke="#212121" stroke-width="8"/><circle cx="720" cy="430" r="50" fill="#757575" stroke="#212121" stroke-width="8"/>${R(520,520,240,30,'#fafafa')}${R(530,540,220,30,'#f5f5f5')}`);
+  // 책장 + 시집
+  s+=hot('book',`${R(60,120,240,500,'#3e2723','rx="4"')}${[0,1,2,3,4].map(r=>[0,1,2,3,4,5,6].map(i=>R(72+i*32,135+r*96,26,78,['#6d4c41','#8d6e63','#a1887f','#4e342e'][(i+r)%4])).join('')+R(66,213+r*96,228,8,'#2b1d16')).join('')}${R(168,328,30,88,'#c62828')}`);
+  // 책상 + 편지 + 등잔
+  s+=R(880,520,420,24,'#3e2723','rx="4"')+R(900,544,20,110,'#2b1d16')+R(1260,544,20,110,'#2b1d16');
+  s+=hot('letter',`${R(920,480,120,44,'#f3e0b5','transform="rotate(-6 980 502)"')}<line x1="935" x2="1025" y1="495" y2="488" stroke="#8d6e63" stroke-width="3"/><line x1="935" x2="1015" y1="508" y2="502" stroke="#8d6e63" stroke-width="3"/>`);
+  s+=hot('lamp',`${R(1190,470,30,50,'#ffb300','rx="6"')}<path d="M1205 466 q-8 -16 0 -28 q8 12 0 28z" fill="#ff7043"/><circle cx="1205" cy="470" r="70" fill="#ffcc80" opacity=".18"/>`);
+  // 문서함
+  s+=hot('box',`${R(900,720,220,140,'#6d4c41','rx="6" stroke="#3e2723" stroke-width="5"')}${R(985,770,50,40,'#d4af37','rx="4"')}`);
+  // 태극기 액자
+  s+=hot('flag',`${R(1000,120,300,220,'#8d6e63','rx="6"')}${R(1015,135,270,190,'#fff')}${S.f.flag?`<path d="M1110 230 A40 40 0 0 1 1190 230 A20 20 0 0 0 1150 230 A20 20 0 0 1 1110 230Z" fill="#cd2e3a"/><path d="M1110 230 A40 40 0 0 0 1190 230 A20 20 0 0 0 1150 230 A20 20 0 0 1 1110 230Z" fill="#0047a0"/>`:lbl(1150,240,'?','#bbb',60)}`);
+  // 신문 더미 (헛다리)
+  s+=hot('papers',`${[0,1,2,3].map(i=>R(300+i*6,820-i*14,180,16,'#eeeeee','stroke="#bdbdbd"')).join('')}`);
+  s+=hot('machine',`<g transform="translate(1290,450) scale(.55)">${timeCapsule(200,0,true)}</g>`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 4: 2050 미래 도시 ---------- */
+function sceneFuture(){
+  let s=`<defs><linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a237e"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs>`+R(0,0,1600,650,'url(#fsky)');
+  [[60,200,120],[200,120,100],[320,260,90],[1200,150,110],[1330,90,130],[1480,220,100]].forEach(([x,y,w])=>{s+=R(x,y,w,650-y,'#283593')+[0,1,2,3,4,5].map(i=>R(x+14,y+20+i*55,w-28,10,'#80deea','opacity=".5"')).join('')});
+  s+=`<path d="M0 360 Q800 240 1600 360" stroke="#00e5ff" stroke-width="6" fill="none" opacity=".6"/>`;
+  s+=R(0,640,1600,360,'#263238');for(let x=0;x<1600;x+=120)s+=R(x,800,70,8,'#00e5ff','opacity=".3"');
+  s+=hot('globe',`<circle cx="560" cy="300" r="110" fill="#00b8d4" opacity=".55" stroke="#84ffff" stroke-width="4"/><path d="M490 260 q40 -30 80 0 t50 40 q-30 40 -80 20z" fill="#69f0ae" opacity=".7"/><path d="M590 340 q30 10 40 40" stroke="#69f0ae" stroke-width="20" opacity=".7"/>${R(500,420,120,20,'#37474f','rx="6"')}${lbl(560,465,'홀로그램 지구본','#84ffff',18)}`);
+  s+=hot('graph',`${R(760,170,320,220,'#0d1b2a','rx="10" stroke="#00e5ff" stroke-width="4"')}${[800,650,500,350,200].map((v,i)=>R(790+i*55,360-v*0.22,34,v*0.22,'#69f0ae')).join('')}${lbl(920,205,'탄소 배출 그래프','#84ffff',18)}`);
+  s+=hot('bins',`${['#1e88e5','#43a047','#fdd835','#e53935'].map((c,i)=>R(140+i*80,720,70,120,c,'rx="8"')).join('')}${lbl(290,870,'분리배출 로봇 수거함','#e0f7fa',18)}<text x="200" y="700" font-size="44">🤖</text>`);
+  s+=hot('robot',`${R(1180,660,100,140,'#b0bec5','rx="20"')}<circle cx="1230" cy="640" r="40" fill="#cfd8dc"/><circle cx="1215" cy="636" r="7" fill="#00e5ff"/><circle cx="1245" cy="636" r="7" fill="#00e5ff"/>${R(1195,700,70,40,'#0d1b2a','rx="6"')}${lbl(1230,726,'GUIDE','#00e5ff',13,'bold')}`);
+  s+=hot('energy',`${R(1360,620,180,200,'#37474f','rx="12" stroke="#00e5ff" stroke-width="4"')}<path d="M1450 650 l-30 60 h28 l-18 60 l50 -76 h-30 l20 -44z" fill="#ffeb3b"/>${lbl(1450,800,'에너지 금고','#84ffff',16)}`);
+  s+=hot('drone',`<text x="1000" y="120" font-size="50">🛸</text>`);
+  s+=hot('tree',`<circle cx="1080" cy="760" r="60" fill="#2e7d32"/>${R(1070,800,20,60,'#5d4037')}`);
+  s+=hot('machine',`<g transform="translate(580,560) scale(.55)">${timeCapsule(200,0,true)}</g>`);
+  return svgWrap(s);
+}
+
+/* ---------- 방 정의 ---------- */
+const rooms=[
+{
+  name:'2026 · 시간 여행 연구소',scene:sceneLab,
+  objects:[
+    {id:'notebook',click(){openModal('연구 노트',paper('<b>시간 여행 실험 계획</b><br>· 첫 번째 목적지: <b>훈민정음이 반포된 해</b><br>&nbsp;&nbsp;'+DD.y1.memo+'<br>· 타임머신은 <b>전원</b>과 <b>시간 결정</b>이 있어야 움직인다.<br>· 시간 결정은 금고에 보관 중. 금고 번호는 화이트보드 대응표의 <b>?</b>'))}},
+    {id:'board',click(){openModal('에너지 대응표',box('결정 수(○)와 에너지(□) 사이의 대응 관계')+`<table class="paper" style="margin:auto;font-size:22px;border-collapse:collapse;text-align:center"><tr><td style="padding:6px 14px">○</td>${DD.corr.top.map(v=>`<td style="padding:6px 14px">${v}</td>`).join('')}</tr><tr><td style="padding:6px 14px">□</td>${DD.corr.bot.map(v=>v==='?'?'<b style="color:#c62828">?</b>':v).map(v=>`<td style="padding:6px 14px">${v}</td>`).join('')}</tr></table>`)}},
+    {id:'safe',click(){
+      if(S.f.safe){openModal('금고',box('금고는 비어 있다.'));return}
+      openModal('연구소 금고',box('🔒 숫자 자물쇠')+DD.corr.tip+lock({placeholder:'숫자',maxlen:4}),()=>bindLock(String(DD.corr.ans),()=>{S.f.safe=true;save();closeModal();give('cr0')}))}},
+    {id:'circuit',click(){
+      if(S.f.power){openModal('전원 회로',box('⚡ 전원이 연결되어 타임머신이 웅웅 울린다.'));return}
+      choiceQ('전원 회로 선택',box('타임머신 전원 패널: <b>"전구에 불이 켜지는 회로를 골라 연결하시오."</b>')+circuits(),['가','나','다','라'],DD.circ.ans,'✅ 전구가 반짝! 타임머신에 전원이 들어왔다',()=>{S.f.power=true;save();closeModal();toast('⚡ 타임머신 전원 연결!')},4)}},
+    {id:'machine',click(){timeMachine(['cr0'],1446,'첫 번째 목적지 연도를 입력하세요. (연구 노트를 확인!)',()=>nextRoom('슈우웅! 1446년 조선, 세종대왕의 궁궐에 도착했다!'),()=>{if(!S.f.power){openModal('타임머신',box('<div style="font-size:54px">🕰️</div>타임머신이 꺼져 있다. <b>전원</b>부터 연결해야 한다.'));return false}return true})}},
+    {id:'coffee',click(){openModal('커피 머신',box('연구원들의 커피 머신. 별건 없다.'))}},
+    {id:'clock',click(){openModal('연도 시계',box('지금 연도: <b>2026년</b>'))}},
+    {id:'robot',click(){openModal('청소 로봇',box('위잉~ 바닥 청소 중. 별건 없다.'))}}
+  ],
+  hints:DD.hints[0]
+},
+{
+  name:'1446 · 조선 세종 시대',scene:sceneJoseon,
+  objects:[
+    {id:'guard',click(){
+      if(S.f.hall){openModal('신하',box('"집현전 문을 열어 드렸사옵니다. 학자들의 기록을 살펴보시옵소서."'));return}
+      openModal('문 앞을 지키는 신하',box('"멈추시오! 집현전에 들어가려면 <b>바른 높임말</b>을 알아야 하오. 아래 문장이 바르면 1, 틀리면 0으로 하여 순서대로 말해 보시오."')+paper(DD.honor.html)+DD.honor.tip+lock({placeholder:'숫자 '+DD.honor.n+'자리 (1 또는 0)',maxlen:DD.honor.n}),()=>bindLock(DD.honor.ans,()=>{S.f.hall=true;save();closeModal();toast('신하가 집현전 문을 열어 주었다!')}))}},
+    {id:'hall',click(){
+      if(!S.f.hall){openModal('집현전',box('굳게 닫힌 문 앞을 신하가 지키고 있다.'));return}
+      if(S.f.hallDone){openModal('집현전 서고',box('학자들의 기록이 가지런히 꽂혀 있다.'));return}
+      openModal('집현전 서고',paper('<b>훈민정음 학자의 기록</b><br>"자음의 기본자 <b>ㄱ, ㄴ, ㅁ, ㅅ, ㅇ</b>은 소리 낼 때 발음 기관의 모양을 본떴다.<br>소리가 세질수록 <b>획을 하나씩 더하여</b> 새 글자를 만들었다.<br>예) ㄴ → ㄷ → ㅌ"')+box('서고 자물쇠: <b>"'+DD.gah.q+'"</b>')+DD.gah.tip+lock({placeholder:'자음 '+DD.gah.ans.length+'개',maxlen:DD.gah.ans.length+1}),()=>bindLock(DD.gah.ans,()=>{S.f.hallDone=true;save();closeModal();give('cr1')}))}},
+    {id:'sundial',click(){openModal('앙부일구 (해시계)',box('솥 모양의 해시계에 그림자가 드리워져 있다.<br>'+sundial()+'<br><span class="muted">조선 시대에는 하루를 열두 개의 "시(時)"로 나누어 십이지 이름을 붙였다.</span>'))}},
+    {id:'zodiac',click(){openModal('십이지 병풍',paper('<b>십이지 시각</b> (차례대로)<br>자 · 축 · 인 · 묘 · 진 · 사 · 오 · 미 · 신 · 유 · 술 · 해<br><br><b>십이지 동물</b> (차례대로)<br>쥐 · 소 · 호랑이 · 토끼 · 용 · 뱀 · 말 · 양 · 원숭이 · 닭 · 개 · 돼지'))}},
+    {id:'store',click(){
+      if(S.f.store){openModal('궁궐 창고',box('창고는 열려 있다.'));return}
+      openModal('궁궐 창고',box('창고 자물쇠에 글귀: <b>'+DD.sun.q+'</b>')+DD.sun.tip+lock({placeholder:'동물 이름',maxlen:4}),()=>bindLock(DD.sun.ans,()=>{S.f.store=true;save();closeModal();give('cr2')}))}},
+    {id:'rain',click(){
+      if(S.f.rain){openModal('측우기',box('비의 양을 재는 측우기. 아래 상자는 열려 있다.'));return}
+      openModal('측우기',box('세종 때 만든, 비의 양을 재는 측우기다. 받침돌에 기록과 상자가 있다.')+paper(DD.rain.html)+DD.rain.tip+lock({placeholder:'숫자('+DD.rain.u+')',maxlen:5}),()=>bindLock(String(DD.rain.ans),()=>{S.f.rain=true;save();closeModal();give('cr3')}))}},
+    {id:'haetae',click(){openModal('해태상',box('궁궐을 지키는 상상의 동물. 별건 없다.'))}},
+    {id:'machine',click(){timeMachine(['cr1','cr2','cr3'],1919,DD.y2.screen,()=>nextRoom('슈우웅! 1919년 3월, 비밀 인쇄소에 도착했다!'))}}
+  ],
+  hints:DD.hints[1]
+},
+{
+  name:'1919 · 비밀 인쇄소',scene:scenePress,
+  objects:[
+    {id:'press',click(){
+      if(S.f.press){openModal('인쇄기',box('인쇄기가 쉬지 않고 독립선언서를 찍어 내고 있다.'));return}
+      openModal('인쇄기',box('밤새 몰래 <b>독립선언서</b>를 찍어야 한다! 인쇄기 옆에 계산 쪽지가 있다.')+paper(DD.press.html)+DD.press.tip+lock({placeholder:'숫자('+DD.press.u+')',maxlen:5}),()=>bindLock(String(DD.press.ans),()=>{S.f.press=true;save();openModal('인쇄기',box('철컥철컥! 인쇄기가 돌아가기 시작했다.<br>인쇄기 아래에서 빛나는 것을 발견했다!'));give('cr4')}))}},
+    {id:'book',click(){openModal('책장 속 빨간 책',box('빨간 책 속에 짧은 시가 적힌 쪽이 접혀 있다.')+paper('<b>봄을 기다리며</b><br>1 &nbsp;봄이 오면 우리 함께 만나자<br>2 &nbsp;새벽 종소리 울리는 탑골 마을<br>3 &nbsp;공원 앞 느티나무 아래에서<br>4 &nbsp;두 손 모아 그날을 기다린다'))}},
+    {id:'letter',click(){openModal('책상 위 편지',paper('"동지에게.<br>약속 장소는 우리끼리 정한 방식으로 적는다.<br>앞 숫자는 <b>시의 줄</b>, 뒤 숫자는 그 줄의 <b>몇 번째 낱말</b>.<br><br><b style="font-size:24px">2-4 · 3-1</b><br><br>두 낱말을 이어 붙이면 3월 1일, 독립선언서를 읽을 곳이다.<br>문서함 암호도 이것이다."'))}},
+    {id:'box',click(){
+      if(S.f.box){openModal('문서함',box('문서함은 비어 있다.'));return}
+      openModal('비밀 문서함',box('🔒 글자 자물쇠: "약속 장소"')+lock({placeholder:'장소 이름',maxlen:6}),()=>bindLock('탑골공원',()=>{S.f.box=true;save();closeModal();give('cr5')}))}},
+    {id:'flag',click(){
+      if(S.f.flag){openModal('태극기',box('태극기가 완성되었다.')+taegukFlag(['☰','☵','☲','☷'],false));return}
+      const c=S.f.tg||['?','?','?','?'];const cyc=['☰','☷','☵','☲'];
+      const draw=()=>{$('tgw').innerHTML=taegukFlag(c,true);document.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;const k=cyc.indexOf(c[i]);c[i]=cyc[(k+1)%4];S.f.tg=c;save();tone(400);draw()})};
+      openModal('비어 있는 태극기',box('태극기의 네 귀퉁이 괘가 지워져 있다. 칸을 눌러 괘를 바꾸며 완성하라. (왼쪽 막대가 깃대)')+paper('<b>괘 설명서</b><br>· <b>건(☰, 하늘)</b>: 막대 셋이 모두 이어짐 — 깃대 쪽 위<br>· <b>곤(☷, 땅)</b>: 막대 셋이 모두 끊어짐 — 건과 대각선으로 마주 봄<br>· <b>감(☵, 물)</b>: 깃대에서 먼 쪽 위<br>· <b>리(☲, 불)</b>: 남은 자리')+`<div id="tgw"></div><div class="center"><button class="btn" id="tgok">완성!</button></div><div class="msg" id="tgm"></div>`,()=>{draw();$('tgok').onclick=()=>{if(c.join()==='☰,☵,☲,☷'){good('tgm','✅ 태극기가 완성되었다! 액자 뒤에서 무언가 떨어졌다');S.f.flag=true;save();setTimeout(()=>{closeModal();give('cr6')},1100)}else bad('tgm','❌ 괘의 위치가 맞지 않는다')}})}},
+    {id:'lamp',click(){openModal('등잔',box('희미한 불빛. 들키지 않게 조심해야 한다.'))}},
+    {id:'papers',click(){openModal('신문 더미',box('오래된 신문들. 별건 없다.'))}},
+    {id:'machine',click(){timeMachine(['cr4','cr5','cr6'],2050,DD.y3.screen,()=>nextRoom('슈우웅! 2050년 미래 도시에 도착했다!'))}}
+  ],
+  hints:DD.hints[2]
+},
+{
+  name:'2050 · 미래 도시',scene:sceneFuture,
+  objects:[
+    {id:'bins',click(){
+      if(S.f.bins){openModal('분리배출 로봇',box('🤖 "분리배출 완벽해요! 고마워요!"'));return}
+      const items=DD.bins.items;const B=DD.bins.B;const sel={};
+      const draw=()=>{$('bn').innerHTML=items.map(([n],i)=>`<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0"><b style="min-width:200px">${n}</b>${B.map(b=>`<button class="ghost bb" data-i="${i}" data-b="${b}" style="font-size:14px;padding:6px 10px;${sel[i]===b?'border-color:var(--gold);color:var(--gold)':''}">${b}</button>`).join('')}</div>`).join('')+'<div class="center"><button class="btn" id="bngo">수거함에 넣기</button></div>';
+        document.querySelectorAll('.bb').forEach(x=>x.onclick=()=>{sel[x.dataset.i]=x.dataset.b;draw()});
+        $('bngo').onclick=()=>{if(items.every(([,a],i)=>sel[i]===a)){good('bnm','✅ 🤖 "완벽한 분리배출! 시간 결정을 드릴게요"');S.f.bins=true;save();setTimeout(()=>{closeModal();give('cr7')},1100)}else bad('bnm','🤖 "삐빅! 잘못 넣은 것이 있어요"')}};
+      openModal('분리배출 로봇',box('🤖 "2050년 도시에서는 분리배출이 기본이에요! 쓰레기를 알맞은 수거함에 넣어 주세요."')+`<div id="bn"></div><div class="msg" id="bnm"></div>`,draw)}},
+    {id:'graph',click(){openModal('탄소 배출 그래프',box('미래 도시의 탄소 배출량 변화 그래프다.')+carbonGraph())}},
+    {id:'energy',click(){
+      if(S.f.energy){openModal('에너지 금고',box('금고는 열려 있다.'));return}
+      openModal('에너지 금고',box('🔒 "'+DD.graph.q+'"')+DD.graph.tip+lock({placeholder:'숫자('+DD.graph.u+')',maxlen:4}),()=>bindLock(String(DD.graph.ans),()=>{S.f.energy=true;save();closeModal();give('cr8')}))}},
+    {id:'robot',click(){
+      if(S.f.robot){openModal('안내 로봇',box('🤖 "Have a nice trip!"'));return}
+      openModal('안내 로봇',box(DD.robot.say)+paper('<b>"'+DD.robot.txt+'"</b>')+DD.robot.tip+cityGrid()+`<div class="center">${DD.robot.opts.map(b=>`<button class="ghost rb" data-b="${b}" style="margin:3px">${b}</button>`).join('')}</div><div class="msg" id="rbm"></div>`,()=>{
+        document.querySelectorAll('.rb').forEach(b=>b.onclick=()=>{if(b.dataset.b===DD.robot.ans){good('rbm','✅ 🤖 "Great job! Here is the crystal!"');S.f.robot=true;save();setTimeout(()=>{closeModal();give('cr9')},1100)}else bad('rbm','🤖 "Oops! Try again."')})})}},
+    {id:'globe',click(){
+      if(S.f.globe){openModal('홀로그램 지구본',box('🌍 귀환 좌표가 설정되었다: 대한민국'));return}
+      const N=DD.globe.N;const C=DD.globe.C;const sel={};
+      const draw=()=>{$('gl').innerHTML=N.map(([n],i)=>`<div style="margin:6px 0"><b>${n}</b> → ${C.map(c=>`<button class="ghost gb" data-i="${i}" data-c="${c}" style="font-size:13px;padding:5px 8px;margin:2px;${sel[i]===c?'border-color:var(--gold);color:var(--gold)':''}">${c}</button>`).join('')}</div>`).join('')+'<div class="center"><button class="btn" id="glgo">좌표 확인</button></div>';
+        document.querySelectorAll('.gb').forEach(x=>x.onclick=()=>{sel[x.dataset.i]=x.dataset.c;draw()});
+        $('glgo').onclick=()=>{if(N.every(([,a],i)=>sel[i]===a)){good('glm','✅ 지구 좌표 보정 완료! 귀환 좌표: 대한민국');S.f.globe=true;save();setTimeout(closeModal,1100)}else bad('glm','❌ 좌표 오류! 대륙을 다시 확인하라')}};
+      openModal('홀로그램 지구본',box('타임머신이 집으로 돌아가려면 지구 좌표를 보정해야 한다. '+DD.globe.q+'')+`<div id="gl"></div><div class="msg" id="glm"></div>`,draw)}},
+    {id:'drone',click(){openModal('배달 드론',box('위이잉~ 택배를 나르는 중. 별건 없다.'))}},
+    {id:'tree',click(){openModal('도시 숲',box('도시 곳곳에 나무가 가득하다. 공기가 상쾌하다!'))}},
+    {id:'machine',click(){timeMachine(['cr7','cr8','cr9'],2026,DD.y4.screen,()=>{closeModal();finish()},()=>{if(!S.f.globe){openModal('타임머신',box('<div style="font-size:54px">🕰️</div>"귀환 좌표가 설정되지 않았습니다." <b>홀로그램 지구본</b>을 먼저 확인하라.'));return false}return true})}}
+  ],
+  hints:DD.hints[3]
+}];
+
+/* ---------- 시작 / 끝 ---------- */
+function renderIntro(app){
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🕰️</div><h1>시간 여행 연구소</h1><div class="muted" style="font-weight:bold">${GRADE}학년 · ${LVN}${LV==='easy'?' · 🧭 문제마다 도움말이 나와요':LV==='hard'?' · 정답 힌트 없음':''}</div>
+  <div class="muted">시대 4곳 · 퍼즐 17개 · 사회·국어·과학·수학·영어 융합</div>
+  <div class="story">견학 온 시간 여행 연구소에서 실수로 타임머신을 작동시켜 버렸다! 연구원은 아무도 없고, 타임머신은 <b>세 시대</b>를 거쳐야만 다시 2026년으로 돌아올 수 있다고 한다.<br><br>
+  <b>조선 세종 시대 → 1919년 3월 → 2050년 미래 도시</b>. 각 시대에서 <b>시간 결정 💎</b>을 모으고 목적지 연도를 맞혀 집으로 돌아오라!</div>
+  <p class="muted">종이와 연필을 준비하면 좋아요 · 막히면 💡 힌트</p>
+  <button class="btn" id="startBtn" style="font-size:22px;padding:14px 40px">시간 여행 시작!</button></div>`;
+  $('startBtn').onclick=()=>{S.room=0;S.start=Date.now();save();render()};
+}
+function renderEnd(app){
+  const t=S.end&&S.start?fmt(S.end-S.start):'--:--';const h=S.hints.reduce((a,b)=>a+b,0);
+  const rank=h===0?'🏆 시간의 지배자':h<=3?'🥇 베테랑 시간 여행자':h<=7?'🥈 시간 여행자':'🥉 시간 여행 견습생';
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🏠</div><h1>2026년 귀환 성공!</h1>
+  <p>기록 <b style="color:var(--gold)">${t}</b> · 힌트 <b style="color:var(--gold)">${h}번</b></p>
+  <p style="font-size:24px">${rank}</p>
+  <div class="story">슈우웅… 눈을 떠 보니 다시 연구소다! 시계는 <b>2026년</b>을 가리키고 있다.<br><br>세종대왕의 집현전, 1919년 만세 운동을 준비하던 사람들, 그리고 깨끗한 2050년의 도시까지. 과거와 현재와 미래를 모두 지나 온 너희는 이제 진짜 <b>시간 여행자</b>다!</div>${LV!=='hard'?`<p><a class="btn" style="text-decoration:none;display:inline-block" href="${location.pathname.split('/').pop()}?lv=${LV==='easy'?'normal':'hard'}">다음 단계 (${LV==='easy'?'🟡 보통':'🔴 어려움'}) 도전하기 →</a></p>`:''}</div>`;
+}
+
+let S=load()||fresh();
+function fresh(){return{room:-1,inv:[],sel:null,f:{},seen:{},hints:[0,0,0,0],start:null,end:null}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const norm=s=>s.replace(/\s/g,'').toUpperCase();
+const $=id=>document.getElementById(id);
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2200)}
+function give(id){if(!S.inv.includes(id)){S.inv.push(id);save();toast(`${ITEMS[id].e} ${ITEMS[id].n} 획득!`);renderInv()}}
+function uses(id){return S.sel===id}
+function consume(id){S.inv=S.inv.filter(x=>x!==id);if(S.sel===id)S.sel=null;save();renderInv()}
+
+function openModal(title,html,setup){$('mtitle').textContent=title;$('mbody').innerHTML=html;$('modal').classList.add('show');if(setup)setup()}
+function closeModal(){$('modal').classList.remove('show');render()}
+$('mclose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function lock(opts){
+  // opts: {label, placeholder, answer, ok(), maxlen}
+  return `<div class="muted" style="text-align:center">${opts.label||''}</div>
+  <form class="lockform" id="lf"><input id="li" maxlength="${opts.maxlen||8}" placeholder="${opts.placeholder||''}" autocomplete="off"><button class="btn">열기</button></form>
+  <div class="msg" id="lm"></div>`;
+}
+function bindLock(answer,ok){
+  const f=$('lf');if(!f)return;
+  f.onsubmit=e=>{e.preventDefault();const v=norm($('li').value);if(!v)return;
+    if(v===norm(answer)){$('lm').className='msg good';$('lm').textContent='✅ 철컥! 열렸다!';f.querySelectorAll('input,button').forEach(x=>x.disabled=true);setTimeout(ok,900)}
+    else{$('lm').className='msg bad';$('lm').textContent='❌ 열리지 않는다…';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+  };
+}
+
+/* ---------- 소리 ---------- */
+let actx=null;
+function tone(f){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.3,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+
+/* ---------- 장면 그리기 도우미 ---------- */
+const hot=(id,inner)=>`<g class="hot" data-id="${id}">${inner}</g>`;
+const R=(x,y,w,h,f,ex='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${ex}/>`;
+function woodFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let y=690;y<1000;y+=45){s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="3"/>`;for(let x=((y/45)%2)*120;x<1600;x+=240)s+=`<line x1="${x}" x2="${x}" y1="${y-45}" y2="${y}" stroke="${c2}" stroke-width="2"/>`}return s}
+function lamps(){return [300,800,1300].map(x=>R(x-100,10,200,16,'#fffef5','rx="6" stroke="#ddd"')).join('')}
+function windowPane(x,y,w,h){return `${R(x-8,y-8,w+16,h+16,'#fff')}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sky)"/><line x1="${x+w/2}" x2="${x+w/2}" y1="${y}" y2="${y+h}" stroke="#fff" stroke-width="8"/><line x1="${x}" x2="${x+w}" y1="${y+h/2}" y2="${y+h/2}" stroke="#fff" stroke-width="8"/><ellipse cx="${x+w*0.3}" cy="${y+h*0.25}" rx="28" ry="12" fill="#fff" opacity=".8"/>`}
+function studentDesk(x,y,sc=1){const w=200*sc,h=16*sc;return `<g>${R(x-w/2,y,w,h,'#ddb983','rx="3"')}${R(x-w/2+8,y+h,w-16,40*sc,'#b98f5a')}${R(x-w/2+6,y+h+40*sc,8*sc,60*sc,'#666')}${R(x+w/2-14,y+h+40*sc,8*sc,60*sc,'#666')}${R(x-55*sc,y+90*sc,110*sc,14*sc,'#3d6fb0','rx="4"')}${R(x-50*sc,y+50*sc,100*sc,40*sc,'#4a7fc1','rx="6"')}${R(x-48*sc,y+104*sc,7*sc,40*sc,'#555')}${R(x+41*sc,y+104*sc,7*sc,40*sc,'#555')}</g>`}
+function clockFace(cx,cy,r){const a=(deg,len,w,c)=>{const t=(deg-90)*Math.PI/180;return `<line x1="${cx}" y1="${cy}" x2="${cx+len*Math.cos(t)}" y2="${cy+len*Math.sin(t)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};let ticks='';for(let i=0;i<12;i++){const t=i*30*Math.PI/180;ticks+=`<line x1="${cx+r*.8*Math.cos(t)}" y1="${cy+r*.8*Math.sin(t)}" x2="${cx+r*.92*Math.cos(t)}" y2="${cy+r*.92*Math.sin(t)}" stroke="#333" stroke-width="3"/>`}return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fffdf5" stroke="#6b4a2a" stroke-width="7"/>${ticks}${a(122.5,r*.5,6,'#111')}${a(30,r*.78,4,'#c0392b')}<circle cx="${cx}" cy="${cy}" r="4" fill="#111"/>`}
+const DEFS=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc9ff"/><stop offset="1" stop-color="#d8efff"/></linearGradient></defs>`;
+const svgWrap=inner=>`<svg viewBox="0 0 1600 1000" width="100%" style="display:block">${DEFS}${inner}</svg>`;
+/* ---------- 진행 ---------- */
+function mx(){return Math.max(S.maxRoom||0,S.room)}
+function nextRoom(t){closeModal();S.room++;S.maxRoom=Math.max(mx(),S.room);S.sel=null;save();render();if(t)toast(t)}
+function goRoom(i){S.maxRoom=mx();S.room=i;S.sel=null;save();render()}
+function finish(){S.end=Date.now();S.room=rooms.length;save();render()}
+
+function renderInv(){
+  const el=$('inv');if(!el)return;
+  el.innerHTML=`<span class="lbl">🎒 소지품</span>`+(S.inv.length?S.inv.map(id=>`<div class="item ${S.sel===id?'sel':''}" data-id="${id}"><span>${ITEMS[id].e}</span>${ITEMS[id].n}</div>`).join(''):'<span class="muted">아직 없음</span>')+(S.sel?`<span class="selinfo">사용 중: ${ITEMS[S.sel].n} → 쓸 곳을 눌러 보세요</span>`:'');
+  el.querySelectorAll('.item').forEach(it=>it.onclick=()=>{const id=it.dataset.id;S.sel=S.sel===id?null:id;save();renderInv()});
+}
+
+function render(){
+  $('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);
+  const app=$('app');
+  if(S.room===-1)return renderIntro(app);
+  if(S.room>=rooms.length)return renderEnd(app);
+  const r=rooms[S.room];
+  app.innerHTML=`<div class="roombar"><h2>방 ${S.room+1} / ${rooms.length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<mx()?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
+  <div class="scene">${r.scene()}</div><div class="inv" id="inv"></div>
+  <p class="muted" style="text-align:center">방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 선택한 뒤 쓸 곳을 누르면 돼요.</p>`;
+  app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-6);h.setAttribute('y',b.y-6);h.setAttribute('width',b.width+12);h.setAttribute('height',b.height+12);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}});
+  app.querySelectorAll('.hot').forEach(el=>el.addEventListener('click',()=>{const o=r.objects.find(x=>x.id===el.dataset.id);if(!o)return;if(o.id==='door'&&S.room<mx()){goRoom(S.room+1);toast('이미 열어 둔 문이다. 다음 방으로!');return}o.click()}));
+  if($('prevBtn'))$('prevBtn').onclick=()=>goRoom(S.room-1);
+  if($('nextBtn'))$('nextBtn').onclick=()=>goRoom(S.room+1);
+  $('hintBtn').onclick=showHints;
+  renderInv();
+}
+function showHints(){
+  const r=rooms[S.room];const n=S.hints[S.room];
+  const html=r.hints.slice(0,n).map((h,i)=>`<div class="hint">💡 ${i+1}. ${h}</div>`).join('')+(n<r.hints.length?`<div class="center" style="margin-top:14px"><button class="btn" id="moreHint">힌트 ${n+1} 열기</button><div class="muted">힌트를 쓰면 기록에 남아요</div></div>`:'<p class="muted center">이 방의 힌트를 모두 열었어요.</p>');
+  openModal(`💡 ${r.name} 힌트`,html,()=>{const b=$('moreHint');if(b)b.onclick=()=>{S.hints[S.room]++;save();$('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);showHints()}});
+}
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+setInterval(()=>{$('timer').textContent=S.start?fmt((S.end||Date.now())-S.start):'00:00'},500);
+$('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="muted">지금까지 푼 기록이 모두 지워져요.</p><div class="center"><button class="btn" id="yesReset">다시 시작</button></div>',()=>{$('yesReset').onclick=()=>{S=fresh();save();closeModal()}});
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 게임을 끝까지 깨면 게임 목록에 완료 표시 */
+setInterval(function(){try{var t=(S&&S.end)?String(S.end):null;if(t&&localStorage.getItem('class-done-skip-time@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['time@'+LV]){d['time@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

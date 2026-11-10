@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리 마을 시장님 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3fb;--card:#fff;--ink:#1d2a44;--muted:#61708f;--blue:#3867d6;--blue2:#2a4fa8;--green:#2e9e5b;--red:#e5482f;--line:#d6e0f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding:14px 14px 60px}
+h1,h2{font-family:'Black Han Sans',sans-serif;font-weight:400}
+h1{font-size:40px;color:var(--blue);margin:0}
+h2{font-size:23px;margin:0 0 8px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{font-family:'Black Han Sans';font-size:22px;color:var(--blue)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px;margin-top:12px;box-shadow:0 4px 0 var(--line)}
+button{font-family:inherit;font-size:16px;border:0;border-radius:12px;padding:9px 16px;cursor:pointer;font-weight:bold}
+.btn{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue2)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue2)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+.ghost.on{border-color:var(--blue);background:#e8efff;color:var(--blue)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted);font-size:14px}
+.meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:640px){.meters{grid-template-columns:repeat(2,1fr)}}
+.m{background:#f6f9ff;border:2px solid var(--line);border-radius:12px;padding:8px 10px}
+.m b{font-size:22px}
+.m .goal{font-size:12px;color:var(--muted)}
+.bar{height:8px;background:#e1e8f5;border-radius:999px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;border-radius:999px}
+.layout{display:grid;grid-template-columns:1fr 290px;gap:12px}
+@media(max-width:780px){.layout{grid-template-columns:1fr}}
+.map{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;background:#9fd59a;padding:8px;border-radius:14px;aspect-ratio:1}
+.tile{background:#b8e2a8;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:min(7vw,38px);cursor:pointer;position:relative;transition:transform .1s}
+.tile:hover{transform:scale(1.05)}
+.tile.water{background:#5fb7e5;cursor:default}
+.tile.mount{background:#9a8f7a;cursor:default}
+.tile.new::after{content:'NEW';position:absolute;top:2px;right:3px;font-size:9px;background:var(--red);color:#fff;border-radius:4px;padding:0 3px}
+.pal{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pb{border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px;text-align:left;font-size:13px;line-height:1.35;cursor:pointer}
+.pb.on{border-color:var(--blue);background:#e8efff}
+.pb .e{font-size:24px}
+.pb b{font-size:14px}
+.event{background:#fff3cd;border:2px dashed #e0a800;border-radius:12px;padding:10px 14px;margin-top:10px}
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.table td:last-child{text-align:right;font-weight:bold}
+input[type=number],input[type=text]{font-family:inherit;font-size:22px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);width:170px;text-align:center}
+.msg{min-height:22px;font-weight:bold;margin-top:6px}
+.good{color:var(--green)}.bad{color:var(--red)}
+.center{text-align:center}
+.pol{border:2px solid var(--line);border-radius:12px;padding:10px;background:#f6f9ff;cursor:pointer}
+.pol.on{border-color:var(--blue);background:#e8efff}
+.shake{animation:shake .35s}@keyframes shake{25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+.fade{animation:fade .3s}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">🏙️ 우리 마을 시장님</div><div id="mon" class="muted"></div></div>
+  <div id="meters"></div>
+  <div id="app"></div>
+  <div class="center" style="margin-top:24px"><button class="ghost" id="reset" style="font-size:13px;padding:5px 12px">처음부터 다시</button></div>
+</div>
+<script>
+const GRADE=6;
+const DATA={"easy":{"goal":{"pop":120,"happy":60,"env":50,"money":0},"start":70,"tries":3,"hints":[]},"normal":{"goal":{"pop":200,"happy":70,"env":60,"money":0},"start":60,"tries":2,"hints":[]},"hard":{"goal":{"pop":260,"happy":75,"env":65,"money":10},"start":50,"tries":1,"hints":[]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'city-mayor-v1':'city-mayor-v1-'+LV;
+const MONTHS=8,START=DD.start;
+const GOAL=DD.goal;const UNIT=GRADE<=3?'골드':'억';
+const B={
+  house:{n:'주택',e:'🏠',c:8,d:'인구 +20 · 세금 +2억'},
+  shop:{n:'상가',e:'🏪',c:12,d:'일자리 15 · 세금 +4억 · 행복 +2'},
+  factory:{n:'공장',e:'🏭',c:18,d:'일자리 30 · 세금 +8억 · 환경 −10'},
+  park:{n:'공원',e:'🌳',c:6,d:'행복 +4 · 환경 +4 · 유지비 1억'},
+  school:{n:'학교',e:'🏫',c:15,d:'행복 +6 · 유지비 2억'},
+  hospital:{n:'병원',e:'🏥',c:20,d:'행복 +8 · 유지비 2억'},
+  solar:{n:'태양광',e:'☀️',c:14,d:'환경 +5 · 유지비 1억'},
+  bus:{n:'버스 정류장',e:'🚌',c:5,d:'행복 +2 · 환경 +2'}
+};
+const TERRAIN={'0,5':'water','1,5':'water','2,5':'water','2,4':'water','5,0':'mount','5,1':'mount'};
+const BUILDABLE=36-Object.keys(TERRAIN).length;
+const POL=[
+  {id:'none',n:'이번 달은 쉬어 가기',e:'😌',d:'아무 정책도 펼치지 않아요.',c:0},
+  {id:'busfree',n:'대중교통 무료의 날',e:'🚌',d:'예산 −3억 · 환경 +3 · 행복 +1',c:3,env:3,happy:1},
+  {id:'festival',n:'마을 축제',e:'🎉',d:'예산 −5억 · 행복 +5',c:5,happy:5},
+  {id:'recycle',n:'재활용 캠페인',e:'♻️',d:'예산 −2억 · 환경 +4',c:2,env:4},
+  {id:'tax',n:'세금 10% 인상',e:'💰',d:'이번 달 세금 수입 ×1.1 · 행복 −4',c:0,happy:-4,tax:1.1},
+  {id:'tree',n:'나무 심기 운동',e:'🌱',d:'예산 −4억 · 환경 +3 · 행복 +2',c:4,env:3,happy:2}
+];
+const EV=[
+ {t:'🎊 새 시장 취임!',d:'시장님, 축하합니다! 빈 땅에 마을을 만들어 주세요. 처음 한 달 동안은 특별한 사건이 없어요.'},
+ {t:'📮 시민 민원',d:'"아이들이 뛰어놀 곳이 없어요!" 이번 달이 끝날 때 공원이 하나 이상 있으면 시민들이 기뻐해요 (행복 +5).',end:s=>{if(cnt(s,'park')>0){s.polHappy+=5;return '공원 민원 해결! 행복 +5'}return '공원이 없어서 민원이 해결되지 않았어요.'}},
+ {t:'🏭 대기업 공장 유치 제안',d:'대기업이 "지원금 15억을 줄 테니 우리 공장을 받아 달라"고 해요. 받으면 환경이 −8 영구히 줄어요.',choice:true},
+ {t:'😷 미세먼지 경보',d:'이번 달이 끝날 때 환경 점수가 50보다 낮으면 시민 건강이 나빠져요 (행복 −6).',end:s=>{if(calc(s).env<50){s.polHappy-=6;return '미세먼지로 행복 −6'}return '맑은 공기 덕분에 피해가 없었어요!'}},
+ {t:'🏗️ 주택 건설 붐',d:'이번 달에는 주택을 반값(4억)에 지을 수 있어요!'},
+ {t:'🌀 태풍 피해',d:'태풍으로 도로가 망가져 수리비 10억이 들어요. 병원이 있으면 응급 대응이 빨라 5억만 들어요.',end:s=>{const c=cnt(s,'hospital')?5:10;s.money-=c;return `태풍 수리비 −${c}억`}},
+ {t:'🌍 환경 도시 박람회',d:'이번 달이 끝날 때 환경 점수가 60 이상이면 상금 15억을 받아요!',end:s=>{if(calc(s).env>=60){s.money+=15;return '환경 박람회 수상! 상금 +15억'}return '환경 점수가 모자라 상을 받지 못했어요.'}},
+ {t:'🗳️ 마지막 달 · 시민 평가',d:'이번 달이 끝나면 시민들이 시장님을 평가해요. 인구, 행복, 환경, 예산 목표를 확인하세요!'}
+];
+const $=id=>document.getElementById(id);
+function fresh(){return{phase:'intro',name:'',month:1,money:START,grid:{},polHappy:0,polEnv:0,trust:0,pol:'none',newTiles:[],sel:'house',hist:[],evNote:null,choiceDone:false}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){S=fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const cnt=(s,k)=>Object.values(s.grid).filter(v=>v===k).length;
+const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,Math.round(v)));
+function calc(s){
+  const n=k=>cnt(s,k);
+  const pop=n('house')*20,jobs=n('shop')*15+n('factory')*30;
+  const env=clamp(70-n('factory')*10+n('park')*4+n('solar')*5+n('bus')*2-n('house')+s.polEnv);
+  const pen=[];
+  let happy=50+n('park')*4+n('school')*6+n('hospital')*8+n('shop')*2+n('bus')*2+s.polHappy+s.trust;
+  if(pop>0&&jobs<pop*0.6){happy-=12;pen.push('일자리 부족 −12')}
+  if(env<40){happy-=10;pen.push('환경 오염 −10')}
+  if(pop>=100&&!n('school')){happy-=8;pen.push('학교 없음 −8')}
+  if(pop>=160&&!n('hospital')){happy-=8;pen.push('병원 없음 −8')}
+  happy=clamp(happy);
+  const tax=n('house')*2+n('shop')*4+n('factory')*8;
+  const upkeep=n('park')+n('school')*2+n('hospital')*2+n('solar');
+  return{pop,jobs,env,happy,tax,upkeep,pen};
+}
+const cost=k=>(k==='house'&&S.month===5)?4:B[k].c;
+let actx=null;function tone(f,d=.12){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.18,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+
+function meters(){
+  if(S.phase==='intro'){$('meters').innerHTML='';$('mon').textContent='';return}
+  const c=calc(S);$('mon').innerHTML=`${GRADE}학년 · ${LVN} · ${S.name?S.name+' 시장님 · ':''}<b>${Math.min(S.month,MONTHS)}월</b> / ${MONTHS}월`;
+  const m=(e,l,v,u,g,pct,col)=>`<div class="m"><div>${e} ${l}</div><b style="color:${col}">${v}${u}</b> <span class="goal">목표 ${g}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,pct))}%;background:${col}"></i></div></div>`;
+  $('meters').innerHTML=`<div class="meters">${m('👨‍👩‍👧','인구',c.pop,'명',GOAL.pop+'명↑',c.pop/GOAL.pop*100,c.pop>=GOAL.pop?'#2e9e5b':'#3867d6')}${m('😊','행복',c.happy,'',GOAL.happy+'↑',c.happy,c.happy>=GOAL.happy?'#2e9e5b':c.happy<40?'#e5482f':'#f0a500')}${m('🌿','환경',c.env,'',GOAL.env+'↑',c.env,c.env>=GOAL.env?'#2e9e5b':c.env<40?'#e5482f':'#f0a500')}${m('💰','예산',S.money,'억',GOAL.money+'억↑',S.money/80*100,S.money>=0?'#3867d6':'#e5482f')}</div>`;
+}
+function render(){meters();({intro,news,build,policy,settle,end})[S.phase]()}
+
+function intro(){
+  $('app').innerHTML=`<div class="card center fade"><div style="font-size:80px">🏙️</div><h1>우리 마을 시장님</h1><p class="muted">${GRADE}학년 · ${LVN} · 1인용 도시 만들기 시뮬레이션 · 8개월</p>
+  <div style="text-align:left;background:#f6f9ff;border-radius:14px;padding:14px 16px;margin:12px 0">
+  여러분은 오늘부터 새로 생긴 마을의 <b>시장님</b>이에요! 예산 <b>${START}억</b>으로 8개월 동안 마을을 만들어요.<br><br>
+  🏗️ <b>건설</b>: 주택, 상가, 공장, 공원, 학교, 병원, 태양광, 버스 정류장을 지어요.<br>
+  📜 <b>정책</b>: 매달 정책 하나를 골라요 (축제, 재활용 캠페인, 세금 인상 등).<br>
+  📊 <b>결산</b>: 달마다 세금이 들어오고 유지비가 나가요. 결산 문제를 맞히면 <b>시민 신뢰</b>가 올라 행복이 늘어요!<br><br>
+  🎯 <b>8월 말 목표</b> — 인구 ${GOAL.pop}명 이상 · 행복 ${GOAL.happy} 이상 · 환경 ${GOAL.env} 이상 · 예산 ${GOAL.money}억 이상<br>${LV==='easy'?'🟢 <b>쉬움</b>: 목표가 낮고 처음 예산이 많아요. 결산 문제 기회 3번.<br>':LV==='hard'?'🔴 <b>어려움</b>: 목표가 높고 처음 예산이 적어요. 결산 문제 기회 1번.<br>':''}
+  ⚠️ 공장은 돈을 많이 벌지만 환경을 망쳐요. 인구가 늘면 학교와 병원, 일자리도 필요해요. <b>지속 가능한 도시</b>를 만들어 보세요!</div>
+  <div class="row" style="justify-content:center"><input type="text" id="nm" placeholder="시장님 이름" maxlength="6"><button class="btn" id="go" style="font-size:20px;padding:11px 32px">취임하기!</button></div></div>`;
+  $('go').onclick=()=>{S.name=$('nm').value.trim();S.phase='news';save();render()};
+}
+
+function news(){
+  const e=EV[S.month-1];
+  $('app').innerHTML=`<div class="card fade"><h2>📰 ${S.month}월 마을 소식</h2><div class="event"><b>${e.t}</b><br>${e.d}</div>
+  ${e.choice&&!S.choiceDone?`<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="yes">🏭 받아들인다 (+15억, 환경 −8)</button><button class="ghost" id="no">🙅 거절한다</button></div>`:`<div class="center" style="margin-top:12px"><button class="btn" id="go">🏗️ 건설하러 가기</button></div>`}</div>`;
+  const go=()=>{S.newTiles=[];S.phase='build';save();render()};
+  if($('go'))$('go').onclick=go;
+  if($('yes'))$('yes').onclick=()=>{S.money+=15;S.polEnv-=8;S.choiceDone=true;S.evNote='공장 유치: 지원금 +15억, 환경 −8';save();render()};
+  if($('no'))$('no').onclick=()=>{S.choiceDone=true;S.evNote='공장 유치 제안을 거절했어요.';save();render()};
+}
+
+function build(){
+  const c=calc(S);
+  $('app').innerHTML=`<div class="card fade"><h2>🏗️ ${S.month}월 · 건설</h2><p class="muted">오른쪽에서 건물을 고르고 지도의 빈 땅을 누르면 지어져요. 이번 달에 지은 건물을 다시 누르면 취소(전액 환불), 예전 건물을 누르면 철거(절반 환불)할 수 있어요.</p>
+  <div class="layout"><div class="map" id="map"></div>
+  <div><div class="pal">${Object.entries(B).map(([k,b])=>`<div class="pb ${S.sel===k?'on':''}" data-k="${k}"><span class="e">${b.e}</span> <b>${b.n}</b> <span style="color:var(--blue);font-weight:bold">${cost(k)}억</span><br><span class="muted" style="font-size:12px">${b.d}</span></div>`).join('')}</div>
+  <table class="table"><tr><td>일자리 / 인구</td><td>${c.jobs} / ${c.pop}</td></tr><tr><td>예상 세금 수입</td><td>+${c.tax}억</td></tr><tr><td>예상 유지비</td><td>−${c.upkeep}억</td></tr></table>
+  ${c.pen.length?`<div class="event" style="font-size:14px">행복 감점: ${c.pen.join(', ')}</div>`:''}
+  </div></div>
+  <div class="msg bad center" id="bm"></div>
+  <div class="center"><button class="btn" id="go">📜 정책 정하러 가기</button></div></div>`;
+  let h='';for(let r=0;r<6;r++)for(let col=0;col<6;col++){const k=r+','+col,t=TERRAIN[k],b=S.grid[k];h+=`<div class="tile ${t||''} ${S.newTiles.includes(k)?'new':''}" data-k="${k}">${t==='water'?'🌊':t==='mount'?'⛰️':b?B[b].e:''}</div>`}
+  $('map').innerHTML=h;
+  document.querySelectorAll('.pb').forEach(p=>p.onclick=()=>{S.sel=p.dataset.k;save();build()});
+  document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>{const k=t.dataset.k;if(TERRAIN[k])return;
+    if(S.grid[k]){const b=S.grid[k];if(S.newTiles.includes(k)){S.money+=cost(b);S.newTiles=S.newTiles.filter(x=>x!==k)}else{S.money+=Math.floor(B[b].c/2)}delete S.grid[k];tone(250);save();render();return}
+    const pc=cost(S.sel);if(S.money<pc){$('bm').textContent=`예산이 모자라요! (${B[S.sel].n} ${pc}억)`;tone(150);return}
+    S.money-=pc;S.grid[k]=S.sel;S.newTiles.push(k);tone(520);save();render()});
+  $('go').onclick=()=>{S.pol='none';S.phase='policy';save();render()};
+}
+
+function policy(){
+  $('app').innerHTML=`<div class="card fade"><h2>📜 ${S.month}월 · 이번 달 정책</h2><p class="muted">정책 하나를 골라요. 행복과 환경 효과는 계속 남아요. (세금 인상은 이번 달 수입에만 적용)</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px">${POL.map(p=>`<div class="pol ${S.pol===p.id?'on':''}" data-id="${p.id}"><span style="font-size:26px">${p.e}</span> <b>${p.n}</b><br><span class="muted">${p.d}</span></div>`).join('')}</div>
+  <div class="msg bad center" id="pm"></div>
+  <div class="row" style="justify-content:center;margin-top:8px"><button class="ghost" id="back">◀ 건설로 돌아가기</button><button class="btn" id="go">📊 이번 달 결산</button></div></div>`;
+  document.querySelectorAll('.pol').forEach(p=>p.onclick=()=>{S.pol=p.dataset.id;tone(480);save();policy()});
+  $('back').onclick=()=>{S.phase='build';save();render()};
+  $('go').onclick=()=>{const p=POL.find(x=>x.id===S.pol);if(S.money<p.c){$('pm').textContent='예산이 모자라 이 정책을 할 수 없어요!';return}doSettle();S.phase='settle';save();render()};
+}
+function doSettle(){
+  const p=POL.find(x=>x.id===S.pol);
+  S.money-=p.c;S.polHappy+=p.happy||0;S.polEnv+=p.env||0;
+  const c=calc(S);const tax=Math.round(c.tax*(p.tax||1));
+  S.money+=tax-c.upkeep;
+  const notes=[];const e=EV[S.month-1];
+  if(S.evNote){notes.push(S.evNote);S.evNote=null}
+  if(e.end)notes.push(e.end(S));
+  const c2=calc(S);
+  S.last={tax,upkeep:c.upkeep,net:tax-c.upkeep,pol:p.n,notes,pop:c2.pop,jobs:c2.jobs,built:Object.keys(S.grid).length};
+  S.qTry=0;S.qDone=false;
+}
+function quiz(){
+  const L=S.last,t=(S.month-1)%3,c=calc(S),n=k=>cnt(S,k),U=UNIT;
+  const net=L.net>=0?{q:`이번 달 <b>남은 돈(순수입)</b>은 얼마일까요?<br><span class="muted">순수입 = 세금 수입 − 유지비</span>`,a:L.net,u:U,info:`세금 수입 ${L.tax}${U} · 유지비 ${L.upkeep}${U}`}:{q:`이번 달 <b>세금 수입과 유지비</b>를 더하면 얼마일까요?`,a:L.tax+L.upkeep,u:U,info:`세금 수입 ${L.tax}${U} · 유지비 ${L.upkeep}${U}`};
+  const built={q:`지금 마을에 지은 <b>건물은 모두 몇 개</b>일까요?`,a:L.built,u:'개',info:`지도에서 건물을 세어 보세요`};
+  const pop={q:`주택 1채에 <b>20명</b>이 살아요. 우리 마을 <b>인구</b>는 몇 명일까요?`,a:n('house')*20,u:'명',info:`주택 ${n('house')}채`};
+  const jobs={q:`상가 1개에 일자리 <b>15개</b>, 공장 1개에 일자리 <b>30개</b>. 우리 마을 <b>일자리</b>는 몇 개일까요?`,a:n('shop')*15+n('factory')*30,u:'개',info:`상가 ${n('shop')}개 · 공장 ${n('factory')}개`};
+  if(GRADE===1)return [built,net,{q:`<b>주택</b>은 몇 채일까요?`,a:n('house'),u:'채',info:'지도에서 🏠를 세어 보세요'}][t];
+  if(GRADE===2)return [net,built,pop][t];
+  if(GRADE===3)return [net,pop,jobs][t];
+  if(GRADE===4)return [net,jobs,{q:`목표 인구 <b>${GOAL.pop}명</b>까지 <b>몇 명 더</b> 필요할까요? (이미 넘었으면 0)`,a:Math.max(0,GOAL.pop-c.pop),u:'명',info:`지금 인구 ${c.pop}명`}][t];
+  if(GRADE===5)return [net,{q:`행복 점수와 환경 점수의 <b>평균</b>은? <span class="muted">(소수 첫째 자리에서 반올림)</span>`,a:Math.round((c.happy+c.env)/2),u:'점',info:`행복 ${c.happy} · 환경 ${c.env}`},jobs][t];
+  if(t===0||L.pop===0)return{q:`이번 달 <b>순수입</b>은 얼마일까요?<br><span class="muted">순수입 = 세금 수입 − 유지비</span>`,a:L.net,u:U,info:`세금 수입 ${L.tax}${U} · 유지비 ${L.upkeep}${U}`};
+  if(t===1)return{q:`우리 마을의 <b>고용률</b>은 몇 %일까요?<br><span class="muted">고용률(%) = 일자리 ÷ 인구 × 100 (소수 첫째 자리에서 반올림, 100%가 넘을 수도 있어요)</span>`,a:Math.round(L.jobs/L.pop*100),u:'%',info:`일자리 ${L.jobs}개 · 인구 ${L.pop}명`};
+  return{q:`건물을 지을 수 있는 땅 중 몇 %를 사용했을까요?<br><span class="muted">사용률(%) = 건물 수 ÷ 지을 수 있는 땅 ${BUILDABLE}칸 × 100 (소수 첫째 자리에서 반올림)</span>`,a:Math.round(L.built/BUILDABLE*100),u:'%',info:`지은 건물 ${L.built}개 · 지을 수 있는 땅 ${BUILDABLE}칸`};
+}
+function quiz_old(){
+  const L=S.last,t=(S.month-1)%3;
+  if(t===0||L.pop===0)return{q:`이번 달 <b>순수입</b>은 얼마일까요?<br><span class="muted">순수입 = 세금 수입 − 유지비</span>`,a:L.net,u:'억',info:`세금 수입 ${L.tax}억 · 유지비 ${L.upkeep}억`};
+  if(t===1)return{q:`우리 마을의 <b>고용률</b>은 몇 %일까요?<br><span class="muted">고용률(%) = 일자리 ÷ 인구 × 100 (소수 첫째 자리에서 반올림, 100%가 넘을 수도 있어요)</span>`,a:Math.round(L.jobs/L.pop*100),u:'%',info:`일자리 ${L.jobs}개 · 인구 ${L.pop}명`};
+  return{q:`건물을 지을 수 있는 땅 중 몇 %를 사용했을까요?<br><span class="muted">사용률(%) = 건물 수 ÷ 지을 수 있는 땅 ${BUILDABLE}칸 × 100 (소수 첫째 자리에서 반올림)</span>`,a:Math.round(L.built/BUILDABLE*100),u:'%',info:`지은 건물 ${L.built}개 · 지을 수 있는 땅 ${BUILDABLE}칸`};
+}
+function settle(){
+  const L=S.last,Q=quiz(),last=S.month===MONTHS;
+  $('app').innerHTML=`<div class="card fade"><h2>📊 ${S.month}월 결산</h2>
+  <table class="table"><tr><td>정책</td><td>${L.pol}</td></tr><tr><td>세금 수입</td><td style="color:var(--green)">+${L.tax}억</td></tr><tr><td>유지비</td><td style="color:var(--red)">−${L.upkeep}억</td></tr></table>
+  ${L.notes.map(n=>`<div class="event" style="margin-top:6px">${n}</div>`).join('')}
+  <div style="background:#f6f9ff;border-radius:12px;padding:12px 14px;margin-top:12px"><b>🧮 결산 문제</b> · ${Q.info}<br>${Q.q}</div>
+  <div class="row" style="justify-content:center;margin-top:10px"><input type="number" id="ans" placeholder="답"><b>${Q.u}</b><button class="btn" id="chk">확인</button></div>
+  <div class="msg center" id="qm"></div><div class="center" id="nx"></div></div>`;
+  const next=()=>{$('nx').innerHTML=`<button class="btn" id="go" style="margin-top:8px">${last?'🗳️ 시민 평가 보기':'➡️ 다음 달로'}</button>`;
+    $('go').onclick=()=>{const c=calc(S);S.hist.push({m:S.month,pop:c.pop,happy:c.happy,env:c.env,money:S.money});if(last){S.phase='end'}else{S.month++;S.choiceDone=false;S.phase='news'}save();render()}};
+  if(S.qDone){$('chk').disabled=true;$('ans').disabled=true;$('qm').className='msg center '+(S.qOk?'good':'bad');$('qm').textContent=S.qOk?'✅ 이미 맞힌 문제예요!':`정답은 ${Q.a}${Q.u}`;next();return}
+  $('chk').onclick=()=>{if($('ans').value==='')return;const v=Number($('ans').value);
+    if(v===Q.a){$('qm').className='msg center good';$('qm').textContent='✅ 정답! 꼼꼼한 시장님을 시민들이 믿어요 (시민 신뢰 → 행복 +2)';S.trust+=2;S.qDone=true;S.qOk=true;tone(880,.3);$('chk').disabled=true;save();meters();next()}
+    else{S.qTry++;save();if(S.qTry<DD.tries){$('qm').className='msg center bad';$('qm').textContent=`❌ 다시 계산해 보세요! (기회 ${DD.tries-S.qTry}번 남음)`;tone(200);const c=document.querySelector('.card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+    else{$('qm').className='msg center bad';$('qm').textContent=`아쉬워요! 정답은 ${Q.a}${Q.u}`;S.qDone=true;S.qOk=false;save();$('chk').disabled=true;next()}}};
+}
+
+function end(){
+  const c=calc(S);
+  const ok={pop:c.pop>=GOAL.pop,happy:c.happy>=GOAL.happy,env:c.env>=GOAL.env,money:S.money>=GOAL.money};
+  const n=Object.values(ok).filter(Boolean).length;
+  const score=c.pop+c.happy*3+c.env*3+Math.max(0,S.money)*2;
+  const rank=n===4?['🏆','지속 가능한 도시 인증!','인구, 행복, 환경, 예산 모두 목표 달성! 최고의 시장님이에요.']:n===3?['🥇','훌륭한 시장님','목표 하나만 더 채우면 완벽해요.']:n===2?['🥈','노력하는 시장님','균형을 조금 더 생각해 봐요.']:['🥉','초보 시장님','다시 도전해서 더 살기 좋은 마을을 만들어 봐요!'];
+  const H=S.hist,W=560,x=i=>50+i*((W-40)/Math.max(1,MONTHS-1));
+  const line=(k,col,sc)=>`<polyline points="${H.map((h,i)=>`${x(i)},${190-Math.min(100,h[k]*sc)*1.6}`).join(' ')}" fill="none" stroke="${col}" stroke-width="3"/>`;
+  let mapH='';for(let r=0;r<6;r++)for(let col=0;col<6;col++){const k=r+','+col,t=TERRAIN[k],b=S.grid[k];mapH+=`<div class="tile ${t||''}" style="cursor:default">${t==='water'?'🌊':t==='mount'?'⛰️':b?B[b].e:''}</div>`}
+  $('app').innerHTML=`<div class="card center fade"><div style="font-size:76px">${rank[0]}</div><h1>${rank[1]}</h1><p>${rank[2]}</p>
+  <p style="font-size:26px;font-weight:bold">시장 점수 <span style="color:var(--blue)">${score}점</span></p>
+  <table class="table" style="max-width:440px;margin:auto">
+  <tr><td>👨‍👩‍👧 인구 ${GOAL.pop}명 이상</td><td>${c.pop}명 ${ok.pop?'✅':'❌'}</td></tr>
+  <tr><td>😊 행복 ${GOAL.happy} 이상</td><td>${c.happy} ${ok.happy?'✅':'❌'}</td></tr>
+  <tr><td>🌿 환경 ${GOAL.env} 이상</td><td>${c.env} ${ok.env?'✅':'❌'}</td></tr>
+  <tr><td>💰 예산 ${GOAL.money}억 이상</td><td>${S.money}억 ${ok.money?'✅':'❌'}</td></tr></table>
+  <p class="muted">시장 점수 = 인구 + 행복×3 + 환경×3 + 남은 예산×2 · 친구와 점수를 비교해 보세요!</p>
+  <h2 style="margin-top:14px">🗺️ 완성된 우리 마을</h2><div class="map" style="max-width:340px;margin:0 auto">${mapH}</div>
+  <h2 style="margin-top:14px">📈 달별 변화</h2>
+  <svg viewBox="0 0 ${W+40} 240" width="100%"><line x1="40" x2="${W+20}" y1="190" y2="190" stroke="#999"/><line x1="40" x2="40" y1="20" y2="190" stroke="#999"/>${line('happy','#f0a500',1)}${line('env','#2e9e5b',1)}${line('pop','#3867d6',0.5)}${H.map((h,i)=>`<text x="${x(i)}" y="208" font-size="12" text-anchor="middle">${h.m}월</text>`).join('')}<text x="60" y="234" font-size="13" fill="#3867d6">― 인구(÷2)</text><text x="180" y="234" font-size="13" fill="#f0a500">― 행복</text><text x="270" y="234" font-size="13" fill="#2e9e5b">― 환경</text></svg>
+  <div style="text-align:left;background:#f6f9ff;border-radius:12px;padding:12px 16px;margin-top:10px"><b>🤔 생각해 봐요</b><br>· 공장을 많이 지으면 돈은 늘지만 무엇이 줄어들었나요?<br>· "지속 가능한 도시"란 어떤 도시일까요? 내 마을을 예로 설명해 보세요.<br>· 친구의 마을과 비교해 보고, 서로 다른 선택을 한 이유를 이야기해 보세요.</div>
+  <p><button class="btn" id="again">다시 도전하기</button></p></div>`;
+  $('again').onclick=()=>{const nm=S.name;S=fresh();S.name=nm;S.phase='news';save();render()};
+}
+$('reset').onclick=()=>{if($('reset').dataset.c){S=fresh();save();render();$('reset').textContent='처음부터 다시';delete $('reset').dataset.c}else{$('reset').dataset.c=1;$('reset').textContent='정말 처음부터? 한 번 더 누르세요'}};
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+setInterval(function(){try{var t=(S&&S.phase==='end')?('e'+S.money+'-'+Object.keys(S.grid).length+'-'+S.trust):null;if(t&&localStorage.getItem('class-done-skip-city@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['city@'+LV]){d['city@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

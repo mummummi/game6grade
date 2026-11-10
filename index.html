@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6학년 게임 교실</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#2b3160 0%,#12141c 70%);color:#f3efe4;font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:17px}
+.wrap{max-width:980px;margin:0 auto;padding:30px 16px 60px}
+.grade{display:inline-block;background:#f2c14e;color:#1b1530;font-family:'Black Han Sans';border-radius:999px;padding:4px 16px;font-size:18px}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:44px;color:#f2c14e;margin:8px 0 0;text-align:center}
+.sub{text-align:center;color:#c5c2d6;margin:6px 0 18px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:28px 0 12px;color:#fff}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 14px}
+.lv{border:3px solid #ffffff22;background:#ffffff10;color:#f3efe4;border-radius:18px;padding:14px 10px;cursor:pointer;font-family:inherit;text-align:center;transition:transform .15s}
+.lv:hover{transform:translateY(-3px)}
+.lv b{display:block;font-family:'Black Han Sans';font-weight:400;font-size:24px}
+.lv small{color:#d6d3e6;font-size:13px;line-height:1.4;display:block;margin-top:4px}
+.lv.on.easy{border-color:#5fd39a;background:#1f4d3a}.lv.on.normal{border-color:#f2c14e;background:#4d4220}.lv.on.hard{border-color:#ff6b6b;background:#4d2020}
+.prog{background:#ffffff10;border:2px solid #ffffff22;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar{flex:1;min-width:180px;height:16px;background:#ffffff18;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#5fd39a,#f2c14e);border-radius:999px;transition:width .5s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{position:relative;background:#1e2130;border:2px solid #3a3f57;border-radius:18px;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-4px);border-color:#f2c14e}
+.card.done{border-color:#5fd39a;background:#1b2a24}
+.card a{display:block;text-decoration:none;color:inherit;padding:18px 18px 62px}
+.em{font-size:46px;line-height:1}
+.t{font-family:'Black Han Sans',sans-serif;font-size:22px;margin:8px 0 4px}
+.d{color:#c9c5d6;font-size:15px;line-height:1.5}
+.tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:12px;background:#2c3150;border-radius:999px;padding:3px 10px;color:#cfd5ff}
+.tag.lvtag{background:#3d3a20;color:#ffe9a8}
+.chk{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.chk button{font-family:inherit;font-size:15px;font-weight:bold;border-radius:12px;padding:7px 14px;cursor:pointer;border:2px solid #3a3f57;background:#12141c;color:#c9c5d6}
+.card.done .chk button{background:#5fd39a;border-color:#5fd39a;color:#0d2a1c}
+.chk small{color:#8fd9b3;font-size:12px;text-align:right}
+.stamp{position:absolute;top:12px;right:12px;background:#5fd39a;color:#0d2a1c;font-weight:bold;font-size:13px;padding:3px 10px;border-radius:999px;transform:rotate(6deg)}
+.foot{text-align:center;color:#999;font-size:13px;margin-top:40px}
+.reset{background:transparent;border:1px solid #555;color:#aaa;border-radius:10px;padding:5px 12px;font-family:inherit;cursor:pointer}
+.soon{border:2px dashed #ffffff33;border-radius:18px;padding:18px;color:#c9c5d6;text-align:center}
+@media(max-width:560px){.levels{gap:6px}.lv{padding:10px 4px}.lv small{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="text-align:center"><span class="grade">6학년</span></div>
+  <h1>🎮 6학년 게임 교실</h1>
+  <p class="sub">학기말 종합 게임 · 난이도를 고르고 게임을 시작하세요 · 진행 상황은 이 기기에 자동 저장돼요</p>
+  <div class="levels" id="levels"></div>
+  <div class="prog"><b id="pt">완료 0 / 0</b><div class="bar"><i id="pb" style="width:0"></i></div><span id="pm" style="color:#f2c14e"></span></div>
+  <div id="list"></div>
+  <p class="foot">우리 사이트 게임은 끝까지 깨면 <b>자동으로</b> 완료 표시가 돼요. 다른 사이트 게임은 직접 <b>완료</b> 버튼을 눌러 주세요. 완료 기록은 난이도마다 따로 남아요.<br><br><button class="reset" id="reset">완료 기록 모두 지우기</button></p>
+</div>
+<script>
+const GRADE=6;
+const LEVELS=[['easy','🟢 쉬움','문제마다 도움말 · 정답 힌트 있음 · 짧은 판'],['normal','🟡 보통','6학년 학기말 수준 · 정답 힌트 있음'],['hard','🔴 어려움','더 어려운 문제 · 정답 힌트 없음 · 기회 적음']];
+const GROUPS=[["🏪 시뮬레이션",[["tteok","tteok.html","🍢","떡볶이 가게 사장님","사장과 매니저가 힘을 합쳐 가게를 운영해요. 재료 구매, 가격 결정, 장부 정리까지!",["2인 협동","비율·백분율","경제"],"L"],["island","island.html","🏝️","무인도에서 살아남기","탐험대장과 살림꾼이 7일 동안 물·식량·나무를 나눠 쓰며 봉화대를 완성해 구조 신호를 보내요!",["2인 협동","비율·백분율","생존 전략"],"L"],["city","city.html","🏙️","우리 마을 시장님","8개월 동안 건물을 짓고 정책을 펼쳐 인구·행복·환경·예산을 모두 지키는 지속 가능한 도시를 만들어요!",["1인용","비율·백분율","지속 가능한 발전"],"L"]]],["🔐 방탈출",[["space","space.html","🚀","우주정거장 탈출","수면실부터 조종실까지, 스도쿠·암호·통신 신호를 풀고 탈출 포드를 발사하라!",["방 4개","퍼즐 15개","교과+상식"],"L"],["museum","museum.html","🏛️","한밤의 박물관 탈출","이집트관, 자연사관, 미술관에 숨은 수수께끼를 풀고 비상구를 찾아라!",["방 4개","퍼즐 15개","교과+상식"],"L"],["pirate","pirate.html","🏴‍☠️","해적선의 보물","선장실, 갑판, 화물칸을 지나 보물섬 동굴의 보물 상자를 열어라!",["방 4개","퍼즐 15개","교과+상식"],"L"],["wizard","wizard.html","🧙","마법사의 탑","도서관, 연금술 실험실, 천문대를 올라 세 개의 룬으로 봉인을 풀어라!",["방 4개","퍼즐 15개","교과+상식"],"L"],["magicschool","https://mummummi.github.io/escapemagicschool/","🌙","달빛 마법 학교의 비밀","달빛이 비치는 마법 학교에 숨겨진 비밀을 풀고 탈출하라!",["방탈출","마법 학교"],"X"],["amusement","https://mummummi.github.io/escapeamusementpark/","🎡","한밤의 놀이공원 탈출","문 닫은 한밤의 별빛랜드! 놀이기구 곳곳의 수수께끼를 풀고 탈출하라!",["방탈출","놀이공원"],"X"],["time","time.html","🕰️","시간 여행 연구소","조선 세종 시대, 1919년, 2050년 미래 도시를 거쳐 집으로 돌아와라!",["시대 4곳","퍼즐 17개","사회·국어 융합"],"L"]]],["⏳ 연속 방탈출 「사라진 타임캡슐」",[["timecapsule-1","timecapsule-1.html","📦","1일차 · 단서를 쫓아라","교실, 과학실, 음악실을 조사해 사라진 타임캡슐의 단서를 찾아라!",["방 3개"],"L"],["timecapsule-2","timecapsule-2.html","🕵️","2일차 · 용의자는 셋","보안관실, 교무실, 도서관에서 용의자를 좁혀라!",["방 3개","교과 퍼즐"],"L"],["timecapsule-3","timecapsule-3.html","🗝️","3일차 · X의 정체","증거 세 개를 모아 범인을 지목하고 타임캡슐을 되찾아라!",["방 3개","문제 12개"],"L"]]]];
+const LEVEL_KEYS={"space":{"easy":"space-escape-v1-easy","normal":"space-escape-v1","hard":"space-escape-v1-hard"},"tteok":{"easy":"tteok-shop-v1-easy","normal":"tteok-shop-v1","hard":"tteok-shop-v1-hard"},"museum":{"easy":"museum-escape-v1-easy","normal":"museum-escape-v1","hard":"museum-escape-v1-hard"},"pirate":{"easy":"pirate-escape-v1-easy","normal":"pirate-escape-v1","hard":"pirate-escape-v1-hard"},"wizard":{"easy":"wizard-escape-v1-easy","normal":"wizard-escape-v1","hard":"wizard-escape-v1-hard"},"time":{"easy":"time-escape-v1-easy","normal":"time-escape-v1","hard":"time-escape-v1-hard"},"timecapsule-1":{"easy":"timecapsule-day1-v2-easy","normal":"timecapsule-day1-v2","hard":"timecapsule-day1-v2-hard"},"timecapsule-2":{"easy":"timecapsule-day2-easy","normal":"timecapsule-day2","hard":"timecapsule-day2-hard"},"timecapsule-3":{"easy":"timecapsule-day3-easy","normal":"timecapsule-day3","hard":"timecapsule-day3-hard"},"island":{"easy":"island-survival-v1-easy","normal":"island-survival-v1","hard":"island-survival-v1-hard"},"city":{"easy":"city-mayor-v1-easy","normal":"city-mayor-v1","hard":"city-mayor-v1-hard"}};
+const LEVEL_TEST={'space':s=>s.end?String(s.end):null,'tteok':s=>s.phase==='end'?'m'+s.money:null,'museum':s=>s.end?String(s.end):null,'pirate':s=>s.end?String(s.end):null,'wizard':s=>s.end?String(s.end):null,'time':s=>s.end?String(s.end):null,'timecapsule-1':s=>s.end?String(s.end):null,'timecapsule-2':s=>s.end?String(s.end):null,'timecapsule-3':s=>s.end?String(s.end):null,'island':s=>s.phase==='end'?'e'+s.day+'-'+s.hp+'-'+s.fire+'-'+s.know:null,'city':s=>s.phase==='end'?'e'+s.money+'-'+Object.keys(s.grid).length+'-'+s.trust:null};
+const SINGLE={};
+let LV=(()=>{try{return localStorage.getItem('class-level')||'normal'}catch(e){return 'normal'}})();
+if(!['easy','normal','hard'].includes(LV))LV='normal';
+const fid=(id,kind)=>kind==='L'?id+'@'+LV:id;
+function tok(id,kind){try{if(kind==='L'){const s=JSON.parse(localStorage.getItem(LEVEL_KEYS[id][LV]));return s?LEVEL_TEST[id](s):null}const a=SINGLE[id];if(!a)return null;const s=JSON.parse(localStorage.getItem(a[0]));return s?a[1](s):null}catch(e){return null}}
+function load(){try{const d=JSON.parse(localStorage.getItem('class-done'))||{};Object.keys(LEVEL_KEYS).forEach(k=>{if(d[k]&&!d[k+'@normal']){d[k+'@normal']=d[k];delete d[k]}});return d}catch(e){return{}}}
+function save(d){try{localStorage.setItem('class-done',JSON.stringify(d))}catch(e){}}
+function scan(){const d=load();GROUPS.forEach(([g,items])=>items.forEach(([id,,,,,,kind])=>{if(kind==='X')return;const f=fid(id,kind);if(d[f])return;const t=tok(id,kind);if(t&&localStorage.getItem('class-done-skip-'+f)!==t)d[f]={how:'auto',at:new Date().toISOString()}}));save(d);return d}
+const fmt=iso=>{const t=new Date(iso);return `${t.getMonth()+1}/${t.getDate()}`};
+function renderLevels(){document.getElementById('levels').innerHTML=LEVELS.map(([k,n,d])=>`<button class="lv ${k} ${LV===k?'on':''}" data-k="${k}"><b>${n}</b><small>${d}</small></button>`).join('');
+  document.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{LV=b.dataset.k;try{localStorage.setItem('class-level',LV)}catch(e){}render()})}
+function render(){
+  renderLevels();
+  const d=scan();let total=0,done=0;
+  document.getElementById('list').innerHTML=GROUPS.map(([g,items])=>`<h2>${g}</h2><div class="grid">${items.map(([id,href,em,t,desc,tags,kind])=>{total++;const f=fid(id,kind);const c=d[f];if(c)done++;
+    const url=kind==='L'?href+'?lv='+LV:href;
+    return `<div class="card ${c?'done':''}">${c?'<span class="stamp">완료!</span>':''}<a href="${url}"><div class="em">${em}</div><div class="t">${t}</div><div class="d">${desc}</div><div class="tags">${tags.map(x=>`<span class="tag">${x}</span>`).join('')}${kind==='L'?`<span class="tag lvtag">${LEVELS.find(l=>l[0]===LV)[1]}</span>`:kind==='S'?'<span class="tag">난이도 1가지</span>':'<span class="tag">수동 체크</span>'}</div></a>
+    <div class="chk"><button data-id="${f}" data-g="${id}" data-k="${kind}">${c?'✅ 완료':'⬜ 완료 체크'}</button><small>${c?(c.how==='auto'?'자동 완료':'직접 체크')+' · '+fmt(c.at):''}</small></div></div>`}).join('')}</div>`).join('');
+  document.getElementById('pt').textContent=`${LEVELS.find(l=>l[0]===LV)[1]} 완료 ${done} / ${total}`;
+  document.getElementById('pb').style.width=(total?done/total*100:0)+'%';
+  document.getElementById('pm').textContent=done===total?'🏆 모든 게임 정복!':done?`${total-done}개 남았어요`:'';
+  document.querySelectorAll('.chk button').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();const d=load(),id=b.dataset.id;
+    if(d[id]){delete d[id];save(d);const t=tok(b.dataset.g,b.dataset.k);if(t)localStorage.setItem('class-done-skip-'+id,t)}
+    else{d[id]={how:'manual',at:new Date().toISOString()};save(d);localStorage.removeItem('class-done-skip-'+id)}
+    render()});
+}
+document.getElementById('reset').onclick=function(){if(this.dataset.c){const d=load();Object.keys(d).forEach(f=>{const [id,lv]=f.split('@');const kind=lv?'L':'S';const keep=LV;if(lv)LV=lv;const t=tok(id,kind);LV=keep;if(t)localStorage.setItem('class-done-skip-'+f,t)});localStorage.removeItem('class-done');delete this.dataset.c;this.textContent='완료 기록 모두 지우기';render()}else{this.dataset.c=1;this.textContent='정말 지울까요? 한 번 더 누르세요'}};
+window.addEventListener('pageshow',render);window.addEventListener('focus',render);
+render();
+</script>
+</body>
+</html>

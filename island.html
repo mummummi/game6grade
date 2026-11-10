@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무인도에서 살아남기 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf7f2;--card:#fff;--ink:#1f3a33;--muted:#5f7f76;--sea:#1e88a8;--sea2:#156a84;--sand:#f4e3b5;--green:#2e9e5b;--red:#e5482f;--line:#cfe8de}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:14px 14px 60px}
+h1,h2{font-family:'Black Han Sans',sans-serif;font-weight:400}
+h1{font-size:40px;color:var(--sea);margin:0}
+h2{font-size:24px;margin:0 0 8px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{font-family:'Black Han Sans';font-size:22px;color:var(--sea)}
+.stats{display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:#fff;border:2px solid var(--line);border-radius:999px;padding:3px 12px;font-size:15px;white-space:nowrap}
+.pill b{color:var(--sea)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px;margin-top:12px;box-shadow:0 4px 0 var(--line)}
+.role{display:inline-flex;gap:6px;background:#ffd76a;border-radius:999px;padding:4px 14px;font-weight:bold;margin-bottom:8px}
+button{font-family:inherit;font-size:17px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+.btn{background:var(--sea);color:#fff;box-shadow:0 4px 0 var(--sea2)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sea2)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+.ghost.on{border-color:var(--sea);background:#e3f4fa;color:var(--sea)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.act{border:2px solid var(--line);border-radius:14px;padding:12px;background:#f7fcfa;text-align:center;cursor:pointer;position:relative}
+.act.on{border-color:var(--sea);background:#e3f4fa}
+.act .em{font-size:38px}
+.act .cnt{position:absolute;top:6px;right:8px;background:var(--sea);color:#fff;border-radius:999px;font-size:13px;padding:1px 9px}
+.muted{color:var(--muted);font-size:15px}
+.big{font-size:26px;font-weight:bold}
+.scene{background:linear-gradient(#8fd3ff 0%,#bfe9ff 45%,#2aa2c8 46%,#1e88a8 62%,#f4e3b5 63%);border-radius:16px;height:170px;position:relative;overflow:hidden}
+.scene .e{position:absolute;font-size:46px}
+.event{background:#fff3cd;border:2px dashed #e0a800;border-radius:12px;padding:10px 14px;margin-top:10px}
+.hp{height:14px;background:#dfeee8;border-radius:999px;overflow:hidden;margin-top:4px}
+.hp i{display:block;height:100%;border-radius:999px;transition:width .4s}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button{width:40px;height:40px;padding:0;font-size:22px}
+.qty b{font-size:22px;min-width:46px;text-align:center}
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table td{padding:7px 8px;border-bottom:1px solid var(--line)}
+.table td:last-child{text-align:right;font-weight:bold}
+input[type=text],input[type=number]{font-family:inherit;font-size:22px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);width:170px;text-align:center}
+.msg{min-height:24px;font-weight:bold;margin-top:8px}
+.good{color:var(--green)}.bad{color:var(--red)}
+.center{text-align:center}
+.fire{height:22px;background:#f1e0c6;border-radius:999px;overflow:hidden;position:relative}
+.fire i{display:block;height:100%;background:linear-gradient(90deg,#ffb300,#e5482f);transition:width .5s}
+.fire span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold}
+.shake{animation:shake .35s}@keyframes shake{25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+.fade{animation:fade .35s}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">🏝️ 무인도에서 살아남기</div><div class="stats" id="stats"></div></div>
+  <div id="app"></div>
+  <div class="center" style="margin-top:24px"><button class="ghost" id="reset" style="font-size:13px;padding:5px 12px">처음부터 다시</button></div>
+</div>
+<script>
+const GRADE=6;
+const DATA={"easy":{"goal":35,"needW":1.5,"wu":"L","wstep":0.5,"dmgMul":0.7,"tries":3,"hints":[]},"normal":{"goal":50,"needW":1.5,"wu":"L","wstep":0.5,"dmgMul":1,"tries":2,"hints":[]},"hard":{"goal":75,"needW":1.5,"wu":"L","wstep":0.5,"dmgMul":1.4,"tries":1,"hints":[]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'island-survival-v1':'island-survival-v1-'+LV;
+const DAYS=7,GOAL=DD.goal,HOURS=8,NEED_W=DD.needW,NEED_F=2,WU=DD.wu;
+const ACTS={
+  water:{n:'샘물 찾기',e:'💧',h:2,d:'물 2~4'+DD.wu},
+  fruit:{n:'열매 따기',e:'🥥',h:2,d:'식량 2~3개'},
+  fish:{n:'물고기 잡기',e:'🎣',h:3,d:'식량 3~4개'},
+  wood:{n:'나무 하기',e:'🪵',h:3,d:'나무 6~8개'},
+  rest:{n:'그늘에서 쉬기',e:'😴',h:2,d:'체력 +15'}
+};
+const PLAN=[
+ {w:'☀️ 맑음',ev:null},
+ {w:'🌧️ 비',ev:{t:'🌧️ 소나기!',d:'빗물을 받아서 물 4'+DD.wu+'를 자동으로 얻었어요.',f:s=>{s.water+=4}}},
+ {w:'☀️ 맑음',ev:{t:'🐒 원숭이 습격!',d:'밤사이 원숭이가 식량의 1/3을 훔쳐 갔어요. (나머지는 버림)',f:s=>{s.monkey=Math.floor(s.food/3);s.food-=s.monkey}}},
+ {w:'🥵 폭염',ev:{t:'🥵 폭염 경보',d:'너무 더워서 오늘은 한 사람이 물을 '+(DD.needW+(DD.wu==='병'?1:0.5))+DD.wu+'씩 마셔야 해요.'}},
+ {w:'🌀 태풍',ev:{t:'🌀 태풍 상륙!',d:'바람이 너무 세서 오늘은 4시간만 밖에서 활동할 수 있어요.'}},
+ {w:'☀️ 맑음',ev:{t:'📦 난파선 상자 발견',d:'바닷가에 떠밀려 온 상자에서 통조림 3개와 밧줄을 찾았어요! (식량 +3, 오늘 나무 하기 +2)',f:s=>{s.food+=3}}},
+ {w:'☀️ 맑음',ev:{t:'🚢 오늘 저녁 구조선 통과!',d:`저녁에 구조선이 섬 옆을 지나가요. 그때까지 봉화대에 나무 ${GOAL}개를 쌓아야 불을 피워 신호를 보낼 수 있어요!`}}
+];
+const $=id=>document.getElementById(id);
+function fresh(){return{phase:'intro',names:['',''],day:1,water:4,food:6,wood:2,fire:0,hp:100,know:0,picks:[],gain:null,share:null,log:[],qTry:0,hist:[],dead:false}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){S=fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const nm=i=>S.names[i]||(i?'살림꾼':'탐험대장');
+const r1=x=>Math.round(x*10)/10;
+const needW=()=>S.day===4?NEED_W+(WU==='병'?1:0.5):NEED_W;
+const hoursToday=()=>S.day===5?4:HOURS;
+const rnd=(a,b,k)=>a+((S.day*31+k*17)%(b-a+1));
+let actx=null;function tone(f,d=.15){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.2,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+
+function stats(){
+  if(S.phase==='intro'){$('stats').innerHTML='';return}
+  $('stats').innerHTML=`<span class="pill">${GRADE}학년 · ${LVN}</span><span class="pill">📅 <b>${Math.min(S.day,DAYS)}</b>/${DAYS}일</span><span class="pill">❤️ <b>${S.hp}</b></span><span class="pill">💧 ${r1(S.water)}${WU}</span><span class="pill">🍖 ${S.food}개</span><span class="pill">🪵 ${S.wood}개</span><span class="pill">🔥 봉화 ${S.fire}/${GOAL}</span>${S.know?`<span class="pill">📘 생존 지식 ${S.know}</span>`:''}`;
+}
+function render(){stats();({intro,morning,explore,share,night,end})[S.phase]()}
+function hpBar(){const c=S.hp>60?'#2e9e5b':S.hp>30?'#f0a500':'#e5482f';return `<div class="hp"><i style="width:${S.hp}%;background:${c}"></i></div>`}
+function fireBar(){return `<div class="fire"><i style="width:${Math.min(100,S.fire/GOAL*100)}%"></i><span>봉화대 ${S.fire} / ${GOAL}</span></div>`}
+
+function intro(){
+  $('app').innerHTML=`<div class="card center fade"><div class="scene"><span class="e" style="left:12%;top:20px">☀️</span><span class="e" style="left:60%;top:95px">🏝️</span><span class="e" style="left:30%;top:100px">🧍</span><span class="e" style="left:38%;top:100px">🧍</span></div>
+  <h1 style="margin-top:12px">무인도에서 살아남기</h1><p class="muted">${GRADE}학년 · ${LVN} · 2인 협동 생존 시뮬레이션 · 7일</p>
+  <div style="text-align:left;background:#f7fcfa;border-radius:14px;padding:14px 16px;margin:12px 0">
+  배가 폭풍에 휩쓸려 둘만 작은 무인도에 떠밀려 왔어요! 라디오에서 <b>7일째 저녁에 구조선이 섬 옆을 지나간다</b>는 소식이 들려요.<br><br>
+  🧭 <b>탐험대장</b>: 하루 8시간 동안 무엇을 할지 정해요 (샘물, 열매, 낚시, 나무, 휴식).<br>
+  🧺 <b>살림꾼</b>: 물과 식량을 나눠 먹고, 나무를 모닥불과 봉화대에 나눠요.<br>
+  📘 <b>둘이 함께</b>: 밤마다 생존 수첩 문제를 풀어요. 맞히면 <b>생존 지식</b>이 쌓여요. 지식 3개마다 활동으로 얻는 양이 1씩 늘어나요!<br><br>
+  🎯 <b>목표</b>: 7일 동안 살아남고, 봉화대에 <b>나무 ${GOAL}개</b>를 쌓아 구조 신호를 보내기!<br>
+  ⚠️ 한 사람이 하루에 <b>물 ${NEED_W}${WU}, 식량 2개</b>가 필요해요.${LV==='easy'?'<br>🟢 <b>쉬움</b>: 목표 나무가 적고, 체력이 덜 줄고, 나눠 쓰기 도움말이 나와요.':LV==='hard'?'<br>🔴 <b>어려움</b>: 목표 나무가 많고, 모자랄 때 체력이 더 많이 줄어요.':''} 모자라면 체력이 줄고, 체력이 0이 되면 실패예요.</div>
+  <div class="row" style="justify-content:center"><input type="text" id="n0" placeholder="탐험대장 이름" maxlength="6"><input type="text" id="n1" placeholder="살림꾼 이름" maxlength="6"></div>
+  <p><button class="btn" id="go" style="font-size:22px;padding:12px 40px">생존 시작!</button></p></div>`;
+  $('go').onclick=()=>{S.names=[$('n0').value.trim(),$('n1').value.trim()];S.phase='morning';save();render()};
+}
+
+function morning(){
+  const p=PLAN[S.day-1];
+  if(!S.evDone&&p.ev&&p.ev.f){p.ev.f(S);S.evDone=true;save();stats()}
+  $('app').innerHTML=`<div class="card fade"><h2>🌅 ${S.day}일째 아침 · ${p.w}</h2>
+  <div class="scene"><span class="e" style="left:8%;top:14px">${p.w.split(' ')[0]}</span><span class="e" style="left:55%;top:95px">🏝️</span><span class="e" style="left:25%;top:100px">🧍</span><span class="e" style="left:33%;top:100px">🧍</span>${S.fire?`<span class="e" style="left:72%;top:92px">🪵</span>`:''}</div>
+  ${p.ev?`<div class="event"><b>${p.ev.t}</b><br>${p.ev.d}${S.day===3&&S.monkey!=null?`<br>→ 원숭이가 가져간 식량: <b>${S.monkey}개</b>`:''}</div>`:''}
+  <div style="margin-top:10px">❤️ 우리 팀 체력 ${S.hp} / 100 ${hpBar()}</div>
+  <div style="margin-top:10px">${fireBar()}</div>
+  <div class="center" style="margin-top:14px"><button class="btn" id="go">🧭 탐험 계획 세우기</button></div></div>`;
+  $('go').onclick=()=>{S.picks=[];S.phase='explore';save();render()};
+}
+
+function explore(){
+  const H=hoursToday();
+  const used=S.picks.reduce((a,k)=>a+ACTS[k].h,0);
+  $('app').innerHTML=`<div class="card fade"><span class="role">🧭 ${nm(0)}의 차례 · 탐험 계획</span>
+  <h2>오늘 ${H}시간 동안 무엇을 할까요?</h2>
+  <p class="muted">같은 활동을 여러 번 골라도 돼요. 활동을 누르면 추가, 아래 목록에서 누르면 빼요.${S.know>=3?` 📘 생존 지식 ${S.know} → 활동마다 얻는 양 +${Math.floor(S.know/3)}`:''}</p>
+  <div class="grid">${Object.entries(ACTS).map(([k,a])=>{const c=S.picks.filter(x=>x===k).length;return `<div class="act ${c?'on':''}" data-k="${k}">${c?`<span class="cnt">×${c}</span>`:''}<div class="em">${a.e}</div><b>${a.n}</b><div class="muted">${a.h}시간 · ${a.d}</div></div>`}).join('')}</div>
+  <div style="margin-top:12px"><b>오늘 계획</b> (${used} / ${H}시간)<div class="row" style="margin-top:6px">${S.picks.length?S.picks.map((k,i)=>`<button class="ghost rm" data-i="${i}">${ACTS[k].e} ${ACTS[k].n} ✕</button>`).join(''):'<span class="muted">아직 없음</span>'}</div></div>
+  <div class="msg bad" id="em"></div>
+  <div class="row" style="justify-content:center;margin-top:6px"><button class="ghost" id="back">◀ 아침으로</button><button class="btn" id="go" ${S.picks.length?'':'disabled'}>탐험 출발!</button></div></div>`;
+  document.querySelectorAll('.act').forEach(d=>d.onclick=()=>{const k=d.dataset.k;if(used+ACTS[k].h>H){$('em').textContent=`시간이 모자라요! (남은 시간 ${H-used}시간)`;tone(200);return}S.picks.push(k);tone(500);save();explore()});
+  document.querySelectorAll('.rm').forEach(b=>b.onclick=()=>{S.picks.splice(+b.dataset.i,1);save();explore()});
+  $('back').onclick=()=>{S.phase='morning';save();render()};
+  $('go').onclick=()=>{
+    const g={water:0,food:0,wood:0,hp:0};
+    S.picks.forEach((k,i)=>{const b=Math.floor(S.know/3);
+      if(k==='water')g.water+=rnd(2,4,i)+b;
+      if(k==='fruit')g.food+=rnd(2,3,i)+b;
+      if(k==='fish')g.food+=rnd(3,4,i)+b;
+      if(k==='wood')g.wood+=rnd(6,8,i)+b+(S.day===6?2:0);
+      if(k==='rest')g.hp+=15});
+    S.water+=g.water;S.food+=g.food;S.wood+=g.wood;S.hp=Math.min(100,S.hp+g.hp);S.gain=g;
+    S.share={w:needW()*2,f:NEED_F*2,campfire:Math.min(1,S.wood),fire:0};
+    S.phase='share';save();render();
+  };
+}
+
+function share(){
+  const g=S.gain,sh=S.share;
+  const maxW=r1(S.water),maxF=S.food;
+  sh.w=Math.min(sh.w,maxW);sh.f=Math.min(sh.f,maxF);
+  const woodLeft=S.wood-sh.campfire-sh.fire;
+  $('app').innerHTML=`<div class="card fade"><span class="role">🧺 ${nm(1)}의 차례 · 나눠 쓰기</span>
+  <h2>오늘 얻은 것</h2>
+  <p>💧 물 +${g.water}${WU} · 🍖 식량 +${g.food}개 · 🪵 나무 +${g.wood}개 ${g.hp?`· ❤️ 체력 +${g.hp}`:''}</p>
+  <table class="table"><tr><td>지금 가진 물</td><td>${r1(S.water)}${WU}</td></tr><tr><td>지금 가진 식량</td><td>${S.food}개</td></tr><tr><td>지금 가진 나무</td><td>${S.wood}개</td></tr></table>
+  <h2 style="margin-top:14px">오늘 저녁 배분</h2>
+  <p class="muted">2명에게 필요한 양: 물 <b>${needW()}${WU} × 2 = ${needW()*2}${WU}</b>, 식량 <b>2개 × 2 = 4개</b>. 밤에는 모닥불에 나무 1개가 필요해요(없으면 추워서 체력 −10).</p>${LV==='easy'?`<div class="event">🧭 도움말: 물 ${needW()*2}${WU}, 식량 4개, 모닥불 1개를 먼저 채우고, 남는 나무는 봉화대에 쌓아요. 내일을 위해 물과 식량을 조금 남겨 두면 좋아요.</div>`:''}
+  ${[['w','💧 마실 물',DD.wstep,WU,maxW],['f','🍖 먹을 식량',1,'개',maxF],['campfire','🔥 모닥불 나무',1,'개',null],['fire','🗼 봉화대에 쌓을 나무',1,'개',null]].map(([k,l,st,u,mx])=>`<div class="row" style="justify-content:space-between;margin:8px 0"><b>${l}</b><div class="qty"><button class="ghost" data-k="${k}" data-d="-${st}">−</button><b>${r1(sh[k])}${u}</b><button class="ghost" data-k="${k}" data-d="${st}">+</button></div></div>`).join('')}
+  <p class="muted">남는 나무: ${woodLeft}개 · 남는 물: ${r1(S.water-sh.w)}${WU} · 남는 식량: ${S.food-sh.f}개</p>
+  <div style="margin-top:6px">${fireBar()}</div>
+  <div class="center" style="margin-top:12px"><button class="btn" id="go">🌙 밤이 되었다</button></div></div>`;
+  document.querySelectorAll('.qty button').forEach(b=>b.onclick=()=>{const k=b.dataset.k,d=+b.dataset.d;let v=r1(sh[k]+d);if(v<0)return;
+    if(k==='w'&&v>maxW)return;if(k==='f'&&v>maxF)return;
+    if((k==='campfire'||k==='fire')&&(sh.campfire+sh.fire+(v-sh[k]))>S.wood)return;
+    if(k==='campfire'&&v>1)return;
+    sh[k]=v;tone(450);save();share()});
+  $('go').onclick=()=>{
+    const notes=[];let dmg=0;
+    const lackW=r1(needW()*2-sh.w),lackF=NEED_F*2-sh.f;
+    if(lackW>0){const d=Math.round((WU==='병'?lackW*6:Math.ceil(lackW/0.5)*4)*DD.dmgMul);dmg+=d;notes.push(`물이 ${lackW}${WU} 모자라 목이 말라요 (체력 −${d})`)}
+    if(lackF>0){const d=Math.round(lackF*5*DD.dmgMul);dmg+=d;notes.push(`식량이 ${lackF}개 모자라 배가 고파요 (체력 −${d})`)}
+    if(sh.campfire<1){const d=Math.round(10*DD.dmgMul);dmg+=d;notes.push(`모닥불이 없어 밤새 추웠어요 (체력 −${d})`)}
+    if(!dmg)notes.push('배부르고 따뜻한 밤이에요. 체력 +5');
+    S.water=r1(S.water-sh.w);S.food-=sh.f;S.wood-=sh.campfire+sh.fire;S.fire+=sh.fire;
+    S.hp=Math.max(0,Math.min(100,S.hp-dmg+(dmg?0:5)));
+    S.nightNotes=notes;S.qTry=0;S.qDone=false;S.phase='night';save();render();
+  };
+}
+
+function quizFor(){
+  const t=(S.day-1)%3,W2=needW()*2,u=WU;
+  if(t===0){
+    if(GRADE<=4)return{q:`봉화대를 완성하려면 나무가 <b>몇 개 더</b> 필요할까요?<br><span class="muted">더 필요한 나무 = ${GOAL} − 쌓은 나무 (이미 넘었으면 0)</span>`,a:Math.max(0,GOAL-S.fire),u:'개',info:`봉화대에 쌓은 나무: ${S.fire}개`};
+    if(GRADE===5)return{q:`지금까지 하루 <b>평균</b> 몇 개의 나무를 봉화대에 쌓았을까요?<br><span class="muted">평균 = 쌓은 나무 ÷ 지난 날수 (소수 첫째 자리에서 반올림)</span>`,a:Math.round(S.fire/S.day),u:'개',info:`봉화대에 쌓은 나무: ${S.fire}개 · 지난 날수: ${S.day}일`};
+    return{q:`봉화대가 얼마나 완성되었을까요?<br><span class="muted">완성률(%) = 쌓은 나무 ÷ ${GOAL} × 100 (소수 첫째 자리에서 반올림)</span>`,a:Math.round(S.fire/GOAL*100),u:'%',info:`봉화대에 쌓은 나무: ${S.fire}개`};}
+  if(t===1){
+    if(GRADE<=2)return{q:`둘이서 내일 식량을 <b>4개</b> 먹으면 몇 개가 남을까요?<br><span class="muted">모자라면 0을 입력해요</span>`,a:Math.max(0,S.food-4),u:'개',info:`남은 식량: ${S.food}개`};
+    if(GRADE===4)return{q:`남은 물에서 내일 둘이 마실 물 <b>${W2}${u}</b>를 빼면 몇 ${u}가 남을까요?<br><span class="muted">모자라면 0을 입력해요</span>`,a:Math.max(0,r1(S.water-W2)),u:u,info:`남은 물: ${r1(S.water)}${u}`};
+    return{q:`지금 남은 물로, 2명이 하루에 ${NEED_W}${u}씩 마시면 <b>며칠</b>을 버틸 수 있을까요?<br><span class="muted">나누어떨어지지 않으면 나머지는 버려요</span>`,a:Math.floor(S.water/(NEED_W*2)+1e-9),u:'일',info:`남은 물: ${r1(S.water)}${u} · 하루에 필요한 물: ${NEED_W}${u} × 2명`};}
+  if(GRADE===1){const gw=S.gain||{food:0,wood:0};return{q:`오늘 얻은 <b>식량과 나무</b>를 모두 더하면 몇 개일까요?`,a:gw.food+gw.wood,u:'개',info:`오늘 얻은 식량: ${gw.food}개 · 오늘 얻은 나무: ${gw.wood}개`}}
+  if(GRADE===2)return{q:`남은 식량을 <b>4개씩</b> 묶으면 몇 묶음이 될까요?<br><span class="muted">남는 것은 세지 않아요</span>`,a:Math.floor(S.food/4),u:'묶음',info:`남은 식량: ${S.food}개`};
+  return{q:`지금 남은 식량으로, 2명이 하루에 2개씩 먹으면 <b>며칠</b>을 버틸 수 있을까요?<br><span class="muted">나누어떨어지지 않으면 나머지는 버려요</span>`,a:Math.floor(S.food/4),u:'일',info:`남은 식량: ${S.food}개 · 하루에 필요한 식량: 2개 × 2명`};
+}
+function quizFor_old(){
+  const t=(S.day-1)%3;
+  if(t===0)return{q:`봉화대가 얼마나 완성되었을까요?<br><span class="muted">완성률(%) = 쌓은 나무 ÷ ${GOAL} × 100</span>`,a:Math.round(S.fire/GOAL*100),u:'%',info:`봉화대에 쌓은 나무: ${S.fire}개`};
+  if(t===1)return{q:`지금 남은 물로, 2명이 하루에 1.5L씩 마시면 <b>며칠</b>을 버틸 수 있을까요?<br><span class="muted">소수점 아래는 버려요</span>`,a:Math.floor(S.water/3),u:'일',info:`남은 물: ${r1(S.water)}L · 하루에 필요한 물: 1.5L × 2명`};
+  return{q:`지금 남은 식량으로, 2명이 하루에 2개씩 먹으면 <b>며칠</b>을 버틸 수 있을까요?<br><span class="muted">나누어떨어지지 않으면 나머지는 버려요</span>`,a:Math.floor(S.food/4),u:'일',info:`남은 식량: ${S.food}개 · 하루에 필요한 식량: 2개 × 2명`};
+}
+function night(){
+  const Q=quizFor(),last=S.day===DAYS,dead=S.hp<=0;
+  $('app').innerHTML=`<div class="card fade"><h2>🌙 ${S.day}일째 밤</h2>
+  ${S.nightNotes.map(n=>`<div class="event" style="margin-top:6px">${n}</div>`).join('')}
+  <div style="margin-top:10px">❤️ 체력 ${S.hp} / 100 ${hpBar()}</div><div style="margin-top:8px">${fireBar()}</div>
+  ${dead?'':`<div style="background:#f7fcfa;border-radius:12px;padding:12px 14px;margin-top:12px"><span class="role">📘 ${nm(0)} + ${nm(1)} · 생존 수첩</span><br>${Q.info}<br><br>${Q.q}</div>
+  <div class="row" style="justify-content:center;margin-top:10px"><input type="number" id="ans" placeholder="답"><b>${Q.u}</b><button class="btn" id="chk">확인</button></div>`}
+  <div class="msg center" id="qm"></div><div class="center" id="nx"></div></div>`;
+  const next=()=>{$('nx').innerHTML=`<button class="btn" id="go" style="margin-top:8px">${dead?'결과 보기':last?'🚢 구조선을 기다린다…':'☀️ 다음 날 아침으로'}</button>`;
+    $('go').onclick=()=>{S.hist.push({day:S.day,hp:S.hp,fire:S.fire,water:S.water,food:S.food});
+      if(dead||last){S.phase='end';save();render();return}
+      S.day++;S.evDone=false;S.phase='morning';save();render()}};
+  if(dead){next();return}
+  if(S.qDone){$('chk').disabled=true;$('ans').disabled=true;$('qm').className='msg center '+(S.qOk?'good':'bad');$('qm').textContent=S.qOk?'✅ 이미 맞힌 문제예요!':`정답은 ${Q.a}${Q.u}`;next();return}
+  $('chk').onclick=()=>{if($('ans').value==='')return;const v=Number($('ans').value);
+    if(Math.abs(v-Q.a)<1e-9){$('qm').className='msg center good';$('qm').textContent='✅ 정답! 생존 지식 +1! (지식 3개마다 활동으로 얻는 양이 1씩 늘어요)';S.know++;S.qDone=true;S.qOk=true;tone(880,.3);$('chk').disabled=true;save();stats();next()}
+    else{S.qTry++;save();if(S.qTry<DD.tries){$('qm').className='msg center bad';$('qm').textContent=`❌ 다시 계산해 보세요! (기회 ${DD.tries-S.qTry}번 남음)`;tone(200);const c=document.querySelector('.card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+    else{$('qm').className='msg center bad';$('qm').textContent=`아쉬워요! 정답은 ${Q.a}${Q.u}`;S.qDone=true;S.qOk=false;save();$('chk').disabled=true;next()}}};
+}
+
+function end(){
+  const alive=S.hp>0,rescued=alive&&S.fire>=GOAL;
+  let em,title,msg;
+  if(rescued){em=S.hp>=70?'🏆':'🚁';title=S.hp>=70?'완벽한 생존자':'구조 성공!';msg=`봉화대에 불을 붙이자 커다란 연기 기둥이 하늘로 올라갔어요. 구조선이 방향을 틀어 섬으로 다가와요! ${S.hp>=70?'체력까지 넉넉하게 지켜 낸 최고의 팀이에요.':''}`}
+  else if(alive){em='🌊';title='구조선이 지나갔다…';msg=`봉화대 나무가 ${GOAL-S.fire}개 모자라 신호를 보내지 못했어요. 다음엔 나무 하기를 조금 더 일찍 시작해 보세요!`}
+  else{em='💤';title='체력이 바닥났다…';msg=`${S.day}일째에 체력이 모두 떨어졌어요. 물과 식량을 넉넉히 확보하는 게 먼저였을지도 몰라요.`}
+  const W=560,H=S.hist;
+  const graph=`<svg viewBox="0 0 ${W+60} 220" width="100%"><line x1="40" x2="${W+40}" y1="180" y2="180" stroke="#999"/><line x1="40" x2="40" y1="20" y2="180" stroke="#999"/>${[0,50,100].map(v=>`<text x="34" y="${184-v*1.6}" font-size="11" text-anchor="end">${v}</text>`).join('')}
+  <polyline points="${H.map((h,i)=>`${60+i*((W-40)/Math.max(1,DAYS-1))},${180-h.hp*1.6}`).join(' ')}" fill="none" stroke="#e5482f" stroke-width="3"/>
+  <polyline points="${H.map((h,i)=>`${60+i*((W-40)/Math.max(1,DAYS-1))},${180-Math.min(100,h.fire/GOAL*100)*1.6}`).join(' ')}" fill="none" stroke="#f0a500" stroke-width="3" stroke-dasharray="6 4"/>
+  ${H.map((h,i)=>`<text x="${60+i*((W-40)/Math.max(1,DAYS-1))}" y="200" font-size="12" text-anchor="middle">${h.day}일</text>`).join('')}
+  <text x="${W-60}" y="30" font-size="12" fill="#e5482f">― 체력</text><text x="${W-60}" y="48" font-size="12" fill="#f0a500">- - 봉화 완성률(%)</text></svg>`;
+  $('app').innerHTML=`<div class="card center fade"><div style="font-size:80px">${em}</div><h1>${title}</h1><p>${msg}</p>
+  <table class="table" style="max-width:420px;margin:auto"><tr><td>버틴 날</td><td>${S.day}일</td></tr><tr><td>남은 체력</td><td>${S.hp}</td></tr><tr><td>봉화대</td><td>${S.fire} / ${GOAL}개</td></tr><tr><td>생존 지식 (수첩 정답)</td><td>📘 ${S.know}</td></tr></table>
+  <h2 style="margin-top:16px">📈 날짜별 체력과 봉화 완성률</h2>${graph}
+  <div style="text-align:left;background:#f7fcfa;border-radius:12px;padding:12px 16px;margin-top:10px"><b>🤔 함께 생각해 봐요</b><br>· 물·식량 모으기와 나무 하기 중 무엇을 먼저 하는 게 좋았을까요?<br>· 원숭이 습격, 폭염, 태풍에 미리 대비하려면 전날 무엇을 해야 했을까요?<br>· 두 사람의 의견이 달랐을 때 어떻게 정했나요?</div>
+  <p><button class="btn" id="again">다시 도전하기</button></p></div>`;
+  $('again').onclick=()=>{const n=S.names;S=fresh();S.names=n;S.phase='morning';save();render()};
+}
+$('reset').onclick=()=>{if($('reset').dataset.c){S=fresh();save();render();$('reset').textContent='처음부터 다시';delete $('reset').dataset.c}else{$('reset').dataset.c=1;$('reset').textContent='정말 처음부터? 한 번 더 누르세요'}};
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록 */
+setInterval(function(){try{var t=(S&&S.phase==='end')?('e'+S.day+'-'+S.hp+'-'+S.fire+'-'+S.know):null;if(t&&localStorage.getItem('class-done-skip-island@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['island@'+LV]){d['island@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>

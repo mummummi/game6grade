@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한밤의 박물관 탈출 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#12141c;--panel:#1e2130;--panel2:#282c40;--ink:#f3efe4;--muted:#a9a6b8;--gold:#f2c14e;--red:#e85d5d;--green:#5fd39a;--line:#3a3f57}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 50% 0%,#232842 0%,var(--bg) 60%);color:var(--ink);font-family:'Gowun Dodum',system-ui,sans-serif;min-height:100vh;font-size:18px;line-height:1.6;-webkit-user-select:none;user-select:none}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .brand{font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--gold)}
+  .stats{display:flex;gap:8px;font-size:15px;flex-wrap:wrap}
+  .pill{background:var(--panel);border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+  h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:36px;margin:0 0 6px;color:var(--gold)}
+  h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .story{background:var(--panel2);border-left:4px solid var(--gold);padding:14px 16px;border-radius:10px;margin:14px 0;text-align:left}
+  .center{text-align:center}
+  .muted{color:var(--muted);font-size:15px}
+  button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:bold}
+  .btn{background:var(--gold);color:#2a2100}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .roombar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 8px;gap:8px;flex-wrap:wrap}
+  .scene{position:relative;width:100%;border-radius:16px;overflow:hidden;border:2px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .hot{cursor:pointer}
+  .obj{position:absolute;transform:translate(-50%,-50%);cursor:pointer;line-height:1;transition:transform .15s,filter .15s;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45))}
+  .obj:hover{transform:translate(-50%,-50%) scale(1.12);filter:drop-shadow(0 0 10px rgba(242,193,78,.8))}
+  .obj .seen{position:absolute;right:-4px;top:-4px;font-size:12px;background:var(--green);color:#000;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .inv{display:flex;gap:8px;align-items:center;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 12px;min-height:62px;flex-wrap:wrap}
+  .inv .lbl{color:var(--muted);font-size:14px;margin-right:4px}
+  .item{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:15px}
+  .item span{font-size:24px}
+  .item.sel{border-color:var(--gold);background:#3b3420}
+  .selinfo{margin-left:auto;font-size:14px;color:var(--gold)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:20}
+  .modal.show{display:flex}
+  .modal .card{width:100%;max-width:620px;max-height:92vh;overflow:auto;animation:pop .2s}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .x{background:transparent;color:var(--muted);font-size:26px;padding:0 6px}
+  .box{background:#161925;border:1px dashed var(--line);border-radius:12px;padding:16px;margin:10px 0;text-align:center}
+  .paper{background:#fbf6e6;color:#2b2414;border-radius:6px;padding:16px 18px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:17px}
+  .paper table{border-collapse:collapse;margin:8px auto}
+  .paper td{padding:3px 10px;border-bottom:1px solid #d9cfb3}
+  .paper td.c{font-family:monospace;font-size:22px;font-weight:bold;letter-spacing:4px}
+  .lockform{display:flex;gap:8px;margin-top:12px}
+  .lockform input{flex:1;min-width:0;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#0e1018;color:var(--ink);font-family:monospace;letter-spacing:6px;text-align:center;-webkit-user-select:text;user-select:text}
+  .lockform input:focus{outline:none;border-color:var(--gold)}
+  .msg{min-height:26px;margin-top:8px;font-weight:bold;text-align:center}
+  .msg.bad{color:var(--red)}.msg.good{color:var(--green)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .chalk{background:#1f4d36;border:10px solid #7a5230;border-radius:6px;color:#eef;padding:18px;font-size:24px;text-align:center}
+  .poster{position:relative;height:240px;background:#fff;border-radius:6px;overflow:hidden;transition:background .4s}
+  .poster .msgtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a46ff;font-size:24px;font-weight:bold;line-height:1.5}
+  .poster .noise{position:absolute;font-weight:bold;color:#ff2a2a;pointer-events:none;transition:color .4s}
+  .poster.filtered{background:#ff9d9d}
+  .poster.filtered .noise{color:#ff9d9d;opacity:0}
+  .poster.filtered .msgtxt{color:#2a0010}
+  .ptable{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;font-size:13px}
+  .ptable div{background:#2f3a5c;border-radius:4px;padding:4px 0;text-align:center}
+  .ptable b{display:block;font-size:18px;color:#fff}
+  .ptable small{color:#9fb0e0}
+  .scale{font-size:30px;margin:6px 0;letter-spacing:4px}
+  .scope{width:220px;height:220px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#e8f3ff 0%,#a9c3dc 70%,#223 72%);display:flex;align-items:center;justify-content:center;color:#123;font-size:26px;font-weight:bold;letter-spacing:3px;border:8px solid #333}
+  .piano{position:relative;display:flex;justify-content:center;margin:12px auto 4px;height:170px;width:max-content;max-width:100%}
+  .wk{width:46px;height:170px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;cursor:pointer}
+  .wk:active,.wk.hit{background:#ffe9a8}
+  .bk{position:absolute;top:0;width:30px;height:105px;background:#111;border-radius:0 0 6px 6px;cursor:pointer;z-index:2}
+  .bk:active{background:#444}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .dots i{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}
+  .dots i.on{background:var(--gold)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#2a2100;padding:12px 22px;border-radius:999px;font-weight:bold;z-index:30;display:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .toast.show{display:block;animation:pop .25s}
+  .hint{background:#2b2a1f;border:1px solid #5c5330;color:#f5e6b0;padding:10px 14px;border-radius:10px;margin-top:8px;text-align:left}
+  .teaser{border:2px dashed var(--gold);border-radius:14px;padding:16px;margin-top:18px}
+  .big-emoji{font-size:70px;line-height:1}
+  @media (max-width:560px){.wk{width:30px}.bk{width:20px}.chalk{font-size:19px}}
+
+  .tipbox{background:#16302a;border:1px solid #2f6f5c;color:#bff0dc;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;text-align:left}
+  body.kids{font-size:20px}
+  body.kids .paper{font-size:19px}
+  body.kids .muted{font-size:16px}
+  .speak{background:transparent;color:var(--gold,#f2c14e);font-size:20px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🏛️ 한밤의 박물관</div>
+    <div class="stats">
+      <span class="pill" id="lvPill"></span>
+      <span class="pill">⏱ <span id="timer">00:00</span></span>
+      <span class="pill">💡 힌트 <span id="hintCount">0</span></span>
+      <button class="ghost" id="resetBtn" style="font-size:13px;padding:4px 10px">처음부터</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="mcard">
+  <div class="mhead"><h2 id="mtitle"></h2><div><button class="x" id="mclose">✕</button></div></div>
+  <div id="mbody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 한밤의 박물관 탈출 ================= */
+const GRADE=6;
+const DATA={"easy":{"day":{"n":30,"ans":"수","html":"<b>특별전 「파라오의 비밀」</b><br>개막일: <b>오늘로부터 30일 뒤!</b><br><br><span style=\"color:#888\">달력 오늘 날짜에 동그라미: <b>2026년 11월 9일 월요일</b></span>","h":"요일은 7일마다 되풀이돼요. 30일 = 7일 × 4 + 2일이니, 월요일에서 2일 뒤를 세어요.","tip":"<div class=\"tipbox\">🧭 도움말: 달력을 그려서 월요일부터 하루씩 세어 보세요. 7일 뒤는 다시 월요일!</div>"},"pc":{"ans":"ART","memo":"\"직원 컴퓨터 비밀번호 — 휴대폰 키패드로 적어 둠<br><b style=\"font-size:22px\">2-1 · 7-3 · 8-1</b><br>(앞 숫자는 버튼, 뒤 숫자는 누른 횟수)\"","keys":"<div style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:300px;margin:10px auto\"><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">1</b><div style=\"font-size:13px;color:#9fe8ff\">&nbsp;</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">2</b><div style=\"font-size:13px;color:#9fe8ff\">ABC</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">3</b><div style=\"font-size:13px;color:#9fe8ff\">DEF</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">4</b><div style=\"font-size:13px;color:#9fe8ff\">GHI</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">5</b><div style=\"font-size:13px;color:#9fe8ff\">JKL</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">6</b><div style=\"font-size:13px;color:#9fe8ff\">MNO</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">7</b><div style=\"font-size:13px;color:#9fe8ff\">PQRS</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">8</b><div style=\"font-size:13px;color:#9fe8ff\">TUV</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">9</b><div style=\"font-size:13px;color:#9fe8ff\">WXYZ</div></div></div>","ask":"<b>영어 비밀번호</b>(3글자)를 입력하세요.","ph":"영어 단어","h":"키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","tip":"<div class=\"tipbox\">🧭 도움말: 예를 들어 2-3은 2번 버튼(ABC)을 3번 → C예요.</div>"},"kiosk":{"ans":25200,"html":"<b>입장료</b><br>어른 12,000원 · 어린이 8,000원<br>※ 할인은 직원에게 문의<hr>오늘 우리 일행: <b>어린이 2명, 어른 1명</b>","notice":"· 단체 관람객 할인: 단체 관람객 할인율: <b>10%</b>","ph":"숫자만","h":"할인 전 금액 = 8,000원 × 2 + 12,000원 × 1. 할인 방법은 직원 컴퓨터 공지에 있어요.","a":"25200","tip":"<div class=\"tipbox\">🧭 도움말: 먼저 직원 컴퓨터의 공지를 읽고 할인 방법을 확인하세요.</div>"},"pyr":{"rows":[[""],["",""],["8","10",""],["2","6","?","9"]],"ans":41,"h":"위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요.","tip":"<div class=\"tipbox\">🧭 도움말: 먼저 ?를 구하고, 맨 아래 줄부터 한 층씩 더해 올라가요.</div>"},"egy":{"nums":[["𓀀",624],["𓁐",1611],["𓃠",2114]],"rule":"<b>가장 큰 수 − 가장 작은 수</b>","ans":1490,"h":"석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","tip":"<div class=\"tipbox\">🧭 도움말: 벽화의 기호를 종류별로 세어 보세요. 말발굽 3개 + 막대 2개 = 32!</div>"},"cats":{"head":"받침대 글귀: \"황금 열쇠는 셋 중 <b>한 조각상 아래</b>에 있다. 우리는 모두 <b>진실</b>만 말한다.\"","html":"<b>모두 진실을 말하는 고양이들</b><br><b>A:</b> \"열쇠는 내 아래에 없다.\"<br><b>C:</b> \"열쇠는 A 아래에도, 내 아래에도 없다.\"","ans":"B","h":"모든 고양이가 진실을 말하니, \"없다\"고 한 곳을 하나씩 지워 보세요.","tip":"<div class=\"tipbox\">🧭 도움말: A, B, C를 적고, 열쇠가 없는 곳에 ✕를 쳐 보세요.</div>"},"laser":{"mir":{"0,1":"\\","2,1":"\\","2,2":"/","1,3":"\\","3,0":"/","1,0":"\\"},"flip":1,"h":"빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요.","ans":"거울 1개를 \\ 모양으로 바꾸기"},"word":{"html":"<b>생각하는 자연사관 퀴즈</b><br><br>① 그림을 그리는 사람 (2글자) — <b>첫째</b> 글자<br>② 해가 질 무렵의 붉은 하늘, ___양 (2글자) — <b>첫째</b> 글자<br><hr>\"고른 글자를 차례로 이으면 전시 케이스의 비밀번호!\"","ans":"화석","ask":"옛날 생물의 흔적이 돌에 남은 것 (한글 2글자)","h":"안내판 낱말: ① 화가, ② 석양 → 정해진 자리의 글자를 골라요.","tip":"<div class=\"tipbox\">🧭 도움말: 먼저 낱말을 맞히고, 몇째 글자인지 손가락으로 짚어 보세요.</div>"},"chain":{"html":"① 뱀 &nbsp; ② 벼 &nbsp; ③ 개구리 &nbsp; ④ 메뚜기<hr>\"<b>먹히는 쪽 → 먹는 쪽</b> 순서로 카드 번호를 적으시오.\"","ans":"2431","emo":"🌾🦗🐸🐍","n":4,"h":"디오라마: 벼 → 메뚜기 → 개구리 → 뱀의 순서를 떠올려요.","tip":"<div class=\"tipbox\">🧭 도움말: 카드를 종이에 적고 화살표(→)로 이어 보세요.</div>"},"egg":{"html":"<b>이 공룡알 화석의 지름은 10cm입니다. 알의 가장 굵은 부분을 한 바퀴 두른 길이(원의 둘레)는? (원주율 3.14)</b>","ans":31.4,"h":"공룡알 보관함: 원의 둘레 = 지름 × 3.14.","tip":"<div class=\"tipbox\">🧭 도움말: 원의 둘레 = 지름 × 3.14</div>"},"order":{"html":"① 훈민정음 해례본 — 조선<br>② 금관 — 신라<br>③ 비파형 동검 — 고조선<br>④ 상감 청자 — 고려<hr>\"진열장 비밀번호: 유물 번호를 <b>오래된 것부터</b> 번호를 차례로\"","ans":"3241","emo":"📜👑🗡️🏺","h":"진열장: 비파형 동검 → 금관 → 상감 청자 → 훈민정음 해례본 순서예요.","tip":"<div class=\"tipbox\">🧭 도움말: 카드를 하나씩 비교하며 줄을 세워 보세요.</div>"},"colors":[["주황","#fb8c00",["빨강","노랑"],"해 질 녘 하늘"],["초록","#43a047",["노랑","파랑"],"봄날의 숲"]],"clock":{"h":3,"m":30,"ans":"0330","hint":"거울 속 시계는 8시 30분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각.","tip":"<div class=\"tipbox\">🧭 도움말: 종이에 시계를 그리고, 바늘을 좌우로 뒤집어(오른쪽 ↔ 왼쪽) 그려 보세요.</div>"},"diffN":3,"tol":26,"hints":[["요일은 7일마다 되풀이돼요. 30일 = 7일 × 4 + 2일이니, 월요일에서 2일 뒤를 세어요. 키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","할인 전 금액 = 8,000원 × 2 + 12,000원 × 1. 할인 방법은 직원 컴퓨터 공지에 있어요. 위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요.","정답 공개 — 서랍 수요일 · 컴퓨터 ART · 매표기 25200 · 블록 탑 41"],["모든 고양이가 진실을 말하니, \"없다\"고 한 곳을 하나씩 지워 보세요. 석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요. 먼저 손전등을 선택하고 전시실을 비춰요.","정답 공개 — 고양이 B · 석관 1490 · 제단: 거울 1개를 \\ 모양으로 바꾸기"],["안내판 낱말: ① 화가, ② 석양 → 정해진 자리의 글자를 골라요. 디오라마: 벼 → 메뚜기 → 개구리 → 뱀의 순서를 떠올려요.","공룡알 보관함: 원의 둘레 = 지름 × 3.14. 화석 세 개를 모은 뒤 복원대를 누르면 다른 그림 찾기(3군데)! 해, 연기, 열매, 가시, 알 무늬를 잘 보세요.","정답 공개 — 케이스 화석 · 디오라마 2431 · 보관함 31.4"],["진열장: 비파형 동검 → 금관 → 상감 청자 → 훈민정음 해례본 순서예요. 진열장에서 붓을 찾아 액자를 눌러요.","색의 혼합: 빨강+노랑=주황, 노랑+파랑=초록, 빨강+파랑=보라, 흰색을 섞으면 연해지고 검정과 섞으면 회색. 거울 속 시계는 8시 30분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각.","정답 공개 — 진열장 3241 · 비상구 0330"]]},"normal":{"day":{"n":100,"ans":"수","html":"<b>특별전 「파라오의 비밀」</b><br>개막일: <b>오늘로부터 100일 뒤!</b><br><br><span style=\"color:#888\">달력 오늘 날짜에 동그라미: <b>2026년 11월 9일 월요일</b></span>","h":"요일은 7일마다 되풀이돼요. 100일 = 7일 × 14 + 2일이니, 월요일에서 2일 뒤를 세어요.","tip":""},"pc":{"ans":"MUSEUM","memo":"\"직원 컴퓨터 비밀번호 — 휴대폰 키패드로 적어 둠<br><b style=\"font-size:22px\">6-1 · 8-2 · 7-4 · 3-2 · 8-2 · 6-1</b><br>(앞 숫자는 버튼, 뒤 숫자는 누른 횟수)\"","keys":"<div style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:300px;margin:10px auto\"><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">1</b><div style=\"font-size:13px;color:#9fe8ff\">&nbsp;</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">2</b><div style=\"font-size:13px;color:#9fe8ff\">ABC</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">3</b><div style=\"font-size:13px;color:#9fe8ff\">DEF</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">4</b><div style=\"font-size:13px;color:#9fe8ff\">GHI</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">5</b><div style=\"font-size:13px;color:#9fe8ff\">JKL</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">6</b><div style=\"font-size:13px;color:#9fe8ff\">MNO</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">7</b><div style=\"font-size:13px;color:#9fe8ff\">PQRS</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">8</b><div style=\"font-size:13px;color:#9fe8ff\">TUV</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">9</b><div style=\"font-size:13px;color:#9fe8ff\">WXYZ</div></div></div>","ask":"<b>영어 비밀번호</b>(6글자)를 입력하세요.","ph":"영어 단어","h":"키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","tip":""},"kiosk":{"ans":22400,"html":"<b>입장료</b><br>어른 12,000원 · 어린이 8,000원<br>※ 할인은 직원에게 문의<hr>오늘 우리 일행: <b>어린이 2명, 어른 1명</b>","notice":"· 단체 관람객 할인: 단체 관람객 할인율: <b>20%</b>","ph":"숫자만","h":"할인 전 금액 = 8,000원 × 2 + 12,000원 × 1. 할인 방법은 직원 컴퓨터 공지에 있어요.","a":"22400","tip":""},"pyr":{"rows":[[""],["",""],["","",""],["7","","","5"],["2","?","3","1","4"]],"ans":48,"h":"위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요.","tip":""},"egy":{"nums":[["𓀀",1204],["𓁐",352],["𓃠",87]],"rule":"<b>가장 큰 수 − 가장 작은 수</b>","ans":1117,"h":"석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","tip":""},"cats":{"head":"받침대 글귀: \"황금 열쇠는 셋 중 <b>한 조각상 아래</b>에 있다. 우리 중 <b>진실을 말하는 고양이는 단 하나</b>뿐이다.\"","html":"<b>A:</b> \"열쇠는 내 아래에 없다.\"<br><b>B:</b> \"열쇠는 A 아래에 있다.\"<br><b>C:</b> \"열쇠는 내 아래에 없다.\"","ans":"C","h":"열쇠가 A 아래라고 가정하고 진실을 말하는 고양이 수를 세어 보세요. B, C도 차례로!","tip":""},"laser":{"mir":{"0,1":"/","2,1":"\\","2,2":"/","1,3":"\\","3,0":"/","1,0":"\\"},"flip":2,"h":"빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요.","ans":"거울 2개를 \\ 모양으로 바꾸기"},"word":{"html":"<b>생각하는 자연사관 퀴즈</b><br><br>① 얼음이 쌓여 강처럼 아주 천천히 흐르는 것 (2글자) — <b>첫째</b> 글자<br>② 수많은 별이 모인 거대한 무리, 우리 태양계도 여기에 속한다 (2글자) — <b>둘째</b> 글자<br>③ 물이 증발하여 기체가 된 것 (3글자) — <b>셋째</b> 글자<br><hr>\"고른 글자를 차례로 이으면 전시 케이스의 비밀번호!\"","ans":"빙하기","ask":"이 동물이 살던 시대 (한글 3글자)","h":"안내판 낱말: ① 빙하, ② 은하, ③ 수증기 → 정해진 자리의 글자를 골라요.","tip":""},"chain":{"html":"① 뱀 &nbsp; ② 벼 &nbsp; ③ 매 &nbsp; ④ 개구리 &nbsp; ⑤ 메뚜기<hr>\"<b>먹히는 쪽 → 먹는 쪽</b> 순서로 카드 번호를 적으시오.\"","ans":"25413","emo":"🌾🦗🐸🐍🦅","n":5,"h":"디오라마: 처음(또는 먹히는 쪽)에 오는 카드부터 하나씩 찾아요.","tip":""},"egg":{"html":"<b>이 공룡알 화석의 지름은 20cm입니다. 알의 가장 굵은 부분을 한 바퀴 두른 길이(원의 둘레)는? (원주율 3.14)</b>","ans":62.8,"h":"공룡알 보관함: 원의 둘레 = 지름 × 3.14.","tip":""},"order":{"html":"① 상감 청자 — 고려<br>② 비파형 동검 — 고조선<br>③ 훈민정음 해례본 — 조선<br>④ 금관 — 신라<hr>\"진열장 비밀번호: 유물 번호를 <b>오래된 것부터</b> 번호를 차례로\"","ans":"2413","emo":"🏺🗡️📜👑","h":"진열장: 기준에 맞게 가장 앞에 올 카드부터 하나씩 골라요.","tip":""},"colors":[["주황","#fb8c00",["빨강","노랑"],"해 질 녘 하늘"],["초록","#43a047",["노랑","파랑"],"봄날의 숲"],["보라","#8e24aa",["빨강","파랑"],"신비한 포도밭"]],"clock":{"h":9,"m":20,"ans":"0920","hint":"거울 속 시계는 2시 40분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각.","tip":""},"diffN":5,"tol":26,"hints":[["요일은 7일마다 되풀이돼요. 100일 = 7일 × 14 + 2일이니, 월요일에서 2일 뒤를 세어요. 키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","할인 전 금액 = 8,000원 × 2 + 12,000원 × 1. 할인 방법은 직원 컴퓨터 공지에 있어요. 위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요.","정답 공개 — 서랍 수요일 · 컴퓨터 MUSEUM · 매표기 22400 · 블록 탑 48"],["열쇠가 A 아래라고 가정하고 진실을 말하는 고양이 수를 세어 보세요. B, C도 차례로! 석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요. 먼저 손전등을 선택하고 전시실을 비춰요.","정답 공개 — 고양이 C · 석관 1117 · 제단: 거울 2개를 \\ 모양으로 바꾸기"],["안내판 낱말: ① 빙하, ② 은하, ③ 수증기 → 정해진 자리의 글자를 골라요. 디오라마: 처음(또는 먹히는 쪽)에 오는 카드부터 하나씩 찾아요.","공룡알 보관함: 원의 둘레 = 지름 × 3.14. 화석 세 개를 모은 뒤 복원대를 누르면 다른 그림 찾기(5군데)! 해, 연기, 열매, 가시, 알 무늬를 잘 보세요.","정답 공개 — 케이스 빙하기 · 디오라마 25413 · 보관함 62.8"],["진열장: 기준에 맞게 가장 앞에 올 카드부터 하나씩 골라요. 진열장에서 붓을 찾아 액자를 눌러요.","색의 혼합: 빨강+노랑=주황, 노랑+파랑=초록, 빨강+파랑=보라, 흰색을 섞으면 연해지고 검정과 섞으면 회색. 거울 속 시계는 2시 40분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각.","정답 공개 — 진열장 2413 · 비상구 0920"]]},"hard":{"day":{"n":200,"ans":"금","html":"<b>특별전 「파라오의 비밀」</b><br>개막일: <b>오늘로부터 200일 뒤!</b><br><br><span style=\"color:#888\">달력 오늘 날짜에 동그라미: <b>2026년 11월 9일 월요일</b></span>","h":"요일은 7일마다 되풀이돼요. 200일 = 7일 × 28 + 4일이니, 월요일에서 4일 뒤를 세어요.","tip":""},"pc":{"ans":"ANCIENT","memo":"\"직원 컴퓨터 비밀번호 — 휴대폰 키패드로 적어 둠<br><b style=\"font-size:22px\">2-1 · 6-2 · 2-3 · 4-3 · 3-2 · 6-2 · 8-1</b><br>(앞 숫자는 버튼, 뒤 숫자는 누른 횟수)\"","keys":"<div style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:300px;margin:10px auto\"><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">1</b><div style=\"font-size:13px;color:#9fe8ff\">&nbsp;</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">2</b><div style=\"font-size:13px;color:#9fe8ff\">ABC</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">3</b><div style=\"font-size:13px;color:#9fe8ff\">DEF</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">4</b><div style=\"font-size:13px;color:#9fe8ff\">GHI</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">5</b><div style=\"font-size:13px;color:#9fe8ff\">JKL</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">6</b><div style=\"font-size:13px;color:#9fe8ff\">MNO</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">7</b><div style=\"font-size:13px;color:#9fe8ff\">PQRS</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">8</b><div style=\"font-size:13px;color:#9fe8ff\">TUV</div></div><div style=\"background:#263238;border-radius:8px;padding:6px;text-align:center\"><b style=\"font-size:22px\">9</b><div style=\"font-size:13px;color:#9fe8ff\">WXYZ</div></div></div>","ask":"<b>영어 비밀번호</b>(7글자)를 입력하세요.","ph":"영어 단어","h":"키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","tip":""},"kiosk":{"ans":40800,"html":"<b>입장료</b><br>어른 12,000원 · 어린이 8,000원<br>※ 할인은 직원에게 문의<hr>오늘 우리 일행: <b>어린이 3명, 어른 2명</b>","notice":"· 단체 관람객 할인: 단체 관람객 할인율: <b>15%</b>","ph":"숫자만","h":"할인 전 금액 = 8,000원 × 3 + 12,000원 × 2. 할인 방법은 직원 컴퓨터 공지에 있어요.","a":"40800","tip":""},"pyr":{"rows":[[""],["",""],["","",""],["14","","15",""],["5","?","10","5","9"]],"ans":130,"h":"위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요.","tip":""},"egy":{"nums":[["𓀀",8640],["𓁐",9204],["𓃠",2818],["𓅓",4987]],"rule":"<b>가장 큰 수 − 가장 작은 수</b>","ans":6386,"h":"석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","tip":""},"cats":{"head":"받침대 글귀: \"황금 열쇠는 셋 중 <b>한 조각상 아래</b>에 있다. 우리 중 <b>거짓말을 하는 고양이는 딱 하나</b>다.\"","html":"<b>A:</b> \"열쇠는 내 아래에 있다.\"<br><b>B:</b> \"열쇠는 내 아래에 있다.\"<br><b>C:</b> \"B는 거짓말을 한다.\"","ans":"A","h":"열쇠 위치를 A, B, C로 하나씩 가정하고, 거짓말하는 고양이가 딱 하나인 경우를 찾아요.","tip":""},"laser":{"mir":{"0,1":"/","2,1":"/","2,2":"/","1,3":"\\","3,0":"/","1,0":"\\"},"flip":3,"h":"빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요.","ans":"거울 3개를 \\ 모양으로 바꾸기"},"word":{"html":"<b>생각하는 자연사관 퀴즈</b><br><br>① 세 변의 길이가 모두 같은 삼각형 (4글자) — <b>둘째</b> 글자<br>② 식물 잎에서 광합성이 일어나는 초록색 알갱이 (3글자) — <b>첫째</b> 글자<br>③ 몸이 머리·가슴·배로 나뉘고 다리가 6개인 동물 (2글자) — <b>둘째</b> 글자<br><hr>\"고른 글자를 차례로 이으면 전시 케이스의 비밀번호!\"","ans":"삼엽충","ask":"고생대 바다에 살던 동물의 화석 (한글 3글자)","h":"안내판 낱말: ① 정삼각형, ② 엽록체, ③ 곤충 → 정해진 자리의 글자를 골라요.","tip":""},"chain":{"html":"① 곰팡이 &nbsp; ② 사슴 &nbsp; ③ 풀 &nbsp; ④ 호랑이<hr>\"<b>양분이 흐르는 순서</b>대로 (생산자 → 소비자 → 분해자) 카드 번호를 적으시오.\"","ans":"3241","emo":"🌿🦌🐅🍄","n":4,"h":"디오라마: 처음(또는 먹히는 쪽)에 오는 카드부터 하나씩 찾아요.","tip":""},"egg":{"html":"<b>공룡알을 반으로 자른 면은 반지름 10cm인 원이에요. 이 원의 넓이는 몇 cm²일까요? (원주율 3.14)</b>","ans":314,"h":"공룡알 보관함: 원의 넓이 = 반지름 × 반지름 × 3.14.","tip":""},"order":{"html":"① 3·1 운동<br>② 갑오개혁<br>③ 6·25 전쟁<br>④ 대한민국 정부 수립<br>⑤ 훈민정음 창제<hr>\"진열장 비밀번호: <b>먼저 일어난 일부터</b> 번호를 차례로\"","ans":"52143","emo":"📜⚖️🇰🇷🏛️🎖️","h":"진열장: 기준에 맞게 가장 앞에 올 카드부터 하나씩 골라요.","tip":""},"colors":[["분홍","#f48fb1",["빨강","흰색"],"봄날의 벚꽃"],["하늘색","#81d4fa",["파랑","흰색"],"맑은 가을 하늘"],["회색","#9e9e9e",["흰색","검정"],"비 오는 날 구름"]],"clock":{"h":11,"m":5,"ans":"1105","hint":"거울 속 시계는 12시 55분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각.","tip":""},"diffN":5,"tol":18,"hints":[["요일은 7일마다 되풀이돼요. 200일 = 7일 × 28 + 4일이니, 월요일에서 4일 뒤를 세어요. 키패드: 6번 버튼 1번 = M, 8번 버튼 2번 = U처럼 버튼의 글자를 누른 횟수만큼 세요.","할인 전 금액 = 8,000원 × 3 + 12,000원 × 2. 할인 방법은 직원 컴퓨터 공지에 있어요. 위 블록 = 바로 아래 두 블록의 합. ?는 위에 적힌 수에서 옆 블록을 빼서 구해요."],["열쇠 위치를 A, B, C로 하나씩 가정하고, 거짓말하는 고양이가 딱 하나인 경우를 찾아요. 석판: 연꽃 1000, 고리 100, 말발굽 10, 막대 1. 같은 기호의 개수를 세어 더해요.","빛이 오른쪽으로 가다가 \\ 거울을 만나면 아래로, 아래로 가다가 \\ 거울을 만나면 오른쪽으로 꺾여요. 먼저 손전등을 선택하고 전시실을 비춰요."],["안내판 낱말: ① 정삼각형, ② 엽록체, ③ 곤충 → 정해진 자리의 글자를 골라요. 디오라마: 처음(또는 먹히는 쪽)에 오는 카드부터 하나씩 찾아요.","공룡알 보관함: 원의 넓이 = 반지름 × 반지름 × 3.14. 화석 세 개를 모은 뒤 복원대를 누르면 다른 그림 찾기(5군데)! 해, 연기, 열매, 가시, 알 무늬를 잘 보세요."],["진열장: 기준에 맞게 가장 앞에 올 카드부터 하나씩 골라요. 진열장에서 붓을 찾아 액자를 눌러요.","색의 혼합: 빨강+노랑=주황, 노랑+파랑=초록, 빨강+파랑=보라, 흰색을 섞으면 연해지고 검정과 섞으면 회색. 거울 속 시계는 12시 55분처럼 보이지만 좌우가 바뀐 모습이에요. 실제 시각 = 12시 − 거울 속 시각."]]}};
+const LV=(()=>{const q=new URLSearchParams(location.search).get('lv');const v=q||(()=>{try{return localStorage.getItem('class-level')}catch(e){return null}})()||'normal';return ['easy','normal','hard'].includes(v)?v:'normal'})();
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'}[LV];
+const DD=DATA[LV];
+const KEY=LV==='normal'?'museum-escape-v1':'museum-escape-v1-'+LV;
+const ITEMS={
+  staff:{e:'🪪',n:'직원 카드'},
+  ticket:{e:'🎟️',n:'입장권'},
+  flash:{e:'🔦',n:'손전등'},
+  gkey:{e:'🗝️',n:'황금 열쇠'},
+  mirror:{e:'🪞',n:'거울 조각'},
+  tooth:{e:'🦷',n:'매머드 이빨'},
+  leaf:{e:'🍂',n:'나뭇잎 화석'},
+  egg:{e:'🥚',n:'공룡알 화석'},
+  brush:{e:'🖌️',n:'붓'}
+};
+const paper=html=>`<div class="paper">${html}</div>`;
+const box=html=>`<div class="box">${html}</div>`;
+const has=id=>S.inv.includes(id);
+const lbl=(x,y,t,c='#333',fs=18,fw='normal')=>`<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" fill="${c}" font-weight="${fw}" font-family="Gowun Dodum">${t}</text>`;
+function bad(id,t){const m=$(id);m.className='msg bad';m.textContent=t;const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+function good(id,t){const m=$(id);m.className='msg good';m.textContent=t}
+function frame(x,y,w,h,inner,fc='#b8860b'){return `${R(x-12,y-12,w+24,h+24,fc,'rx="4"')}${R(x,y,w,h,'#fdf6e3')}${inner||''}`}
+function marbleFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let x=0;x<1600;x+=100)for(let y=650;y<1000;y+=70)if(((x/100)+(y-650)/70)%2<1)s+=R(x,y,100,70,c2);return s+R(0,640,1600,14,'#5d4037')}
+
+/* ---------- 퍼즐 그림/위젯 ---------- */
+function pyramidHTML(){
+  const rows=DD.pyr.rows;
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin:10px 0">${rows.map(r=>`<div style="display:flex;gap:4px">${r.map(v=>`<div style="width:54px;height:40px;background:${v==='?'?'#ffe9a8':v?'#d7ccc8':'#fff'};border:2px solid #6d4c41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#3e2723">${v}</div>`).join('')}</div>`).join('')}</div>`;
+}
+function egyNum(n){
+  // 1000=연꽃, 100=밧줄 고리, 10=말발굽, 1=막대
+  const th=Math.floor(n/1000),h=Math.floor(n%1000/100),t=Math.floor(n%100/10),o=n%10;let x=6,s='';
+  const lotus=x=>`<g transform="translate(${x},0)"><line x1="12" x2="12" y1="44" y2="18" stroke="#3e2723" stroke-width="3"/><path d="M12 18 q-12 -4 -10 -16 q8 4 10 12 q2 -8 10 -12 q2 12 -10 16z" fill="#3e2723"/></g>`;
+  const coil=x=>`<g transform="translate(${x},0)"><path d="M12 44 V30 a9 9 0 1 1 0.1 0 M12 30 a5 5 0 1 0 0.1 0" stroke="#3e2723" stroke-width="3" fill="none"/></g>`;
+  const arch=x=>`<g transform="translate(${x},0)"><path d="M3 44 V24 a8 8 0 0 1 16 0 V44" stroke="#3e2723" stroke-width="4" fill="none"/></g>`;
+  const bar=x=>`<g transform="translate(${x},0)"><line x1="5" x2="5" y1="12" y2="44" stroke="#3e2723" stroke-width="4"/></g>`;
+  for(let i=0;i<th;i++){s+=lotus(x);x+=26}for(let i=0;i<h;i++){s+=coil(x);x+=26}for(let i=0;i<t;i++){s+=arch(x);x+=22}for(let i=0;i<o;i++){s+=bar(x);x+=10}
+  return `<svg viewBox="0 0 ${x+6} 50" height="50" style="max-width:100%">${s}</svg>`;
+}
+function egyLegend(){
+  return `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">${[[1000,'1000'],[100,'100'],[10,'10'],[1,'1']].map(([n,t])=>`<div style="background:#f3e0b5;border-radius:8px;padding:6px">${egyNum(n)}<div style="color:#3e2723;font-weight:bold">${t}</div></div>`).join('')}</div>`;
+}
+function laserPuzzle(ok){
+  const N=4;
+  if(!S.f.mir)S.f.mir={...DD.laser.mir};
+  const M=S.f.mir;
+  function trace(){let r=0,c=-1,dr=0,dc=1,pts=[[-1,0]],out=null;for(let k=0;k<40;k++){r+=dr;c+=dc;if(r<0||r>=N||c<0||c>=N){out=[r,c];pts.push([c,r]);break}pts.push([c,r]);const m=M[r+','+c];if(m==='/'){[dr,dc]=[-dc,-dr]}else if(m==='\\'){[dr,dc]=[dc,dr]}}return{pts,out}}
+  function draw(){
+    const {pts,out}=trace();const cs=80,o=40;const P=([c,r])=>[o+c*cs+cs/2,o+r*cs+cs/2];
+    let s=`<rect x="${o}" y="${o}" width="${N*cs}" height="${N*cs}" fill="#d9b77a" stroke="#6d4c41" stroke-width="4"/>`;
+    for(let i=1;i<N;i++)s+=`<line x1="${o+i*cs}" x2="${o+i*cs}" y1="${o}" y2="${o+N*cs}" stroke="#b08850"/><line y1="${o+i*cs}" y2="${o+i*cs}" x1="${o}" x2="${o+N*cs}" stroke="#b08850"/>`;
+    s+=`<text x="10" y="${o+cs/2+8}" font-size="26">☀️</text>`;
+    s+=`<g transform="translate(${o+2*cs+cs/2-18},${o+N*cs+6})"><polygon points="18,0 36,18 18,36 0,18" fill="#26c6da" stroke="#00838f" stroke-width="3"/></g>`;
+    Object.entries(M).forEach(([k,v])=>{const [r,c]=k.split(',').map(Number);const x=o+c*cs,y=o+r*cs;s+=`<g class="mcell" data-k="${k}" style="cursor:pointer"><rect x="${x+4}" y="${y+4}" width="${cs-8}" height="${cs-8}" fill="#f5e6c8" rx="6"/><line x1="${v==='/'?x+14:x+14}" y1="${v==='/'?y+cs-14:y+14}" x2="${x+cs-14}" y2="${v==='/'?y+14:y+cs-14}" stroke="#90a4ae" stroke-width="9" stroke-linecap="round"/><line x1="${v==='/'?x+14:x+14}" y1="${v==='/'?y+cs-14:y+14}" x2="${x+cs-14}" y2="${v==='/'?y+14:y+cs-14}" stroke="#eceff1" stroke-width="3" stroke-linecap="round"/></g>`});
+    const pp=pts.map(p=>p[0]===-1?[o-10,o+cs/2]:P(p));
+    s+=`<polyline points="${pp.map(p=>p.join(',')).join(' ')}" stroke="#ffeb3b" stroke-width="6" fill="none" opacity=".9" style="pointer-events:none"/>`;
+    $('lz').innerHTML=`<svg viewBox="0 0 ${N*80+80} ${N*80+90}" width="100%" style="max-width:420px;display:block;margin:0 auto">${s}</svg>`;
+    document.querySelectorAll('.mcell').forEach(g=>g.onclick=()=>{const k=g.dataset.k;M[k]=M[k]==='/'?'\\':'/';tone(500);save();draw()});
+    if(out&&out[0]===N&&out[1]===2){good('lzm','✅ 빛이 보석에 닿았다! 쿠르릉… 벽이 열린다!');setTimeout(ok,1300)}
+  }
+  openModal('태양의 제단',box('제단 위 바닥에 거울들이 박혀 있다. 거울을 눌러 방향을 바꿔, 왼쪽에서 들어오는 햇빛을 <b>아래쪽 푸른 보석</b>까지 보내라.')+`<div id="lz"></div><div class="msg" id="lzm"></div>`,draw);
+}
+function spotDiff(ok){
+  const D=[[255,40,'sun'],[231,122,'fruit'],[60,40,'smoke'],[150,195,'egg'],[136,104,'spike']];
+  const found=S.f.diffs||[];
+  const scene=(alt)=>`<rect width="300" height="220" fill="#bfe6ff"/><rect y="170" width="300" height="50" fill="#a5d6a7"/><polygon points="20,170 60,70 100,170" fill="#8d6e63"/>${alt?'':'<path d="M60 70 q-10 -20 5 -30 q10 -10 0 -25" stroke="#9e9e9e" stroke-width="8" fill="none"/>'}<circle cx="255" cy="40" r="20" fill="${alt?'#ff7043':'#ffd54f'}"/><rect x="225" y="120" width="12" height="50" fill="#795548"/><circle cx="231" cy="115" r="28" fill="#43a047"/>${alt?'':'<circle cx="222" cy="110" r="4" fill="#e53935"/><circle cx="240" cy="122" r="4" fill="#e53935"/><circle cx="230" cy="138" r="4" fill="#e53935"/>'}<ellipse cx="140" cy="135" rx="45" ry="25" fill="#7cb342"/><rect x="170" y="95" width="18" height="40" fill="#7cb342" transform="rotate(20 179 115)"/><ellipse cx="195" cy="90" rx="18" ry="12" fill="#7cb342"/><circle cx="200" cy="86" r="3" fill="#000"/><polygon points="95,135 60,150 95,145" fill="#7cb342"/>${[110,128,146].map((x,i)=>alt&&DD.diffN>4&&i===1?'':`<polygon points="${x},112 ${x+8},96 ${x+16},112" fill="#558b2f"/>`).join('')}<rect x="118" y="155" width="10" height="20" fill="#7cb342"/><rect x="150" y="155" width="10" height="20" fill="#7cb342"/><ellipse cx="150" cy="195" rx="14" ry="18" fill="#fff8e1" stroke="#bbb"/>${alt&&DD.diffN>3?'<circle cx="146" cy="190" r="3" fill="#8d6e63"/><circle cx="154" cy="200" r="3" fill="#8d6e63"/>':''}`;
+  function draw(){
+    const marks=found.map(i=>`<circle cx="${D[i][0]}" cy="${D[i][1]}" r="22" fill="none" stroke="#e53935" stroke-width="4"/>`).join('');
+    $('sd').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><svg viewBox="0 0 300 220" width="100%" class="sdimg">${scene(false)}${marks}</svg><svg viewBox="0 0 300 220" width="100%" class="sdimg">${scene(true)}${marks}</svg></div><p class="center" style="margin:6px 0">찾은 개수: <b style="color:var(--gold)">${found.length} / ${DD.diffN}</b></p>`;
+    document.querySelectorAll('.sdimg').forEach(svg=>svg.onclick=e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());
+      const i=D.findIndex(([x,y],k)=>k<DD.diffN&&Math.hypot(x-p.x,y-p.y)<DD.tol);
+      if(i>=0&&!found.includes(i)){found.push(i);S.f.diffs=found;save();tone(700);draw();if(found.length===DD.diffN){good('sdm','✅ 다섯 군데 모두 찾았다! 골격 복원 완료!');setTimeout(ok,1300)}}
+      else if(i<0){tone(150)}});
+  }
+  openModal('공룡 골격 복원대',box(`복원대 화면: "왼쪽이 진짜 복원도, 오른쪽은 누군가 바꿔 놓은 그림입니다. <b>다른 곳 ${DD.diffN}군데</b>를 찾아 누르세요."`)+`<div id="sd"></div><div class="msg" id="sdm"></div>`,draw);
+}
+function colorMix(ok){
+  const T=DD.colors;
+  const P=[['빨강','#e53935'],['노랑','#fdd835'],['파랑','#1e88e5'],['흰색','#fafafa'],['검정','#212121']];
+  const sel=T.map(()=>[]);const done=S.f.mixDone||T.map(()=>false);
+  function draw(){
+    $('cmx').innerHTML=T.map(([n,c,ans],i)=>`<div style="display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap"><div style="width:90px;height:70px;border:8px solid #b8860b;background:${done[i]?c:'#fdf6e3'};display:flex;align-items:center;justify-content:center;font-size:13px;color:#555">${done[i]?'':'액자 '+(i+1)}</div><div style="flex:1;min-width:200px"><div class="muted" style="margin-bottom:4px">${T[i][3]}</div>${done[i]?'<b style="color:var(--green)">완성!</b>':P.map(([pn,pc])=>`<button class="pbtn" data-i="${i}" data-p="${pn}" style="width:42px;height:42px;border-radius:50%;margin:2px;background:${pc};border:${sel[i].includes(pn)?'4px solid var(--gold)':'2px solid #555'}"></button>`).join('')}</div></div>`).join('');
+    document.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,p=b.dataset.p;const s=sel[i];
+      if(s.includes(p))s.splice(s.indexOf(p),1);else s.push(p);
+      if(s.length===2){if(T[i][2].every(x=>s.includes(x))){done[i]=true;S.f.mixDone=done;save();tone(600);good('cmm',`🎨 액자 ${i+1} 색칠 완료!`)}else{bad('cmm','이 두 색을 섞으면 그림 제목과 어울리지 않는다…');s.length=0}}
+      draw();if(done.every(x=>x)){good('cmm','✅ 세 그림이 모두 완성되었다!');setTimeout(ok,1200)}});
+  }
+  openModal('빈 액자 세 개',box('붓을 들자 팔레트가 나타났다. 각 그림 제목에 어울리는 색이 나오도록 <b>물감 두 가지</b>를 골라 섞어라.')+`<div id="cmx"></div><div class="msg" id="cmm"></div>`,draw);
+}
+function mirrorClock(){
+  const a=(deg,len,w,c)=>{const t=(deg-90)*Math.PI/180;return `<line x1="100" y1="100" x2="${100+len*Math.cos(t)}" y2="${100+len*Math.sin(t)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};
+  let n='';for(let i=0;i<60;i++){const t=(i*6-90)*Math.PI/180,big=i%5===0,r1=big?70:80;n+=`<line x1="${100+r1*Math.cos(t)}" y1="${100+r1*Math.sin(t)}" x2="${100+88*Math.cos(t)}" y2="${100+88*Math.sin(t)}" stroke="#222" stroke-width="${big?5:1.5}"/>`}n+=`<rect x="92" y="10" width="16" height="22" fill="#c0392b"/>`;
+  return `<svg viewBox="0 0 200 200" width="230" style="transform:scaleX(-1)"><circle cx="100" cy="100" r="94" fill="#fffdf5" stroke="#5d4037" stroke-width="8"/>${n}${a(DD.clock.h%12*30+DD.clock.m/2,48,8,'#111')}${a(DD.clock.m*6,78,5,'#c0392b')}<circle cx="100" cy="100" r="6" fill="#111"/></svg>`;
+}
+
+/* ---------- 장면 1: 로비 ---------- */
+function sceneLobby(){
+  let s=R(0,0,1600,650,'#e8dcc8')+R(0,0,1600,40,'#d4c4a8')+[160,480,800,1120,1440].map(x=>R(x-30,40,60,600,'#f0e6d2')+R(x-40,40,80,30,'#d4c4a8')+R(x-40,610,80,30,'#d4c4a8')).join('')+marbleFloor('#ede4d3','#d9cdb5');
+  s+=R(500,60,600,70,'#3e2723','rx="8"')+lbl(800,108,'국립 어린이 박물관','#ffd54f',36,'bold');
+  // 달력 포스터
+  let cal=frame(230,180,190,240,'')+lbl(325,215,'특별전 개막!','#b71c1c',22,'bold')+lbl(325,250,'「파라오의 비밀」','#333',20)+R(250,265,150,130,'#fff','stroke="#999"')+lbl(325,285,'2026년 11월','#333',15);
+  for(let r=0;r<5;r++)for(let c=0;c<7;c++){const d=r*7+c;cal+=R(255+c*20,295+r*19,17,15,d===8?'#ffcc80':'#eee')}
+  s+=hot('poster',cal);
+  // 안내 데스크
+  s+=hot('desk',`${R(560,470,420,30,'#6d4c41','rx="6"')}${R(575,500,390,150,'#8d6e63')}${R(600,525,160,50,'#795548','stroke="#4e342e" stroke-width="3"')}${R(660,545,40,10,'#d4af37','rx="3"')}${lbl(860,570,'안내','#ffe0b2',26,'bold')}`);
+  s+=hot('pc',`${R(820,380,130,90,'#263238','rx="6"')}${R(830,390,110,68,'#90caf9')}${R(875,470,20,8,'#37474f')}${lbl(885,430,'직원 전용','#0d47a1',14)}`);
+  // 매표기
+  s+=hot('kiosk',`${R(1030,300,170,350,'#37474f','rx="14"')}${R(1050,330,130,110,'#4fc3f7','rx="6"')}${lbl(1115,380,'매표기','#01579b',22,'bold')}${lbl(1115,410,'TICKET','#01579b',16)}${R(1065,470,100,14,'#111','rx="4"')}${R(1060,510,110,60,'#263238','rx="6"')}`);
+  // 기념품 진열장 (블록 피라미드)
+  let py=R(60,450,260,200,'#5d4037','rx="6"')+R(72,462,236,120,'#cfe8ff','opacity=".4"');
+  [[0,5],[1,4],[2,3]].forEach(([row,n])=>{for(let i=0;i<n;i++)py+=R(95+row*20+i*40,560-row*28,36,26,'#d7ccc8','stroke="#6d4c41" stroke-width="2"')});
+  py+=lbl(190,625,'기념품','#ffe0b2',22,'bold');
+  s+=hot('pyr',py);
+  // 개찰구
+  s+=hot('gate',`${R(1290,430,40,220,'#9e9e9e','rx="6"')}${R(1470,430,40,220,'#9e9e9e','rx="6"')}${R(1330,520,140,14,'#e53935','rx="6"')}${R(1300,460,20,14,'#43a047','rx="4"')}${R(1290,250,220,150,'#3e2723','rx="8"')}${lbl(1400,310,'전시실 입구','#ffd54f',24,'bold')}${lbl(1400,350,'입장권을 넣으세요','#ffe0b2',18)}`);
+  // 장식
+  s+=hot('bench',`${R(560,780,300,30,'#8d6e63','rx="8"')}${R(580,810,20,60,'#5d4037')}${R(820,810,20,60,'#5d4037')}`);
+  s+=hot('plant',`<path d="M1000 820 L1060 820 L1050 900 L1010 900 Z" fill="#a1887f"/><ellipse cx="1015" cy="770" rx="18" ry="55" fill="#43a047" transform="rotate(-20 1015 790)"/><ellipse cx="1045" cy="765" rx="18" ry="60" fill="#66bb6a" transform="rotate(20 1045 790)"/>`);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 2: 이집트관 ---------- */
+function sceneEgypt(){
+  let s=R(0,0,1600,650,'#c9a66b');for(let y=0;y<650;y+=50)for(let x=(y/50%2)*60;x<1600;x+=120)s+=R(x,y,118,48,'none','stroke="#b08850" stroke-width="3"');
+  s+=R(0,650,1600,350,'#b08850')+R(0,640,1600,14,'#7a5c34');
+  // 상형문자 벽화
+  s+=hot('wall',`${R(80,90,480,300,'#e6c98a','stroke="#7a5c34" stroke-width="8"')}${lbl(320,135,'파라오의 벽화','#5d4037',24,'bold')}${[175,245,315].map((y,i)=>R(110,y,420,52,'#f3e0b5','rx="4"')).join('')}<text x="130" y="210" font-size="30">𓀀</text><text x="130" y="280" font-size="30">𓁐</text><text x="130" y="350" font-size="30">𓃠</text>${[200,270,340].map(y=>`<path d="M200 ${y} h20 m10 0 a8 8 0 1 1 0.1 0 m20 0 v-14 a8 8 0 0 1 16 0 v14 m14 0 v-20 m8 20 v-20 m8 20 v-20" stroke="#3e2723" stroke-width="3" fill="none"/>`).join('')}`);
+  // 해독 석판
+  s+=hot('legend',`${R(620,140,180,220,'#9e9e9e','rx="10"')}${R(635,155,150,190,'#bdbdbd','rx="6"')}${lbl(710,190,'숫자 석판','#424242',20,'bold')}<path d="M650 250 h30 M700 250 a8 8 0 1 1 0.1 0 M740 260 v-14 a8 8 0 0 1 16 0 v14 M770 260 v-20" stroke="#424242" stroke-width="3" fill="none"/>`);
+  // 고양이 조각상 3개
+  s+=hot('statues',[[880,'A'],[1010,'B'],[1140,'C']].map(([x,l])=>`${R(x-40,560,80,90,'#7a5c34','rx="4"')}<path d="M${x-25} 560 q-5 -80 10 -110 l-8 -25 l18 15 h10 l18 -15 l-8 25 q15 30 10 110z" fill="#212121"/><circle cx="${x-6}" cy="${470}" r="3" fill="#ffd54f"/><circle cx="${x+8}" cy="${470}" r="3" fill="#ffd54f"/>${lbl(x,620,l,'#ffe0b2',30,'bold')}`).join(''));
+  // 석관
+  s+=hot('sarc',`<path d="M1280 650 L1300 300 Q1360 220 1420 300 L1440 650 Z" fill="#d4a017" stroke="#7a5c34" stroke-width="6"/><ellipse cx="1360" cy="320" rx="38" ry="44" fill="#f2c14e"/><rect x="1338" y="300" width="44" height="10" fill="#1565c0"/><circle cx="1348" cy="325" r="5" fill="#000"/><circle cx="1372" cy="325" r="5" fill="#000"/>${[400,450,500,550,600].map(y=>`<line x1="1305" x2="1415" y1="${y}" y2="${y}" stroke="#1565c0" stroke-width="6"/>`).join('')}${R(1340,470,40,30,'#5d4037','rx="4"')}`);
+  // 제단
+  s+=hot('altar',`${R(300,720,360,120,'#a1887f','rx="6"')}${R(280,700,400,30,'#8d6e63','rx="6"')}${[0,1,2,3].map(i=>[0,1,2,3].map(j=>R(320+i*80,738+j*24,70,18,'#d7ccc8')).join('')).join('')}${lbl(480,880,'태양의 제단','#5d4037',22,'bold')}`);
+  // 횃불, 항아리
+  [40,1560].forEach(x=>s+=`${R(x-6,250,12,80,'#5d4037')}<path d="M${x} 250 q-14 -20 0 -45 q14 25 0 45z" fill="#ff7043"/>`);
+  s+=hot('jar',`<path d="M820 800 q-30 60 0 120 h60 q30 -60 0 -120z" fill="#bf8040"/>${R(825,780,50,24,'#a0522d','rx="6"')}`);
+  // 비밀 문
+  s+=hot('door',`${R(1460,200,120,450,'#a67c45','stroke="#7a5c34" stroke-width="6"')}<text x="1520" y="420" font-size="44" text-anchor="middle">𓂀</text>`);
+  if(!S.f.lit)s+=`<rect width="1600" height="1000" fill="#000" opacity=".86" pointer-events="none"/>`+lbl(800,500,'너무 어둡다…','#888',40);
+  return svgWrap(s);
+}
+
+/* ---------- 장면 3: 자연사관 ---------- */
+function sceneNature(){
+  let s=R(0,0,1600,650,'#4a6b53')+R(0,0,1600,40,'#3c5844')+R(0,650,1600,350,'#6d6457')+R(0,640,1600,14,'#3e2723');
+  for(let x=0;x<1600;x+=80)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="#5c5448" stroke-width="2"/>`;
+  // 티라노 골격 (복원대)
+  let tr=`${R(420,560,560,40,'#8d8d8d','rx="6"')}`;
+  tr+=`<path d="M480 420 Q600 360 760 380 L860 300 Q900 270 940 300 L930 340 L880 350 L800 420 Q700 460 560 450 Q500 440 480 420Z" fill="none" stroke="#f5f0e1" stroke-width="10"/>`;
+  for(let i=0;i<8;i++)tr+=`<path d="M${560+i*28} 400 q8 30 0 55" stroke="#f5f0e1" stroke-width="7" fill="none"/>`;
+  tr+=`<path d="M600 450 L590 520 L620 560 M720 440 L740 520 L710 560 M820 380 L840 420" stroke="#f5f0e1" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M480 420 Q420 410 380 450" stroke="#f5f0e1" stroke-width="9" fill="none"/><circle cx="905" cy="300" r="7" fill="#333"/>`+lbl(700,630,'골격 복원대','#e0e0e0',22,'bold');
+  s+=hot('skeleton',tr);
+  // 안내판 (낱말 퀴즈)
+  s+=hot('sign',`${R(70,120,260,230,'#2e4a37','rx="8" stroke="#c8e6c9" stroke-width="4"')}${lbl(200,165,'퀴즈 안내판','#c8e6c9',24,'bold')}${[205,240,275,310].map(y=>R(95,y,210,14,'#a5d6a7','rx="4"')).join('')}`);
+  // 매머드 케이스
+  s+=hot('mammoth',`${R(70,400,260,250,'#5d4037','rx="8"')}${R(85,415,230,180,'#cfe8ff','opacity=".35"')}<ellipse cx="200" cy="520" rx="70" ry="45" fill="#8d6e63"/><circle cx="140" cy="490" r="34" fill="#8d6e63"/><path d="M118 510 q-30 30 0 60 M150 520 q-10 40 20 50" stroke="#fffde7" stroke-width="8" fill="none"/>${R(180,600,40,30,'#263238','rx="4"')}`);
+  // 먹이 사슬 디오라마
+  s+=hot('diorama',`${R(1040,140,360,240,'#3e2723','rx="8"')}${R(1055,155,330,210,'#a5d6a7')}<rect x="1055" y="300" width="330" height="65" fill="#7cb342"/>${[...DD.chain.emo].filter(c=>c.trim()&&c!=='\ufe0f').map((e,i)=>`<text x="${1085+i*65}" y="${i===4?220:300}" font-size="38">${e}</text>`).join('')}${lbl(1220,410,'먹이 사슬 디오라마','#e0e0e0',20,'bold')}`);
+  // 공룡알 보관함
+  s+=hot('eggcase',`${R(1060,470,260,180,'#6d4c41','rx="8"')}${R(1075,485,230,110,'#cfe8ff','opacity=".35"')}<ellipse cx="1150" cy="545" rx="30" ry="40" fill="#efebe9" stroke="#bcaaa4" stroke-width="3"/><ellipse cx="1230" cy="550" rx="28" ry="36" fill="#d7ccc8" stroke="#bcaaa4" stroke-width="3"/>${R(1160,605,60,32,'#263238','rx="4"')}`);
+  // 장식
+  s+=hot('fern',`<path d="M1400 650 q-40 -120 -10 -200 M1400 650 q20 -130 60 -190 M1400 650 q-80 -60 -110 -110" stroke="#2e7d32" stroke-width="10" fill="none"/>`);
+  s+=hot('door',`${R(1460,200,120,450,'#5d4037','rx="6"')}${R(1480,230,80,120,'#a5d6a7','opacity=".5"')}<circle cx="1475" cy="440" r="9" fill="#d4af37"/>`)+R(1460,160,120,32,'#c8e6c9','rx="4"')+lbl(1520,184,'미술관 →','#1b5e20',18,'bold');
+  return svgWrap(s);
+}
+
+/* ---------- 장면 4: 미술관 ---------- */
+function sceneArt(){
+  let s=R(0,0,1600,650,'#7b1f2e')+R(0,0,1600,40,'#5c1622')+R(0,560,1600,90,'#5c1622')+R(0,650,1600,350,'#6d4c41');
+  for(let x=0;x<1600;x+=60)s+=`<line x1="${x}" x2="${x}" y1="650" y2="1000" stroke="#5d4037" stroke-width="3"/>`;
+  // 빈 액자 3개
+  const done=S.f.mixDone||DD.colors.map(()=>false);const cols=DD.colors.map(c=>c[1]);
+  s+=hot('frames',DD.colors.map((_,i)=>i).map(i=>frame(120+i*230,130,170,210,done[i]?R(120+i*230,130,170,210,cols[i]):lbl(205+i*230,240,'?','#bbb',60))).join(''));
+  // 유물 진열장
+  s+=hot('case',`${R(860,330,320,320,'#3e2723','rx="8"')}${R(875,345,290,180,'#cfe8ff','opacity=".3"')}${[...DD.order.emo].filter(c=>c.trim()&&c!=='\ufe0f'&&c!=='\u20e3').slice(0,4).map((e,i)=>`<text x="${900+i*65}" y="420" font-size="44">${e}</text>`).join('')}${lbl(1020,480,'① ② ③ ④','#ffe0b2',24)}${R(990,560,60,34,'#263238','rx="4"')}`);
+  // 설명판
+  s+=hot('labels',`${R(880,150,280,140,'#fffde7','rx="6"')}${lbl(1020,185,'유물 설명판','#5d4037',22,'bold')}${[215,240,265].map(y=>`<line x1="905" x2="1135" y1="${y}" y2="${y}" stroke="#bbb" stroke-width="5"/>`).join('')}`);
+  // 거울
+  s+=hot('mirror',`<ellipse cx="1300" cy="300" rx="80" ry="120" fill="#cfd8dc" stroke="#b8860b" stroke-width="14"/><ellipse cx="1280" cy="270" rx="25" ry="50" fill="#fff" opacity=".5"/>`);
+  // 조각상, 벤치
+  s+=hot('bust',`${R(780,540,60,110,'#eeeeee')}<circle cx="810" cy="500" r="32" fill="#f5f5f5"/>${R(790,525,40,20,'#f5f5f5')}`);
+  s+=hot('bench',`${R(300,800,400,30,'#3e2723','rx="8"')}${R(320,830,20,60,'#2b1d14')}${R(660,830,20,60,'#2b1d14')}`);
+  // 비상구
+  s+=hot('exit',`${R(1430,250,150,400,'#455a64','rx="6"')}${R(1440,190,130,46,'#2e7d32','rx="6"')}${lbl(1505,222,'🏃 비상구','#fff',20,'bold')}${R(1460,420,90,60,'#111','rx="6"')}${[0,1,2].map(r=>[0,1,2].map(c=>R(1468+c*26,426+r*17,20,12,'#66bb6a','rx="2"')).join('')).join('')}`);
+  return svgWrap(s);
+}
+
+/* ---------- 방 정의 ---------- */
+const rooms=[
+{
+  name:'박물관 로비',scene:sceneLobby,
+  objects:[
+    {id:'poster',click(){openModal('특별전 포스터',paper(DD.day.html)+DD.day.tip)}},
+    {id:'desk',click(){
+      if(S.f.desk){openModal('안내 데스크 서랍',box('서랍 안 메모:')+paper(DD.pc.memo));return}
+      const days=['월','화','수','목','금','토','일'];
+      openModal('안내 데스크 서랍',box('서랍에 요일 버튼 자물쇠가 달려 있다.<br><b>"특별전 개막 요일을 누르시오"</b>')+`<div class="center">${days.map(d=>`<button class="ghost dbtn" data-d="${d}" style="margin:3px;padding:10px 14px">${d}</button>`).join('')}</div><div class="msg" id="dm"></div>`,()=>{
+        document.querySelectorAll('.dbtn').forEach(b=>b.onclick=()=>{if(b.dataset.d===DD.day.ans){good('dm','✅ 딸깍! 서랍이 열렸다');S.f.desk=true;save();setTimeout(()=>{give('staff');openModal('안내 데스크 서랍',box('서랍 안에 <b>직원 카드</b>와 메모가 있다.')+paper(DD.pc.memo))},900)}else bad('dm','❌ 열리지 않는다')})})}},
+    {id:'pc',click(){
+      if(S.f.pc){openModal('직원 컴퓨터',pcScreen());return}
+      if(!uses('staff')&&!S.f.pcCard){openModal('직원 컴퓨터',box('"직원 카드를 대 주세요" — 카드 리더기가 깜빡인다.'));return}
+      S.f.pcCard=true;save();
+      openModal('직원 컴퓨터',box('카드 인식 완료. '+DD.pc.ask)+DD.pc.keys+DD.pc.tip+lock({placeholder:DD.pc.ph,maxlen:10}),()=>bindLock(DD.pc.ans,()=>{S.f.pc=true;save();openModal('직원 컴퓨터',pcScreen())}))}},
+    {id:'kiosk',click(){
+      if(S.f.kiosk){openModal('매표기',box('입장권은 이미 뽑았다.'));return}
+      openModal('매표기',paper(DD.kiosk.html)+box('"결제할 금액을 입력하세요"')+DD.kiosk.tip+lock({placeholder:'숫자만',maxlen:7}),()=>bindLock(String(DD.kiosk.ans),()=>{S.f.kiosk=true;save();openModal('매표기',box('찰칵! <b>입장권</b>이 나왔다.'));give('ticket')}))}},
+    {id:'pyr',click(){
+      if(S.f.pyr){openModal('기념품 진열장',box('진열장은 열려 있다. 블록 탑만 남아 있다.'));return}
+      openModal('기념품 진열장',box('블록 탑 장난감과 설명서가 있다.<br><b>"위 블록의 수 = 바로 아래 두 블록의 수의 합"</b>')+pyramidHTML()+box('진열장 자물쇠: "<b>맨 꼭대기 블록의 수</b>를 입력하시오"')+DD.pyr.tip+lock({placeholder:'숫자',maxlen:3}),()=>bindLock(String(DD.pyr.ans),()=>{S.f.pyr=true;save();openModal('기념품 진열장',box('진열장이 열렸다! 기념품 <b>손전등</b>을 챙겼다.'));give('flash')}))}},
+    {id:'gate',click(){
+      if(!has('flash')){openModal('전시실 입구',box('입구 안내: "이집트관은 정전 중입니다. <b>불빛</b>을 준비하세요."'));return}
+      if(uses('ticket')){consume('ticket');nextRoom('입장권을 넣자 개찰구가 열렸다! 이집트관으로');return}
+      openModal('전시실 입구',box('"입장권을 넣으세요"'))}},
+    {id:'bench',click(){openModal('벤치',box('관람객용 벤치. 별건 없다.'))}},
+    {id:'plant',click(){openModal('화분',box('커다란 고무나무. 별건 없다.'))}}
+  ],
+  hints:DD.hints[0]
+},
+{
+  name:'이집트관',scene:sceneEgypt,
+  objects:[
+    {id:'wall',click(){openModal('파라오의 벽화',box('벽에 고대 이집트 숫자로 세 개의 수가 새겨져 있다.')+`<div style="background:#f3e0b5;border-radius:8px;padding:10px;display:grid;gap:8px">${DD.egy.nums.map(([g,n])=>`<div style="display:flex;align-items:center;gap:10px"><span style="font-size:28px;color:#3e2723">${g}</span>${egyNum(n)}</div>`).join('')}</div>`+paper('아래 글귀: "석관을 여는 수 = '+DD.egy.rule+'"')+DD.egy.tip)}},
+    {id:'legend',click(){openModal('숫자 석판',box('고대 이집트 숫자 해독표다.')+egyLegend()+'<p class="muted center">같은 기호가 여러 번 나오면 그만큼 더한다.</p>')}},
+    {id:'statues',click(){
+      if(S.f.statue){openModal('고양이 조각상',box(DD.cats.ans+' 조각상 아래 비밀 공간은 비어 있다.'));return}
+      openModal('세 고양이 조각상',paper(DD.cats.head)+box(DD.cats.html)+DD.cats.tip+`<div class="center">${['A','B','C'].map(k=>`<button class="ghost sbtn" data-k="${k}" style="margin:4px;font-size:20px;padding:12px 22px">🐈‍⬛ ${k} 들어 올리기</button>`).join('')}</div><div class="msg" id="stm"></div>`,()=>{
+        document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>{if(b.dataset.k===DD.cats.ans){good('stm','✅ '+DD.cats.ans+' 아래에서 황금 열쇠 발견!');S.f.statue=true;save();setTimeout(()=>{closeModal();give('gkey')},1000)}else bad('stm','쿵! 아무것도 없다. 다시 추리해 보자')})})}},
+    {id:'sarc',click(){
+      if(S.f.sarc){openModal('석관',box('석관 안은 비어 있다.'));return}
+      if(!S.f.sarcKey){if(uses('gkey')){consume('gkey');S.f.sarcKey=true;save()}else{openModal('석관',box('파라오의 석관. 가슴 부분에 <b>열쇠 구멍</b>과 숫자 다이얼이 있다.'));return}}
+      openModal('석관',box('열쇠를 돌리자 숫자 다이얼이 풀렸다. 🔒 숫자 다이얼')+lock({placeholder:'숫자',maxlen:6}),()=>bindLock(String(DD.egy.ans),()=>{S.f.sarc=true;save();openModal('석관',box('석관 뚜껑이 열렸다! 안에서 반짝이는 <b>거울 조각</b>을 찾았다.<br><span class="muted">"태양의 빛을 이끄는 자만이 문을 연다"</span>'));give('mirror')}))}},
+    {id:'altar',click(){
+      if(S.f.altar){openModal('태양의 제단',box('빛이 보석에 닿아 있다.'));return}
+      if(!S.f.altarMir){if(uses('mirror')){consume('mirror');S.f.altarMir=true;save()}else{openModal('태양의 제단',box('제단 바닥에 거울이 박혀 있는데, 한 칸이 비어 있다. <b>거울 조각</b>이 필요하다.'));return}}
+      laserPuzzle(()=>{S.f.altar=true;save();closeModal();toast('벽이 열렸다! 비밀 문이 드러났다')})}},
+    {id:'jar',click(){openModal('항아리',box('먼지만 가득하다. 별건 없다.'))}},
+    {id:'door',click(){
+      if(!S.f.altar){openModal('벽',box('눈 모양 문양이 새겨진 단단한 벽. 어딘가와 연결된 장치가 있는 것 같다.'));return}
+      nextRoom('비밀 통로를 지나 자연사관으로!')}}
+  ],
+  hints:DD.hints[1]
+},
+{
+  name:'자연사관',scene:sceneNature,
+  objects:[
+    {id:'sign',click(){openModal('퀴즈 안내판',paper(DD.word.html)+DD.word.tip)}},
+    {id:'mammoth',click(){
+      if(S.f.mam){openModal('매머드 전시 케이스',box('케이스는 열려 있다.'));return}
+      openModal('매머드 전시 케이스',box('🔒 "'+DD.word.ask+'"')+lock({placeholder:'한글',maxlen:6}),()=>bindLock(DD.word.ans,()=>{S.f.mam=true;save();openModal('매머드 전시 케이스',box('케이스가 열리고 <b>매머드 이빨</b> 화석이 굴러 나왔다!'));give('tooth')}))}},
+    {id:'diorama',click(){
+      if(S.f.dio){openModal('먹이 사슬 디오라마',box('디오라마 아래 서랍은 열려 있다.'));return}
+      openModal('먹이 사슬 디오라마',box('디오라마 아래 카드 '+DD.chain.n+'장과 번호 자물쇠가 있다.')+paper(DD.chain.html)+DD.chain.tip+lock({placeholder:'숫자 '+DD.chain.n+'자리',maxlen:DD.chain.n}),()=>bindLock(DD.chain.ans,()=>{S.f.dio=true;save();openModal('먹이 사슬 디오라마',box('서랍에서 <b>나뭇잎 화석</b>을 찾았다!'));give('leaf')}))}},
+    {id:'eggcase',click(){
+      if(S.f.egg){openModal('공룡알 보관함',box('보관함은 열려 있다.'));return}
+      openModal('공룡알 보관함',paper(DD.egg.html)+DD.egg.tip+box('🔒 "답을 숫자로 입력"')+lock({placeholder:'숫자',maxlen:7}),()=>bindLock(String(DD.egg.ans),()=>{S.f.egg=true;save();openModal('공룡알 보관함',box('딸깍! 작은 <b>공룡알 화석</b>을 얻었다.'));give('egg')}))}},
+    {id:'skeleton',click(){
+      if(S.f.diffDone){openModal('공룡 골격 복원대',box('티라노사우루스 골격이 완벽하게 복원되었다!'));return}
+      if(!(has('tooth')&&has('leaf')&&has('egg'))){openModal('공룡 골격 복원대',box('복원대 화면: <b>"화석 세 개(이빨, 나뭇잎, 알)를 모두 올려 주세요."</b>'));return}
+      spotDiff(()=>{S.f.diffDone=true;['tooth','leaf','egg'].forEach(consume);save();closeModal();toast('골격 복원 완료! 미술관 문이 열렸다')})}},
+    {id:'fern',click(){openModal('고사리',box('공룡 시대에도 있었던 식물이라고 한다. 별건 없다.'))}},
+    {id:'door',click(){
+      if(!S.f.diffDone){openModal('미술관 문',box('"골격 복원이 끝나야 문이 열립니다."'));return}
+      nextRoom('미술관으로! 마지막 방이다')}}
+  ],
+  hints:DD.hints[2]
+},
+{
+  name:'미술관',scene:sceneArt,
+  objects:[
+    {id:'labels',click(){openModal('유물 설명판',paper(DD.order.html)+DD.order.tip)}},
+    {id:'case',click(){
+      if(S.f.case){openModal('유물 진열장',box('진열장은 열려 있다.'));return}
+      openModal('유물 진열장',box('🔒 '+DD.order.ans.length+'자리 숫자 자물쇠')+lock({placeholder:'숫자 '+DD.order.ans.length+'자리',maxlen:DD.order.ans.length}),()=>bindLock(DD.order.ans,()=>{S.f.case=true;save();openModal('유물 진열장',box('진열장 바닥에 화가가 쓰던 <b>붓</b>이 숨겨져 있었다!'));give('brush')}))}},
+    {id:'frames',click(){
+      if(S.f.mix){openModal('세 그림',box('세 그림이 완성되었다. 그림 아래 금빛 글씨:')+paper('"<b>비상구 비밀번호는 거울 속 시계가 알려 준다.</b> 거울에 비친 모습이 아닌, <b>진짜 시각</b>을 네 자리로."'));return}
+      if(!has('brush')){openModal('빈 액자 세 개',box('제목만 붙어 있는 빈 액자들. 무언가로 색을 칠해야 할 것 같다.<br>'+DD.colors.map(c=>'「'+c[3]+'」').join(' ')+''));return}
+      colorMix(()=>{S.f.mix=true;save();openModal('세 그림',box('세 그림이 완성되자 그림 아래 금빛 글씨가 떠올랐다!')+paper('"<b>비상구 비밀번호는 거울 속 시계가 알려 준다.</b> 거울에 비친 모습이 아닌, <b>진짜 시각</b>을 네 자리로."'))})}},
+    {id:'mirror',click(){openModal('커다란 거울',DD.clock.tip+box('거울에 맞은편 벽시계가 비쳐 보인다. 숫자 없이 눈금만 있는 시계다. (빨간 눈금이 12시, 시계는 등 뒤에 있어서 직접 볼 수 없다)<br>'+mirrorClock()+'<br><span class="muted">거울 속에서는 왼쪽과 오른쪽이 바뀌어 보인다.</span>'))}},
+    {id:'bust',click(){openModal('흉상',box('근엄한 표정의 조각상. 별건 없다.'))}},
+    {id:'bench',click(){openModal('벤치',box('잠깐 쉬고 싶지만… 탈출이 먼저!'))}},
+    {id:'exit',click(){
+      if(!S.f.mix){openModal('비상구',box('🔒 숫자 키패드가 있지만 아직 비밀번호를 모른다. 그림들이 무언가 말해 줄 것 같다.'));return}
+      openModal('비상구',box('🔒 "네 자리 비밀번호 (예: 3시 15분 → 0315)"')+lock({placeholder:'숫자 4자리',maxlen:4}),()=>bindLock(DD.clock.ans,()=>{closeModal();finish()}))}}
+  ],
+  hints:DD.hints[3]
+}];
+function pcScreen(){return box('<b>직원 시스템</b>')+paper('📢 오늘의 공지<br>'+DD.kiosk.notice+'<br>· 이집트관 정전! 손전등은 기념품 진열장에 있음 (블록 탑 퍼즐로 잠김)')}
+
+/* 이집트관: 어두울 때는 손전등이 있어야 조사 가능 */
+rooms[1].objects.forEach(o=>{const c=o.click;o.click=function(){
+  if(!S.f.lit){if(uses('flash')){S.f.lit=true;save();render();toast('🔦 손전등을 켰다! 전시실이 보인다');return}
+    openModal('캄캄하다',box('너무 어두워서 아무것도 보이지 않는다. 소지품에서 <b>손전등</b>을 선택한 뒤 눌러 보자.'));return}
+  c.call(this)}});
+
+/* ---------- 시작 / 끝 ---------- */
+function renderIntro(app){
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🏛️</div><h1>한밤의 박물관 탈출</h1><div class="muted" style="font-weight:bold">${GRADE}학년 · ${LVN}${LV==='easy'?' · 🧭 문제마다 도움말이 나와요':LV==='hard'?' · 정답 힌트 없음':''}</div>
+  <div class="muted">방 4개 · 퍼즐 15개 · 교과 + 추리·관찰·논리</div>
+  <div class="story">현장 체험 학습으로 온 박물관. 전시를 보다가 깜빡 잠이 들었는데… 눈을 떠 보니 <b>박물관 문이 모두 닫혔다!</b><br><br>
+  로비 → 이집트관 → 자연사관 → 미술관을 지나 <b>비상구</b>를 찾아 탈출하라. 전시물마다 수수께끼가 숨어 있다!</div>
+  <p class="muted">종이와 연필을 준비하면 좋아요 · 막히면 💡 힌트</p>
+  <button class="btn" id="startBtn" style="font-size:22px;padding:14px 40px">탈출 시작!</button></div>`;
+  $('startBtn').onclick=()=>{S.room=0;S.start=Date.now();save();render()};
+}
+function renderEnd(app){
+  const t=S.end&&S.start?fmt(S.end-S.start):'--:--';const h=S.hints.reduce((a,b)=>a+b,0);
+  const rank=h===0?'🏆 전설의 큐레이터':h<=3?'🥇 수석 학예사':h<=7?'🥈 박물관 탐험가':'🥉 꼬마 관람객';
+  app.innerHTML=`<div class="card center"><div class="big-emoji">🌅</div><h1>탈출 성공!</h1>
+  <p>기록 <b style="color:var(--gold)">${t}</b> · 힌트 <b style="color:var(--gold)">${h}번</b></p>
+  <p style="font-size:24px">${rank}</p>
+  <div class="story">비상구 문이 열리자 아침 햇살이 쏟아진다. 경비 아저씨가 깜짝 놀라 묻는다. "아니, 밤새 여기 있었니?"<br><br>요일 계산, 키패드 암호, 이집트 숫자, 거짓말쟁이 고양이, 빛의 반사, 먹이 사슬, 다른 그림 찾기, 색의 혼합, 거울 시계까지… 박물관의 모든 비밀을 풀었다!</div>${LV!=='hard'?`<p><a class="btn" style="text-decoration:none;display:inline-block" href="${location.pathname.split('/').pop()}?lv=${LV==='easy'?'normal':'hard'}">다음 단계 (${LV==='easy'?'🟡 보통':'🔴 어려움'}) 도전하기 →</a></p>`:''}</div>`;
+}
+
+let S=load()||fresh();
+function fresh(){return{room:-1,inv:[],sel:null,f:{},seen:{},hints:[0,0,0,0],start:null,end:null}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const norm=s=>s.replace(/\s/g,'').toUpperCase();
+const $=id=>document.getElementById(id);
+
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2200)}
+function give(id){if(!S.inv.includes(id)){S.inv.push(id);save();toast(`${ITEMS[id].e} ${ITEMS[id].n} 획득!`);renderInv()}}
+function uses(id){return S.sel===id}
+function consume(id){S.inv=S.inv.filter(x=>x!==id);if(S.sel===id)S.sel=null;save();renderInv()}
+
+function openModal(title,html,setup){$('mtitle').textContent=title;$('mbody').innerHTML=html;$('modal').classList.add('show');if(setup)setup()}
+function closeModal(){$('modal').classList.remove('show');render()}
+$('mclose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function lock(opts){
+  // opts: {label, placeholder, answer, ok(), maxlen}
+  return `<div class="muted" style="text-align:center">${opts.label||''}</div>
+  <form class="lockform" id="lf"><input id="li" maxlength="${opts.maxlen||8}" placeholder="${opts.placeholder||''}" autocomplete="off"><button class="btn">열기</button></form>
+  <div class="msg" id="lm"></div>`;
+}
+function bindLock(answer,ok){
+  const f=$('lf');if(!f)return;
+  f.onsubmit=e=>{e.preventDefault();const v=norm($('li').value);if(!v)return;
+    if(v===norm(answer)){$('lm').className='msg good';$('lm').textContent='✅ 철컥! 열렸다!';f.querySelectorAll('input,button').forEach(x=>x.disabled=true);setTimeout(ok,900)}
+    else{$('lm').className='msg bad';$('lm').textContent='❌ 열리지 않는다…';const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
+  };
+}
+
+/* ---------- 소리 ---------- */
+let actx=null;
+function tone(f){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.3,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6)}catch(e){}}
+
+/* ---------- 장면 그리기 도우미 ---------- */
+const hot=(id,inner)=>`<g class="hot" data-id="${id}">${inner}</g>`;
+const R=(x,y,w,h,f,ex='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${ex}/>`;
+function woodFloor(c1,c2){let s=R(0,650,1600,350,c1);for(let y=690;y<1000;y+=45){s+=`<line x1="0" x2="1600" y1="${y}" y2="${y}" stroke="${c2}" stroke-width="3"/>`;for(let x=((y/45)%2)*120;x<1600;x+=240)s+=`<line x1="${x}" x2="${x}" y1="${y-45}" y2="${y}" stroke="${c2}" stroke-width="2"/>`}return s}
+function lamps(){return [300,800,1300].map(x=>R(x-100,10,200,16,'#fffef5','rx="6" stroke="#ddd"')).join('')}
+function windowPane(x,y,w,h){return `${R(x-8,y-8,w+16,h+16,'#fff')}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sky)"/><line x1="${x+w/2}" x2="${x+w/2}" y1="${y}" y2="${y+h}" stroke="#fff" stroke-width="8"/><line x1="${x}" x2="${x+w}" y1="${y+h/2}" y2="${y+h/2}" stroke="#fff" stroke-width="8"/><ellipse cx="${x+w*0.3}" cy="${y+h*0.25}" rx="28" ry="12" fill="#fff" opacity=".8"/>`}
+function studentDesk(x,y,sc=1){const w=200*sc,h=16*sc;return `<g>${R(x-w/2,y,w,h,'#ddb983','rx="3"')}${R(x-w/2+8,y+h,w-16,40*sc,'#b98f5a')}${R(x-w/2+6,y+h+40*sc,8*sc,60*sc,'#666')}${R(x+w/2-14,y+h+40*sc,8*sc,60*sc,'#666')}${R(x-55*sc,y+90*sc,110*sc,14*sc,'#3d6fb0','rx="4"')}${R(x-50*sc,y+50*sc,100*sc,40*sc,'#4a7fc1','rx="6"')}${R(x-48*sc,y+104*sc,7*sc,40*sc,'#555')}${R(x+41*sc,y+104*sc,7*sc,40*sc,'#555')}</g>`}
+function clockFace(cx,cy,r){const a=(deg,len,w,c)=>{const t=(deg-90)*Math.PI/180;return `<line x1="${cx}" y1="${cy}" x2="${cx+len*Math.cos(t)}" y2="${cy+len*Math.sin(t)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`};let ticks='';for(let i=0;i<12;i++){const t=i*30*Math.PI/180;ticks+=`<line x1="${cx+r*.8*Math.cos(t)}" y1="${cy+r*.8*Math.sin(t)}" x2="${cx+r*.92*Math.cos(t)}" y2="${cy+r*.92*Math.sin(t)}" stroke="#333" stroke-width="3"/>`}return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fffdf5" stroke="#6b4a2a" stroke-width="7"/>${ticks}${a(122.5,r*.5,6,'#111')}${a(30,r*.78,4,'#c0392b')}<circle cx="${cx}" cy="${cy}" r="4" fill="#111"/>`}
+const DEFS=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc9ff"/><stop offset="1" stop-color="#d8efff"/></linearGradient></defs>`;
+const svgWrap=inner=>`<svg viewBox="0 0 1600 1000" width="100%" style="display:block">${DEFS}${inner}</svg>`;
+/* ---------- 진행 ---------- */
+function mx(){return Math.max(S.maxRoom||0,S.room)}
+function nextRoom(t){closeModal();S.room++;S.maxRoom=Math.max(mx(),S.room);S.sel=null;save();render();if(t)toast(t)}
+function goRoom(i){S.maxRoom=mx();S.room=i;S.sel=null;save();render()}
+function finish(){S.end=Date.now();S.room=rooms.length;save();render()}
+
+function renderInv(){
+  const el=$('inv');if(!el)return;
+  el.innerHTML=`<span class="lbl">🎒 소지품</span>`+(S.inv.length?S.inv.map(id=>`<div class="item ${S.sel===id?'sel':''}" data-id="${id}"><span>${ITEMS[id].e}</span>${ITEMS[id].n}</div>`).join(''):'<span class="muted">아직 없음</span>')+(S.sel?`<span class="selinfo">사용 중: ${ITEMS[S.sel].n} → 쓸 곳을 눌러 보세요</span>`:'');
+  el.querySelectorAll('.item').forEach(it=>it.onclick=()=>{const id=it.dataset.id;S.sel=S.sel===id?null:id;save();renderInv()});
+}
+
+function render(){
+  $('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);
+  const app=$('app');
+  if(S.room===-1)return renderIntro(app);
+  if(S.room>=rooms.length)return renderEnd(app);
+  const r=rooms[S.room];
+  app.innerHTML=`<div class="roombar"><h2>방 ${S.room+1} / ${rooms.length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<mx()?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
+  <div class="scene">${r.scene()}</div><div class="inv" id="inv"></div>
+  <p class="muted" style="text-align:center">방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 선택한 뒤 쓸 곳을 누르면 돼요.</p>`;
+  app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-6);h.setAttribute('y',b.y-6);h.setAttribute('width',b.width+12);h.setAttribute('height',b.height+12);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}});
+  app.querySelectorAll('.hot').forEach(el=>el.addEventListener('click',()=>{const o=r.objects.find(x=>x.id===el.dataset.id);if(!o)return;if(o.id==='door'&&S.room<mx()){goRoom(S.room+1);toast('이미 열어 둔 문이다. 다음 방으로!');return}o.click()}));
+  if($('prevBtn'))$('prevBtn').onclick=()=>goRoom(S.room-1);
+  if($('nextBtn'))$('nextBtn').onclick=()=>goRoom(S.room+1);
+  $('hintBtn').onclick=showHints;
+  renderInv();
+}
+function showHints(){
+  const r=rooms[S.room];const n=S.hints[S.room];
+  const html=r.hints.slice(0,n).map((h,i)=>`<div class="hint">💡 ${i+1}. ${h}</div>`).join('')+(n<r.hints.length?`<div class="center" style="margin-top:14px"><button class="btn" id="moreHint">힌트 ${n+1} 열기</button><div class="muted">힌트를 쓰면 기록에 남아요</div></div>`:'<p class="muted center">이 방의 힌트를 모두 열었어요.</p>');
+  openModal(`💡 ${r.name} 힌트`,html,()=>{const b=$('moreHint');if(b)b.onclick=()=>{S.hints[S.room]++;save();$('hintCount').textContent=S.hints.reduce((a,b)=>a+b,0);showHints()}});
+}
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+setInterval(()=>{$('timer').textContent=S.start?fmt((S.end||Date.now())-S.start):'00:00'},500);
+$('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="muted">지금까지 푼 기록이 모두 지워져요.</p><div class="center"><button class="btn" id="yesReset">다시 시작</button></div>',()=>{$('yesReset').onclick=()=>{S=fresh();save();closeModal()}});
+render();
+
+if(document.getElementById('speak'))document.getElementById('speak').onclick=()=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance((document.getElementById('mtitle').textContent+'. '+document.getElementById('mbody').innerText).replace(/[★□]/g,' '));u.lang='ko-KR';u.rate=.95;speechSynthesis.speak(u)}catch(e){}};
+try{const _om=openModal;openModal=function(){try{speechSynthesis.cancel()}catch(e){}return _om.apply(this,arguments)}}catch(e){}
+if(document.getElementById('lvPill'))document.getElementById('lvPill').textContent=GRADE+'학년 · '+LVN;
+</script>
+<a href="index.html" style="position:fixed;left:10px;bottom:10px;z-index:50;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;font-size:13px;padding:6px 12px;border-radius:999px;font-family:sans-serif">← 게임 목록</a>
+<script>
+/* 완료 자동 기록: 게임을 끝까지 깨면 게임 목록에 완료 표시 */
+setInterval(function(){try{var t=(S&&S.end)?String(S.end):null;if(t&&localStorage.getItem('class-done-skip-museum@'+LV)!==t){var d=JSON.parse(localStorage.getItem('class-done')||'{}');if(!d['museum@'+LV]){d['museum@'+LV]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}}catch(e){}},1000);
+</script>
+</body>
+</html>
