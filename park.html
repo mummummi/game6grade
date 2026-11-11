@@ -98,6 +98,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
 .how div{background:#f7f3fb;border-radius:16px;padding:10px;font-size:16px}
 .how b{display:block;font-size:34px;font-family:Jua;font-weight:400}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.shopitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid #ebe4f3;background:#fff;border-radius:18px;padding:10px 8px;box-shadow:0 4px 0 #ece6f3;text-align:center}
+.shopitem b{font-size:34px;font-weight:400}.shopitem .nm{font-family:Jua;font-size:18px}.shopitem .nm small{font-size:13px;color:#7a6f8c}.shopitem .ds{font-size:13px;color:#6b6280;line-height:1.35}
+.shopitem .pr{margin-top:4px;background:#fff6d6;border-radius:999px;padding:2px 10px;font-family:Jua}.shopitem.full{opacity:.6}.shopitem:disabled{opacity:.45}
+.mission{background:linear-gradient(90deg,#efe6ff,#fff);border:2px solid #c9b6f5;border-radius:14px;padding:7px 12px;margin:6px 0;font-size:16px;text-align:center}
+.mission span{display:inline-block;margin-left:6px;font-size:14px;color:#7048e8}.mission.done{background:#dff7e3;border-color:#7bd389}
+.trash{position:absolute;font-size:24px;border:none;background:none;padding:0;transform:translate(-50%,-50%);z-index:6;animation:tbob 1.6s ease-in-out infinite;cursor:pointer}
+@keyframes tbob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-65%)}}
 @media (max-width:560px){.hud .t{display:none}.btn.big{font-size:22px}}
 .path{position:absolute;left:2%;right:2%;top:58%;height:12%;background:#e9d8b4;border-radius:999px;box-shadow:inset 0 3px 0 #0001}
 .gate{position:absolute;left:1%;bottom:4%;font-size:50px;text-align:center;line-height:1}.gate small{display:block;font:13px Jua;background:#fff;border-radius:8px;padding:1px 4px}
@@ -113,6 +121,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .night .ride{filter:drop-shadow(0 0 10px #ffd86b) drop-shadow(0 0 3px #fff)}
 .ticket{position:absolute;left:10%;bottom:3%;background:#fff;border:3px solid var(--main);border-radius:12px;padding:2px 10px;font:18px Jua}
 .evflag{position:absolute;right:2%;top:3%;background:#fff3c4;border-radius:12px;padding:4px 10px;font:18px Jua;animation:bob 1.4s infinite}
+.lvb{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:#7048e8;color:#fff;font:12px Jua;border-radius:999px;padding:0 6px}
+.staffbar{position:absolute;left:12%;top:4%;background:#fff9;border-radius:12px;padding:2px 8px;font-size:22px}
 .walker{position:absolute;font-size:24px;transform:translate(-50%,-50%);transition:left 1.1s ease-in-out,top 1.1s ease-in-out;z-index:5}
 .walker .say{position:absolute;left:60%;top:-26px;font-size:20px;background:#fff;border-radius:12px;padding:0 4px;animation:popin .4s}
 </style>
@@ -126,7 +136,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div class="ov hide" id="ov"><div class="box" id="box"></div></div>
 <script>
 const GRADE=6,GAME='park',KEY='sim-park-v1',INFO={"title": "놀이공원 사장님", "emoji": "🎢"};
-const DATA={"easy": {"days": 8, "slots": 6, "start": 70000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.65, "cloud": 0.25, "rain": 0.1}, "evP": 0.3, "breakP": 0.05, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin"}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle"}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing"}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate"}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster"}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle"}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 900000}, "normal": {"days": 10, "slots": 7, "start": 60000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.5, "cloud": 0.25, "rain": 0.15, "heat": 0.1}, "evP": 0.25, "breakP": 0.1, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin"}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle"}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing"}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate"}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster"}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle"}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 1800000}, "hard": {"days": 10, "slots": 7, "start": 50000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.4, "cloud": 0.25, "rain": 0.2, "heat": 0.15}, "evP": 0.2, "breakP": 0.15, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin"}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle"}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing"}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate"}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster"}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle"}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 1900000}};
+const DATA={"easy": {"slots": 6, "wage": 3000, "hire": 25000, "adCost": 15000, "landCost": 40000, "parkCost": 60000, "trashPer": 12, "start": 70000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.65, "cloud": 0.25, "rain": 0.1}, "evP": 0.3, "breakP": 0.05, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin", "desc": null, "feat": null}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle", "desc": null, "feat": null}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing", "desc": null, "feat": null}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate", "desc": null, "feat": null}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster", "desc": null, "feat": null}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "손님이 간식을 사 먹어요", "feat": null}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway", "desc": "만족도 +4 · 재미 1", "feat": null}, {"id": "ice", "n": "아이스크림 가게", "e": "🍦", "cost": 30000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "더운 날 잘 팔려요!", "feat": "stalls"}, {"id": "umbrella", "n": "우산 가게", "e": "☂️", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "sway", "desc": "비 오는 날 잘 팔려요!", "feat": "stalls"}, {"id": "toilet", "n": "화장실", "e": "🚻", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "none", "desc": "만족도 +6 (2개까지)", "feat": "stalls"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "days": 12, "feat": ["upgrade", "forecast", "stalls", "staff", "ads", "trash", "land", "parking"], "rent": 10000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 4800000}, "normal": {"slots": 7, "wage": 3000, "hire": 25000, "adCost": 15000, "landCost": 40000, "parkCost": 60000, "trashPer": 12, "start": 60000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.5, "cloud": 0.25, "rain": 0.15, "heat": 0.1}, "evP": 0.25, "breakP": 0.1, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin", "desc": null, "feat": null}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle", "desc": null, "feat": null}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing", "desc": null, "feat": null}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate", "desc": null, "feat": null}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster", "desc": null, "feat": null}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "손님이 간식을 사 먹어요", "feat": null}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway", "desc": "만족도 +4 · 재미 1", "feat": null}, {"id": "ice", "n": "아이스크림 가게", "e": "🍦", "cost": 30000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "더운 날 잘 팔려요!", "feat": "stalls"}, {"id": "umbrella", "n": "우산 가게", "e": "☂️", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "sway", "desc": "비 오는 날 잘 팔려요!", "feat": "stalls"}, {"id": "toilet", "n": "화장실", "e": "🚻", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "none", "desc": "만족도 +6 (2개까지)", "feat": "stalls"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "days": 14, "feat": ["upgrade", "forecast", "stalls", "staff", "ads", "trash", "land", "parking"], "rent": 10000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 9150000}, "hard": {"slots": 7, "wage": 3000, "hire": 25000, "adCost": 15000, "landCost": 40000, "parkCost": 60000, "trashPer": 12, "start": 50000, "prices": [1000, 2000, 3000, 4000, 5000, 6000, 8000], "base": 8, "perFun": 5, "fairDiv": 4, "wxP": {"sun": 0.4, "cloud": 0.25, "rain": 0.2, "heat": 0.15}, "evP": 0.2, "breakP": 0.15, "repair": 0.3, "group": 15, "snackCap": 30, "snackP": 1000, "rides": [{"id": "carousel", "n": "회전목마", "e": "🎠", "cost": 30000, "fun": 2, "cap": 25, "up": 2000, "anim": "spin", "desc": null, "feat": null}, {"id": "bumper", "n": "범퍼카", "e": "🚗", "cost": 45000, "fun": 3, "cap": 25, "up": 3000, "anim": "jiggle", "desc": null, "feat": null}, {"id": "viking", "n": "바이킹", "e": "🏴‍☠️", "cost": 70000, "fun": 4, "cap": 30, "up": 4000, "anim": "swing", "desc": null, "feat": null}, {"id": "ferris", "n": "관람차", "e": "🎡", "cost": 90000, "fun": 4, "cap": 45, "up": 4000, "anim": "rotate", "desc": null, "feat": null}, {"id": "coaster", "n": "롤러코스터", "e": "🎢", "cost": 140000, "fun": 6, "cap": 40, "up": 6000, "anim": "coaster", "desc": null, "feat": null}, {"id": "snack", "n": "매점", "e": "🍿", "cost": 25000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "손님이 간식을 사 먹어요", "feat": null}, {"id": "flower", "n": "꽃밭", "e": "🌷", "cost": 10000, "fun": 1, "cap": 0, "up": 0, "anim": "sway", "desc": "만족도 +4 · 재미 1", "feat": null}, {"id": "ice", "n": "아이스크림 가게", "e": "🍦", "cost": 30000, "fun": 0, "cap": 0, "up": 1000, "anim": "jiggle", "desc": "더운 날 잘 팔려요!", "feat": "stalls"}, {"id": "umbrella", "n": "우산 가게", "e": "☂️", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "sway", "desc": "비 오는 날 잘 팔려요!", "feat": "stalls"}, {"id": "toilet", "n": "화장실", "e": "🚻", "cost": 20000, "fun": 0, "cap": 0, "up": 1000, "anim": "none", "desc": "만족도 +6 (2개까지)", "feat": "stalls"}], "story": "낡은 놀이공원을 물려받았어요! 🎢 놀이기구를 짓고 입장료를 정해서 손님을 모아요. 손님이 즐거우면 밤마다 불꽃놀이가 펑펑!", "endWin": "최고의 놀이공원! 🎆", "endText": "손님들이 줄을 서는 인기 놀이공원이 되었어요. 사장님 최고!", "days": 15, "feat": ["upgrade", "forecast", "stalls", "staff", "ads", "trash", "land", "parking"], "rent": 13000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "지구가 하루에 한 바퀴씩 스스로 도는 것은?", "a": "자전", "o": ["자전", "공전", "월식"], "h": "", "pic": "🌏"}, {"q": "공 모양의 입체도형은?", "a": "구", "o": ["구", "원기둥", "원뿔"], "h": "", "pic": "⚽"}, {"q": "비 3 : 5의 비율을 소수로 나타내면?", "a": "0.6", "o": ["0.6", "1.6", "0.35"], "h": "", "pic": "➗"}, {"q": "전구 두 개를 더 밝게 켜려면 어떻게 연결할까요?", "a": "병렬", "o": ["병렬", "직렬", "연결하지 않는다"], "h": "", "pic": "💡"}], "goal": 11000000}};
 </script>
 <script>
 'use strict';
@@ -216,9 +226,21 @@ function ask(q){/* q:{title,text,pic,ans,opts?,unit?,h?,reward} → Promise<bool
     if(useInput){const inp=h('input','inbox');inp.inputMode='decimal';inp.placeholder='숫자';const b=h('button','btn go','확인');b.onclick=()=>{if(inp.value.trim())judge(inp.value.trim(),null)};inp.onkeydown=e=>{if(e.key==='Enter')b.click()};box.append(h('div','row'),msg);box.children[1].append(inp,h('span','jua',q.unit||''),b);setTimeout(()=>inp.focus(),60)}
     else{const row=h('div','opts');(q.opts||numOpts(q.ans)).forEach(o=>{const b=h('button','opt',typeof o==='number'?o.toLocaleString()+(q.unit||''):o);b.dataset.v=o;b.onclick=()=>{if(b.classList.contains('no')||b.classList.contains('ok'))return;judge(o,b)};row.appendChild(b)});box.append(row,msg)}
     $('#ov').classList.remove('hide')})}
+
+/* ── 공통 기능: 상점 · 미션 · 예보 · 임대료 ── */
+function rentToday(){return D.rent?Math.round(D.rent*(1+(S.day-1)*D.rentUp)/D.M)*D.M:0}
+function openShop(items,onBuy,title){
+  const box=h('div','',`<h2>${title||'🛒 업그레이드 상점'}</h2><div class="hint">가진 돈 <b>${won(S.money)}</b></div>`);const grid=h('div','shopgrid');
+  items.forEach(it=>{const full=it.max&&it.lv>=it.max;const b=h('button','shopitem'+(full?' full':''),`<b>${it.e}</b><span class="nm">${it.n}${it.max>1?` <small>Lv ${it.lv}/${it.max}</small>`:it.lv?' <small>✔ 보유</small>':''}</span><span class="ds">${it.d}</span><span class="pr">${full?'최고 단계':won(it.cost)}</span>`);
+    b.dataset.s=it.id;if(full||!canPay(it.cost))b.disabled=true;b.onclick=()=>{closeModal();if(!canPay(it.cost)){SND.bad();return}earn(-it.cost,null);S.g.spent=(S.g.spent||0)+it.cost;onBuy(it.id);SND.fan();FX.confetti&&0;banner(`${it.e} ${it.n}!`);save()};grid.appendChild(b)});
+  box.appendChild(grid);return modal(box,[['닫기','ghost']]);
+}
+function missionBox(){const m=S.g.mis;if(!m)return null;return h('div','mission'+(m.done?' done':''),`🎯 <b>오늘의 미션</b> ${m.t} <span>보상 ${won(m.r)} · ⭐+5</span>`)}
+function setMission(pool){if(!pool||!pool.length){S.g.mis=null;return}const k=Math.floor(rnd()*pool.length);const m=pool[k];S.g.mis={k,t:m.t,r:m.r||D.bonus*3,done:false}}
+function forecastText(){return S.g.fwx?`🔮 내일 예보: <b>${S.g.fwx}</b>`:''}
 /* ── 흐름 ── */
 let G;   // 게임 모듈
-function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();save()}}
+function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();if(G.missions)setMission(G.missions());save()}}
 function intro(){
   ensureDay();setTime(.35);clouds(3);G.scene();
   const c=h('div','card');
@@ -237,9 +259,12 @@ async function runDay(){
   $('#panel').querySelectorAll('button').forEach(b=>b.disabled=true);
   const rep=await G.day();               // 애니메이션 + 결과 계산
   setTime(.95);await wait(500);
+  const rent=Math.min(rentToday(),Math.max(0,S.money));if(rentToday()){earn(-rent,null);rep.lines.push(['🏠 오늘 임대료'+(rent<rentToday()?' (돈이 모자라 일부만)':''),'−'+won(rent),'#e04848']);rep.net-=rent}
+  let misOk=false;if(S.g.mis&&!S.g.mis.done&&G.missions){const pool=G.missions();const m=pool[S.g.mis.k];if(m&&m.test(rep)){misOk=true;S.g.mis.done=true;rep.lines.push(['🎯 미션 성공! '+S.g.mis.t,'+'+won(S.g.mis.r),'#7048e8'])}else rep.lines.push(['🎯 미션 실패',S.g.mis.t,'#adb5bd'])}
   const lines=rep.lines.map(([k,v,c])=>`<span>${k}</span><b style="color:${c||'inherit'}">${v}</b>`).join('');
   const net=rep.net;
   await modal(`<div class="big">${rep.emoji||'🌙'}</div><h2>${S.day}일째 결산</h2><div class="rep">${lines}<span class="tot">오늘 남은 돈</span><b class="tot" style="color:${net>=0?'#1f9d55':'#e04848'}">${net>=0?'+':''}${won(net)}</b></div>${rep.note?`<div class="hint">${rep.note}</div>`:''}`,[['장부 쓰러 가기 ✏️','go']]);
+  if(misOk){earn(S.g.mis.r,$('#hMoney'));S.rep=Math.min(100,S.rep+5);FX.confetti();SND.fan();hud()}
   const lq=G.ledger(rep);
   if(lq){const ok=await ask(Object.assign({title:'📒 오늘의 장부',reward:'⭐+3 · '+won(D.bonus)},lq));if(ok){S.rep=Math.min(100,S.rep+3);earn(D.bonus,$('#hMoney'))}}
   const kq=(D.quiz&&D.quiz.length&&S.day%2===0)?D.quiz[(S.day/2-1)%D.quiz.length]:null;
@@ -272,97 +297,141 @@ function markDone(){try{const id=GAME+'@'+LV;if(localStorage.getItem('class-done
 const RIDE=Object.fromEntries(D.rides.map(r=>[r.id,r]));
 const WXN={sun:'☀️ 맑음',cloud:'⛅ 흐림',rain:'🌧️ 비',heat:'🔥 무더위'};
 const WXM={sun:1,cloud:.9,rain:.55,heat:.8};
-const SLOTPOS=[[14,44],[38,40],[62,42],[86,46],[26,74],[54,76],[80,78],[10,78]];
+const SLOTPOS=[[13,42],[36,38],[60,40],[85,44],[24,76],[50,78],[76,80],[94,74],[6,74]];
 const PEOPLE=['🧒','👧','👦','🧑','👩','👨','👵','👴','👶','🧑‍🦱','👱'];
+const F=new Set(D.feat||[]);
 const GAMEDEF={
-  init(){S.g.slots=Array.from({length:D.slots},()=>({r:null,broken:false}));S.g.pi=Math.min(1,D.prices.length-1);S.g.total=0;S.g.best=0},
+  init(){S.g.slots=Array.from({length:D.slots},()=>({r:null,lv:1,broken:false,inv:0}));S.g.pi=Math.min(1,D.prices.length-1);S.g.total=0;S.g.best=0;S.g.staff={clean:0,mech:0};S.g.park=0;S.g.trash=[];S.g.ad=0},
+  roll(){const r=rnd();let acc=0;for(const[k,p]of Object.entries(D.wxP)){acc+=p;if(r<acc)return k}return'sun'},
   newDay(){
-    const r=rnd();let acc=0,wx='sun';for(const[k,p]of Object.entries(D.wxP)){acc+=p;if(r<acc){wx=k;break}}S.g.wx=wx;
-    const e=rnd();S.g.ev=e<D.evP?pick(['festival','group']):null;
-    S.g.spent=0;S.g.slots.forEach(s=>{if(s.r&&!s.broken&&rnd()<D.breakP)s.broken=true});
+    const g=S.g;g.wx=g.next||this.roll();g.next=this.roll();g.fwx=F.has('forecast')?WXN[g.next]:'';
+    const e=rnd();g.ev=e<D.evP?pick(['festival','group']):null;
+    g.spent=0;g.slots.forEach(s=>{if(s.r&&RIDE[s.r].fun>0&&!s.broken&&rnd()<D.breakP*(1-.35*g.staff.mech))s.broken=true});
+    g.exp=Math.max(10,Math.round(this.expVis()));
   },
   wxIcon(){return WXN[S.g.wx].split(' ')[0]},
-  how(){return[['🏗️','빈 땅을 눌러 놀이기구를 지어요'],['🎟️','입장료를 정해요 (너무 비싸면 손님이 줄어요)'],['🔧','고장 난 기구는 눌러서 고쳐요'],['🎆','손님이 즐거우면 밤에 불꽃놀이!']]},
+  how(){const a=[['🏗️','빈 땅을 눌러 놀이기구를 지어요'],['🎟️','입장료를 정해요 (비싸면 손님이 줄어요)'],['⬆️','지은 기구를 누르면 업그레이드 · 철거 · 수리'],['🎆','손님이 즐거우면 밤에 불꽃놀이!']];if(F.has('staff'))a.splice(3,0,['🛒','상점에서 직원·광고·땅을 사요']);if(F.has('trash'))a.push(['🗑️','밤새 생긴 쓰레기는 눌러서 주워요']);return a},
   goalText(){return `${won(D.goal)} 모으기`},
   progress(){return S.money/D.goal},
   won(){return S.money>=D.goal},
-  summary(){return[['모은 돈',won(S.money)],['목표',won(D.goal)],['다녀간 손님',S.g.total+'명'],['최고 인기 하루',S.g.best+'명']]},
-  fun(){let f=0;S.g.slots.forEach(s=>{if(s.r&&!s.broken)f+=RIDE[s.r].fun});return f},
-  cap(){let c=0;S.g.slots.forEach(s=>{if(s.r&&!s.broken)c+=RIDE[s.r].cap});return c},
+  summary(){const lv=S.g.slots.filter(s=>s.r).length;return[['모은 돈',won(S.money)],['목표',won(D.goal)],['다녀간 손님',S.g.total+'명'],['최고 인기 하루',S.g.best+'명'],['놀이기구·가게',lv+'개']]},
+  rf(s){return s.r?RIDE[s.r].fun+(RIDE[s.r].fun>0?s.lv-1:0):0},
+  rc(s){return s.r&&RIDE[s.r].cap?RIDE[s.r].cap+15*(s.lv-1):0},
+  fun(){let f=0;S.g.slots.forEach(s=>{if(s.r&&!s.broken)f+=this.rf(s)});return f},
+  cap(){let c=0;S.g.slots.forEach(s=>{if(s.r&&!s.broken)c+=this.rc(s)});return c},
   fair(){return 1+this.fun()/D.fairDiv},
   price(){return D.prices[S.g.pi]},
+  count(id){return S.g.slots.filter(s=>s.r===id).length},
+  expVis(){const g=S.g;return(D.base+this.fun()*D.perFun)*WXM[g.wx]*(.6+S.rep/125)*(g.ev==='festival'?1.4:1)*(g.ad?1.3:1)*(1+.1*g.park)},
   scene(){
-    const w=$('#world');w.innerHTML='';
+    const w=$('#world'),g=S.g;w.innerHTML='';
     $('#ground').style.background='linear-gradient(#a4dc7a,#8fcf63 40%,#80c257)';
     w.appendChild(h('div','path',''));
     const gate=h('div','gate','🎪<small>입구</small>');gate.id='gate';w.appendChild(gate);
-    S.g.slots.forEach((s,i)=>{const[x,y]=SLOTPOS[i];const b=h('button','slot'+(s.r?' built':'')+(s.broken?' broken':''),s.r?`<span class="ride a-${RIDE[s.r].anim}">${RIDE[s.r].e}</span>`:'<span class="lot">🏗️<small>빈 땅</small></span>');
+    g.slots.forEach((s,i)=>{const[x,y]=SLOTPOS[i];const R=s.r&&RIDE[s.r];const b=h('button','slot'+(s.r?' built':'')+(s.broken?' broken':''),s.r?`<span class="ride a-${R.anim}">${R.e}</span>${s.lv>1?`<span class="lvb">Lv${s.lv}</span>`:''}`:'<span class="lot">🏗️<small>빈 땅</small></span>');
       b.style.left=x+'%';b.style.top=y+'%';b.dataset.i=i;if(s.broken)b.appendChild(h('span','smoke','💨🔧'));b.onclick=()=>this.tapSlot(i,b);w.appendChild(b)});
+    (g.trash||[]).forEach((t,i)=>{const b=h('button','trash',t.e);b.style.left=t.x+'%';b.style.top=t.y+'%';b.dataset.t=i;b.onclick=e=>{e.stopPropagation();g.trash.splice(i,1);SND.pop();FX.burstOn(b,['✨','🧹'],5);FX.floatOn(b,'깨끗!','#2f9e44');this.scene();this.panel($('#panel'));save()};w.appendChild(b)});
     const tk=h('div','ticket',`🎟️ ${won(this.price())}`);tk.id='tk';w.appendChild(tk);
-    if(S.g.ev)w.appendChild(h('div','evflag',S.g.ev==='festival'?'🎉 축제 날!':'🚌 단체 손님!'));
+    const st=[];if(g.staff.clean)st.push('🧹'.repeat(g.staff.clean));if(g.staff.mech)st.push('🧑‍🔧'.repeat(g.staff.mech));if(g.park)st.push('🅿️');if(g.ad)st.push('📣');
+    if(st.length)w.appendChild(h('div','staffbar',st.join(' ')));
+    if(g.ev)w.appendChild(h('div','evflag',g.ev==='festival'?'🎉 축제 날!':'🚌 단체 손님!'));
   },
   panel(el){
     el.innerHTML='';const g=S.g;const fair=this.fair();
-    el.appendChild(h('div','hint',`오늘 날씨 <b>${WXN[g.wx]}</b>${g.ev==='festival'?' · 🎉 축제 날이라 손님이 많이 와요!':g.ev==='group'?' · 🚌 단체 손님이 와요!':''} · 재미 점수 <b>${this.fun()}</b> · 하루에 태울 수 있는 손님 <b>${this.cap()}명</b>`));
-    if(LV==='easy')el.appendChild(h('div','tip',`💡 빈 땅을 눌러 놀이기구를 지어요. 입장료는 <b>${won(D.prices[Math.max(0,Math.min(D.prices.length-1,Math.round(fair)-1))])}</b> 정도가 알맞아요. 놀이기구 수보다 손님이 많으면 줄이 길어져서 화를 내요!`));
+    el.appendChild(h('div','hint',`오늘 날씨 <b>${WXN[g.wx]}</b>${g.ev==='festival'?' · 🎉 축제 날!':g.ev==='group'?' · 🚌 단체 손님이 와요!':''} · 재미 <b>${this.fun()}</b> · 태울 수 있는 손님 <b>${this.cap()}명</b> · 예상 손님 약 <b>${Math.round(this.expVis())}명</b>${g.fwx?' · '+forecastText():''}${rentToday()?` · 🏠 오늘 임대료 ${won(rentToday())}`:''}`));
+    const mb=missionBox();if(mb)el.appendChild(mb);
+    if((g.trash||[]).length)el.appendChild(h('div','hint',`🗑️ 공원에 쓰레기 <b>${g.trash.length}개</b>! 눌러서 주워야 손님 기분이 좋아요.`));
+    if(LV==='easy')el.appendChild(h('div','tip',`💡 입장료는 <b>${won(D.prices[Math.max(0,Math.min(D.prices.length-1,Math.round(fair)-1))])}</b> 정도가 알맞아요. 예상 손님보다 태울 수 있는 손님이 적으면 줄이 길어져요! 지은 기구를 누르면 업그레이드하거나 철거할 수 있어요.`));
     const row=h('div','row');
     const minus=h('button','btn ghost','−');minus.id='pm';minus.onclick=()=>{if(g.pi>0){g.pi--;SND.click();this.scene();this.panel(el);save()}};
     const plus=h('button','btn ghost','+');plus.id='pp';plus.onclick=()=>{if(g.pi<D.prices.length-1){g.pi++;SND.click();this.scene();this.panel(el);save()}};
-    row.append(h('span','jua','🎟️ 입장료'),minus,h('span','chip jua',won(this.price())),plus);el.appendChild(row);
+    row.append(h('span','jua','🎟️ 입장료'),minus,h('span','chip jua',won(this.price())),plus);
+    if(this.shopItems().length){const sb=h('button','btn','🛒 상점');sb.id='shopBtn';sb.onclick=()=>openShop(this.shopItems(),id=>this.buy(id)).then(()=>{this.scene();this.panel($('#panel'))});row.appendChild(sb)}
+    el.appendChild(row);
     const go=h('button','btn go big','🎢 문 열기 ▶');go.id='dayBtn';go.onclick=()=>runDay();const r2=h('div','row');r2.style.marginTop='10px';r2.appendChild(go);el.appendChild(r2);
   },
+  shopItems(){const g=S.g,M=D.M,it=[];
+    if(F.has('staff')){it.push({id:'clean',e:'🧹',n:'청소 직원',d:`쓰레기가 덜 생기고 만족도 +4 · 하루 ${won(D.wage)}`,cost:D.hire,lv:g.staff.clean,max:2});
+      it.push({id:'mech',e:'🧑‍🔧',n:'정비 직원',d:`고장이 35%씩 줄어요 · 하루 ${won(D.wage)}`,cost:D.hire,lv:g.staff.mech,max:2})}
+    if(F.has('ads'))it.push({id:'ad',e:'📣',n:'오늘 광고',d:'오늘 손님 +30% (하루만)',cost:D.adCost,lv:g.ad?1:0,max:1});
+    if(F.has('land'))it.push({id:'land',e:'🗺️',n:'땅 넓히기',d:'놀이기구 자리 +1',cost:D.landCost*(g.slots.length-D.slots+1),lv:g.slots.length-D.slots,max:SLOTPOS.length-D.slots});
+    if(F.has('parking'))it.push({id:'park',e:'🅿️',n:'주차장',d:'매일 손님 +10%',cost:D.parkCost,lv:g.park,max:2});
+    return it},
+  buy(id){const g=S.g;if(id==='clean')g.staff.clean++;if(id==='mech')g.staff.mech++;if(id==='ad')g.ad=1;if(id==='park')g.park++;if(id==='land')g.slots.push({r:null,lv:1,broken:false,inv:0});g.exp=Math.round(this.expVis())},
   tapSlot(i,el){
     const g=S.g,s=g.slots[i];
-    if(s.r&&s.broken){const c=Math.round(RIDE[s.r].cost*D.repair/D.M)*D.M;modal(`<div class="big">🔧</div><h2>${RIDE[s.r].n} 고장!</h2><p>고치는 데 <b>${won(c)}</b>이 들어요.</p>`,[['고치기','go'],['그냥 두기','ghost']]).then(k=>{if(k===0){if(!canPay(c)){SND.bad();FX.floatOn(el,'돈이 모자라요','#e04848');return}earn(-c,null);g.spent+=c;s.broken=false;SND.good();this.scene();this.panel($('#panel'));FX.burstOn(document.querySelector(`.slot[data-i="${i}"]`),['✨','🔧','⭐'],8);save()}});return}
-    if(s.r){const R=RIDE[s.r];FX.floatOn(el,`${R.n} · 재미 ${R.fun} · ${R.cap}명`,'#6b5b95');return}
-    const box=h('div','',`<h2>🏗️ 무엇을 지을까요?</h2><div class="hint">가진 돈 ${won(S.money)}</div>`);const grid=h('div','row');
-    D.rides.forEach(R=>{const b=h('button','tool',`<b>${R.e}</b>${R.n}<small>${won(R.cost)}</small><small>재미 ${R.fun} · ${R.cap}명 · 운영비 ${won(R.up)}</small>`);b.dataset.r=R.id;if(!canPay(R.cost))b.disabled=true;
+    if(!s.r){return this.buildMenu(i)}
+    const R=RIDE[s.r];const up=Math.round(R.cost*.6*s.lv/D.M)*D.M,ref=Math.round(s.inv*.5/D.M)*D.M,fix=Math.round(R.cost*D.repair/D.M)*D.M;
+    const btns=[];const acts=[];
+    if(s.broken){btns.push([`🔧 수리 ${won(fix)}`,'go']);acts.push('fix')}
+    if(R.fun>0&&s.lv<3&&F.has('upgrade')){btns.push([`⬆️ Lv${s.lv+1} ${won(up)}`,'go']);acts.push('up')}
+    btns.push([`🔨 철거 (+${won(ref)})`,'']);acts.push('del');btns.push(['닫기','ghost']);acts.push('x');
+    modal(`<div class="big">${R.e}</div><h2>${R.n}${s.lv>1?' Lv'+s.lv:''}${s.broken?' 🔧고장':''}</h2><div class="rep"><span>재미</span><b>${this.rf(s)}</b><span>하루에 태우는 손님</span><b>${this.rc(s)}명</b><span>운영비</span><b>${won(R.up)}</b></div>${R.fun>0&&s.lv<3&&F.has('upgrade')?`<div class="hint">업그레이드하면 재미 +1, 태우는 손님 +15명</div>`:''}`,btns).then(k=>{
+      const a=acts[k];const el2=()=>document.querySelector(`.slot[data-i="${i}"]`);
+      if(a==='fix'){if(!canPay(fix)){SND.bad();return}earn(-fix,null);g.spent+=fix;s.broken=false;SND.good();this.scene();FX.burstOn(el2(),['✨','🔧','⭐'],8)}
+      if(a==='up'){if(!canPay(up)){SND.bad();FX.floatOn(el2(),'돈이 모자라요','#e04848');return}earn(-up,null);g.spent+=up;s.inv+=up;s.lv++;SND.fan();this.scene();const e=el2();e.classList.add('popin');FX.burstOn(e,['⬆️','✨','⭐'],10);FX.floatOn(e,`${R.n} Lv${s.lv}!`,'#7048e8')}
+      if(a==='del'){const e=el2();FX.burstOn(e,['💥','🧱','💨'],12);SND.boom();earn(ref,e);g.slots[i]={r:null,lv:1,broken:false,inv:0};this.scene()}
+      this.panel($('#panel'));save()});
+  },
+  buildMenu(i){
+    const box=h('div','');box.innerHTML=`<h2>🏗️ 무엇을 지을까요?</h2><div class="hint">가진 돈 ${won(S.money)}</div>`;const grid=h('div','shopgrid');
+    D.rides.filter(R=>!R.feat||F.has(R.feat)).forEach(R=>{const b=h('button','shopitem',`<b>${R.e}</b><span class="nm">${R.n}</span><span class="ds">${R.desc||`재미 ${R.fun} · ${R.cap}명`}<br>운영비 ${won(R.up)}</span><span class="pr">${won(R.cost)}</span>`);b.dataset.r=R.id;if(!canPay(R.cost))b.disabled=true;
       b.onclick=()=>{closeModal();this.build(i,R.id)};grid.appendChild(b)});
     box.appendChild(grid);modal(box,[['취소','ghost']]);
   },
-  build(i,id){const R=RIDE[id],g=S.g;if(!canPay(R.cost))return;earn(-R.cost,null);g.spent+=R.cost;g.slots[i].r=id;g.slots[i].broken=false;SND.pop();this.scene();
-    const el=document.querySelector(`.slot[data-i="${i}"]`);el.classList.add('popin');FX.burstOn(el,['✨','🎉','⭐'],10);FX.floatOn(el,R.n+' 완성!','#7048e8');this.panel($('#panel'));save()},
+  build(i,id){const R=RIDE[id],g=S.g;if(!canPay(R.cost))return;earn(-R.cost,null);g.spent+=R.cost;g.slots[i]={r:id,lv:1,broken:false,inv:R.cost};SND.pop();this.scene();
+    const el=document.querySelector(`.slot[data-i="${i}"]`);el.classList.add('popin');FX.burstOn(el,['✨','🎉','⭐'],10);FX.floatOn(el,R.n+' 완성!','#7048e8');g.exp=Math.round(this.expVis());this.panel($('#panel'));save()},
+  missions(){const g=S.g,e=g.exp||20,M=D.M;return[
+    {t:`손님 ${Math.round(e*1.05)}명 넘기기`,test:r=>r.vis>=Math.round(e*1.05)},
+    {t:'만족도 80% 이상',test:r=>r.sat>=80},
+    {t:'화난 손님 0명',test:r=>r.vis>0&&r.angry===0},
+    {t:`오늘 수입 ${won(Math.round(e*this.price()*.9/M)*M)} 넘기기`,test:r=>r.ticket+r.stall>=Math.round(e*this.price()*.9/M)*M},
+  ]},
   async day(){
     const g=S.g,fun=this.fun(),cap=this.cap(),p=this.price(),fair=this.fair();
-    let base=(D.base+fun*D.perFun)*WXM[g.wx]*(.6+S.rep/125)*(g.ev==='festival'?1.4:1);
     const pm=Math.max(.15,Math.min(1.4,1.25-.2*(p/D.M-fair)));
-    let vis=Math.round(base*pm)+(g.ev==='group'?D.group:0);if(fun===0)vis=Math.min(vis,3);
+    let vis=Math.round(this.expVis()*pm)+(g.ev==='group'?D.group:0);if(fun===0)vis=Math.min(vis,3);
     const served=Math.min(vis,cap),angry=vis-served;
-    const flowers=g.slots.filter(s=>s.r==='flower').length,snacks=g.slots.filter(s=>s.r==='snack').length;
-    let sat=72+5*flowers+(p/D.M<fair-.5?8:0)-(p/D.M>fair+1?14:0)-Math.round(45*angry/Math.max(1,vis))-(g.wx==='rain'?6:0)+(g.ev==='festival'?5:0);
+    const toilets=this.count('toilet'),flowers=this.count('flower');
+    const trashN=(g.trash||[]).length;
+    let sat=72+4*flowers+6*Math.min(2,toilets)+4*g.staff.clean+(p/D.M<fair-.5?8:0)-(p/D.M>fair+1?14:0)-Math.round(45*angry/Math.max(1,vis))-(g.wx==='rain'?6:0)+(g.ev==='festival'?5:0)-2*Math.min(8,trashN);
     if(fun===0)sat=20;sat=Math.max(0,Math.min(100,sat));
+    // 가게 수입
+    const base=Math.min(vis,D.snackCap)*D.snackP;
+    const stall=this.count('snack')*base+this.count('ice')*Math.round(base*({heat:2.2,sun:1.2,cloud:.6,rain:.15}[g.wx]))+this.count('umbrella')*Math.round(base*({rain:2.6,cloud:.3,sun:.05,heat:0}[g.wx]));
+    const stallR=Math.round(stall/D.M)*D.M;
     // 애니메이션
     weather(g.wx);document.querySelectorAll('.ride').forEach(r=>r.classList.add('run'));
-    const w=$('#world'),gate=$('#gate');const rides=[...document.querySelectorAll('.slot.built:not(.broken)')];
+    const w=$('#world');const rides=[...document.querySelectorAll('.slot.built:not(.broken)')];
     const shown=Math.min(vis,FAST?0:22);
     for(let k=0;k<shown;k++){const pp=h('div','walker',pick(PEOPLE));pp.style.left='4%';pp.style.top='86%';w.appendChild(pp);
       const tgt=rides.length?pick(rides):null;const isAngry=k>=served*shown/Math.max(1,vis);
       setTimeout(()=>{if(tgt){pp.style.left=tgt.style.left;pp.style.top=`calc(${tgt.style.top} + 30px)`}else{pp.style.left='30%';pp.style.top='80%'}},40+k*90);
-      setTimeout(()=>{const b=h('span','say',isAngry?pick(['😡','😤','⏳']):pick(['😆','😍','🤩','😄','🎉']));pp.appendChild(b);if(!isAngry&&k%3===0)SND.pop()},900+k*90);
+      setTimeout(()=>{const b=h('span','say',isAngry?pick(['😡','😤','⏳']):trashN>3&&k%4===0?'🤢':pick(['😆','😍','🤩','😄','🎉']));pp.appendChild(b);if(!isAngry&&k%3===0)SND.pop()},900+k*90);
       if(k%5===0)setTimeout(()=>{const tk=$('#tk');if(tk)FX.floatOn(tk,'+'+won(p*5),'#e0a000')},300+k*90)}
     for(let t=.3;t<=.8;t+=.1){setTime(t);await wait(380)}
-    const ticket=vis*p,snack=Math.round(snacks*Math.min(vis,D.snackCap)*D.snackP/D.M)*D.M;
-    let up=0;g.slots.forEach(s=>{if(s.r)up+=RIDE[s.r].up});
+    const ticket=vis*p;let up=0;g.slots.forEach(s=>{if(s.r)up+=RIDE[s.r].up});const wages=(g.staff.clean+g.staff.mech)*D.wage;
     S.rep=Math.max(0,Math.min(100,S.rep+(sat-62)/6));
-    earn(ticket+snack,gate);await wait(500);
-    earn(-up,null);
+    earn(ticket+stallR,$('#gate'));await wait(400);earn(-(up+wages),null);
     setTime(.9);document.querySelectorAll('.walker').forEach(e=>e.remove());document.querySelectorAll('.ride').forEach(r=>r.classList.remove('run'));
     if(sat>=75){banner('🎆 불꽃놀이!');FX.fireworks(5);await wait(1600)}
     g.total+=vis;g.best=Math.max(g.best,vis);
+    // 밤사이 쓰레기
+    if(F.has('trash')){const n=Math.max(0,Math.round(vis/D.trashPer)-2*g.staff.clean);for(let k=0;k<n&&g.trash.length<12;k++)g.trash.push({e:pick(['🥤','🍌','📰','🍿','🧃']),x:ri(8,92),y:ri(52,94)})}
+    g.ad=0;
     const lines=[[`🧑 손님 ${vis}명 × 입장료 ${won(p)}`,won(ticket),'#1f9d55']];
-    if(snacks)lines.push([`🍿 매점 수입`,won(snack),'#1f9d55']);
-    lines.push(['🔧 놀이기구 운영비','−'+won(up),'#e04848']);if(g.spent)lines.push(['🏗️ 짓기·수리에 쓴 돈','−'+won(g.spent),'#e04848']);
+    if(stallR)lines.push([`🍿 가게 수입`,won(stallR),'#1f9d55']);
+    lines.push(['🔧 놀이기구 운영비','−'+won(up),'#e04848']);if(wages)lines.push(['🧑‍🔧 직원 월급','−'+won(wages),'#e04848']);if(g.spent)lines.push(['🏗️ 짓기·수리·상점에 쓴 돈','−'+won(g.spent),'#e04848']);
     lines.push(['😊 손님 만족도',sat+'%',sat>=70?'#1f9d55':sat>=50?'#e0a000':'#e04848']);
-    const note=angry?`줄이 너무 길어서 ${angry}명이 화가 났어요. 놀이기구를 더 지어 봐요!`:p/D.M>fair+1?'입장료가 비싸서 손님이 줄었어요.':fun===0?'놀이기구가 없어서 손님이 실망했어요!':'';
-    const dist=rides.map(r=>RIDE[g.slots[r.dataset.i].r].n);
-    g.last={vis,p,ticket,up,snack,sat,served,dist};save();
-    return{lines,net:ticket+snack-up-g.spent,emoji:sat>=75?'🎆':'🎡',note,vis,p,ticket,up,sat,spent:g.spent};
+    const note=angry?`줄이 너무 길어서 ${angry}명이 화가 났어요. 놀이기구를 더 짓거나 업그레이드해 봐요!`:trashN>3?'쓰레기가 많아서 손님들이 싫어했어요.':p/D.M>fair+1?'입장료가 비싸서 손님이 줄었어요.':fun===0?'놀이기구가 없어서 손님이 실망했어요!':'';
+    save();
+    return{lines,net:ticket+stallR-up-wages-g.spent,emoji:sat>=75?'🎆':'🎡',note,vis,p,ticket,up:up+wages,sat,spent:g.spent,angry,stall:stallR};
   },
   ledger(r){
     if(GRADE===1){const a=Math.min(9,Math.max(2,Math.round(r.vis/5))),b=Math.min(9,Math.max(1,Math.round(r.vis/7)));return{text:`회전목마에 <b>${a}명</b>, 범퍼카에 <b>${b}명</b>이 줄을 섰어요.<br>모두 몇 명일까요?`,ans:a+b,unit:'명',pic:'🎠🚗'}}
     if(GRADE===2){const k=ri(3,9),n=ri(2,6);return{text:`관람차 한 칸에 <b>${n}명</b>씩 탈 수 있어요. <b>${k}칸</b>이 꽉 찼다면 모두 몇 명일까요?`,ans:k*n,unit:'명',pic:'🎡',h:`${n}단 곱셈구구`}}
     if(GRADE===3)return{text:`오늘 손님 <b>${r.vis}명</b>이 입장료 <b>${won(r.p)}</b>씩 냈어요.<br>입장료로 번 돈은 모두 얼마일까요?`,ans:r.vis*r.p,unit:U,h:`${r.p} × ${r.vis}`};
-    if(GRADE===4&&r.ticket>=r.up)return{text:`오늘 입장료로 <b>${josa(won(r.ticket),'을','를')}</b> 벌고, 운영비로 <b>${josa(won(r.up),'을','를')}</b> 냈어요.<br>입장료에서 운영비를 빼면?`,ans:r.ticket-r.up,unit:U};
+    if(GRADE===4&&r.ticket>=r.up)return{text:`오늘 입장료로 <b>${josa(won(r.ticket),'을','를')}</b> 벌고, 운영비와 월급으로 <b>${josa(won(r.up),'을','를')}</b> 냈어요.<br>입장료에서 운영비를 빼면?`,ans:r.ticket-r.up,unit:U};
     if(GRADE===4)return{text:`놀이기구 운영비가 하루에 <b>${josa(won(r.up||D.rides[0].up),'이에요','예요')}</b>. <b>15일</b> 동안 운영하면 운영비는 모두 얼마일까요?`,ans:(r.up||D.rides[0].up)*15,unit:U};
     if(GRADE===5){const hs=S.g.visHist=(S.g.visHist||[]).concat([r.vis]).slice(-3);const sum=hs.reduce((a,b)=>a+b,0);
       if(hs.length===3&&sum%3===0)return{text:`최근 3일 동안 손님이 <b>${hs.join('명, ')}명</b> 왔어요.<br>하루 평균 몇 명일까요?`,ans:sum/3,unit:'명',h:'세 수를 더해서 3으로 나눠요'};
@@ -370,13 +439,19 @@ const GAMEDEF={
     const asked=50,yes=Math.round(r.sat/2);return{text:`손님 <b>${asked}명</b>에게 물었더니 <b>${yes}명</b>이 "또 오고 싶어요!"라고 했어요.<br>또 오고 싶은 손님은 몇 %일까요?`,ans:yes*2,unit:'%',h:`${yes} ÷ ${asked} × 100`};
   },
   bot(){
-    const g=S.g;
-    g.slots.forEach((s,i)=>{if(s.r&&s.broken){const c=Math.round(RIDE[s.r].cost*D.repair/D.M)*D.M;if(canPay(c)){earn(-c,null);g.spent+=c;s.broken=false}}});
-    const left=D.days-S.day;
-    const empty=g.slots.findIndex(s=>!s.r);
-    if(empty>=0&&left>=2){const need=this.cap()<(D.base+this.fun()*D.perFun)*1.1;
-      const opts=D.rides.filter(R=>canPay(R.cost)&&R.cost<=S.money*.9).sort((a,b)=>need?(b.cap/b.cost)-(a.cap/a.cost):(b.fun/b.cost)-(a.fun/a.cost));
-      const ride=opts.find(R=>R.cap>0)||opts[0];if(ride)this.build(empty,ride.id)}
+    const g=S.g,left=D.days-S.day;
+    g.trash=[];
+    g.slots.forEach(s=>{if(s.r&&s.broken){const c=Math.round(RIDE[s.r].cost*D.repair/D.M)*D.M;if(canPay(c)){earn(-c,null);g.spent+=c;s.broken=false}}});
+    const tryBuy=(id,cost,lv,max)=>{if(lv<max&&canPay(cost)&&S.money-cost>D.rides[0].cost){earn(-cost,null);g.spent+=cost;this.buy(id);return true}return false};
+    if(left>=3){
+      const empty=g.slots.findIndex(s=>!s.r);
+      if(empty>=0){const need=this.cap()<this.expVis()*1.1;const opts=D.rides.filter(R=>(!R.feat||F.has(R.feat))&&R.fun>0&&canPay(R.cost)&&R.cost<=S.money*.9).sort((a,b)=>need?(b.cap/b.cost)-(a.cap/a.cost):(b.fun/b.cost)-(a.fun/a.cost));if(opts[0])this.build(empty,opts[0].id)}
+      else if(F.has('land')){const it=this.shopItems().find(x=>x.id==='land');if(it)tryBuy('land',it.cost,it.lv,it.max)}
+      if(F.has('upgrade')){const cand=g.slots.map((s,i)=>[s,i]).filter(([s])=>s.r&&RIDE[s.r].fun>0&&s.lv<3).sort((a,b)=>RIDE[b[0].r].cost-RIDE[a[0].r].cost);for(const[s]of cand){const c=Math.round(RIDE[s.r].cost*.6*s.lv/D.M)*D.M;if(canPay(c)&&S.money-c>D.rides[1].cost){earn(-c,null);g.spent+=c;s.inv+=c;s.lv++;break}}}
+      if(F.has('staff')){tryBuy('clean',D.hire,g.staff.clean,1);tryBuy('mech',D.hire,g.staff.mech,1)}
+      if(F.has('parking'))tryBuy('park',D.parkCost,g.park,1);
+    }
+    if(F.has('ads')&&g.ev!=='festival'&&S.money>D.adCost*4)tryBuy('ad',D.adCost,g.ad,1);
     const f=this.fair();let best=0,bd=1e9;D.prices.forEach((p,i)=>{const d=Math.abs(p/D.M-(f+.3));if(d<bd){bd=d;best=i}});g.pi=best;this.scene();this.panel($('#panel'));
   },
 };

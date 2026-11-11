@@ -98,6 +98,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
 .how div{background:#f7f3fb;border-radius:16px;padding:10px;font-size:16px}
 .how b{display:block;font-size:34px;font-family:Jua;font-weight:400}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.shopitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid #ebe4f3;background:#fff;border-radius:18px;padding:10px 8px;box-shadow:0 4px 0 #ece6f3;text-align:center}
+.shopitem b{font-size:34px;font-weight:400}.shopitem .nm{font-family:Jua;font-size:18px}.shopitem .nm small{font-size:13px;color:#7a6f8c}.shopitem .ds{font-size:13px;color:#6b6280;line-height:1.35}
+.shopitem .pr{margin-top:4px;background:#fff6d6;border-radius:999px;padding:2px 10px;font-family:Jua}.shopitem.full{opacity:.6}.shopitem:disabled{opacity:.45}
+.mission{background:linear-gradient(90deg,#efe6ff,#fff);border:2px solid #c9b6f5;border-radius:14px;padding:7px 12px;margin:6px 0;font-size:16px;text-align:center}
+.mission span{display:inline-block;margin-left:6px;font-size:14px;color:#7048e8}.mission.done{background:#dff7e3;border-color:#7bd389}
+.trash{position:absolute;font-size:24px;border:none;background:none;padding:0;transform:translate(-50%,-50%);z-index:6;animation:tbob 1.6s ease-in-out infinite;cursor:pointer}
+@keyframes tbob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-65%)}}
 @media (max-width:560px){.hud .t{display:none}.btn.big{font-size:22px}}
 .farmhouse{position:absolute;left:3%;top:22%;font-size:62px;filter:drop-shadow(0 6px 0 #0002)}.tree1{position:absolute;left:17%;top:28%;font-size:50px}
 .field{position:absolute;left:3%;right:31%;bottom:4%;display:grid;gap:7px}
@@ -113,6 +121,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .fly{position:absolute;left:0;font-size:22px;animation:fly 11s linear infinite;z-index:4}
 @keyframes fly{0%{transform:translate(-30px,0)}25%{transform:translate(25vw,-30px)}50%{transform:translate(48vw,12px)}75%{transform:translate(70vw,-22px)}100%{transform:translate(100vw,0)}}
 .night .fly{display:none}
+.scare{position:absolute;left:23%;top:22%;font-size:40px}.coop{position:absolute;left:2%;top:46%;font-size:30px;background:#fff8;border-radius:12px;padding:0 4px}
+.sprk{position:absolute;bottom:2px;right:4px;font-size:14px;opacity:.85}.field.green{outline:4px solid #b8f0c088;outline-offset:4px;border-radius:14px;background:#ffffff22}
+.mission.order{background:linear-gradient(90deg,#fff3d6,#fff);border-color:#f3cf55}
 .truck{position:absolute;bottom:1%;left:-35%;font-size:42px;animation:truck 1.3s ease-in forwards;z-index:6;white-space:nowrap}@keyframes truck{to{left:105%}}
 </style>
 </head>
@@ -125,7 +136,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div class="ov hide" id="ov"><div class="box" id="box"></div></div>
 <script>
 const GRADE=6,GAME='farm',KEY='sim-farm-v1',INFO={"title": "우리 반 꼬마 농장", "emoji": "🌱"};
-const DATA={"easy": {"days": 10, "water": 12, "plots": 6, "maxPlots": 9, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.6, "rain": 0.3, "cloud": 0.1}, "bugP": 0.1, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 100000}, "normal": {"days": 12, "water": 7, "plots": 6, "maxPlots": 9, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.5, "rain": 0.2, "cloud": 0.15, "heat": 0.15}, "bugP": 0.15, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "potato", "n": "감자", "e": "🥔", "days": 3, "cost": 5000, "sell": 14000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "corn", "n": "옥수수", "e": "🌽", "days": 4, "cost": 8000, "sell": 22000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 130000}, "hard": {"days": 12, "water": 5, "plots": 6, "maxPlots": 8, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.45, "rain": 0.15, "cloud": 0.15, "heat": 0.25}, "bugP": 0.25, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "potato", "n": "감자", "e": "🥔", "days": 3, "cost": 5000, "sell": 14000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "corn", "n": "옥수수", "e": "🌽", "days": 4, "cost": 8000, "sell": 22000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 170000}};
+const DATA={"easy": {"water": 12, "fertCost": 6000, "scareCost": 20000, "sprCost": 25000, "greenCost": 60000, "coopCost": 35000, "feed": 2000, "eggP": 3000, "plots": 6, "maxPlots": 9, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.6, "rain": 0.3, "cloud": 0.1}, "bugP": 0.1, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "days": 14, "feat": ["fert", "scare", "sprinkler", "forecast", "orders", "coop", "greenhouse", "storm"], "rent": 3000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 250000}, "normal": {"water": 7, "fertCost": 6000, "scareCost": 20000, "sprCost": 25000, "greenCost": 60000, "coopCost": 35000, "feed": 2000, "eggP": 3000, "plots": 6, "maxPlots": 9, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.42, "rain": 0.2, "cloud": 0.15, "heat": 0.15, "storm": 0.08}, "bugP": 0.15, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "potato", "n": "감자", "e": "🥔", "days": 3, "cost": 5000, "sell": 14000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "corn", "n": "옥수수", "e": "🌽", "days": 4, "cost": 8000, "sell": 22000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "days": 16, "feat": ["fert", "scare", "sprinkler", "forecast", "orders", "coop", "greenhouse", "storm"], "rent": 3000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 300000}, "hard": {"water": 5, "fertCost": 6000, "scareCost": 20000, "sprCost": 25000, "greenCost": 60000, "coopCost": 35000, "feed": 2000, "eggP": 3000, "plots": 6, "maxPlots": 8, "plotCost": 15000, "start": 20000, "wxP": {"sun": 0.37, "rain": 0.15, "cloud": 0.15, "heat": 0.25, "storm": 0.08}, "bugP": 0.25, "yieldN": 1, "crops": [{"id": "lettuce", "n": "상추", "e": "🥬", "days": 2, "cost": 2000, "sell": 6000}, {"id": "carrot", "n": "당근", "e": "🥕", "days": 3, "cost": 4000, "sell": 12000}, {"id": "potato", "n": "감자", "e": "🥔", "days": 3, "cost": 5000, "sell": 14000}, {"id": "tomato", "n": "토마토", "e": "🍅", "days": 4, "cost": 6000, "sell": 18000}, {"id": "corn", "n": "옥수수", "e": "🌽", "days": 4, "cost": 8000, "sell": 22000}, {"id": "straw", "n": "딸기", "e": "🍓", "days": 5, "cost": 8000, "sell": 26000}, {"id": "melon", "n": "수박", "e": "🍉", "days": 6, "cost": 12000, "sell": 45000}], "story": "우리 반이 학교 텃밭을 맡았어요! 🌱 씨앗을 심고, 물을 주고, 벌레를 잡아 작물을 키워요. 다 자란 작물은 시장에 팔아 목표 금액을 모아요.", "endWin": "풍년이에요! 🌾", "endText": "정성껏 키운 작물로 목표 금액을 모았어요. 우리 반 텃밭이 학교에서 제일 유명해졌어요!", "days": 16, "feat": ["fert", "scare", "sprinkler", "forecast", "orders", "coop", "greenhouse", "storm"], "rent": 3900, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "식물이 빛을 이용해 양분을 만드는 일은?", "a": "광합성", "o": ["광합성", "증산 작용", "소화"], "h": "", "pic": "☀️🌿"}, {"q": "뿌리에서 흡수한 물이 잎을 통해 빠져나가는 것은?", "a": "증산 작용", "o": ["증산 작용", "광합성", "응결"], "h": "", "pic": "🍃"}, {"q": "꽃가루받이를 도와주는 동물은?", "a": "벌", "o": ["벌", "지렁이", "두더지"], "h": "", "pic": "🐝"}, {"q": "열매가 하는 일로 알맞은 것은?", "a": "씨를 보호하고 퍼뜨린다", "o": ["씨를 보호하고 퍼뜨린다", "물을 흡수한다", "양분을 만든다"], "h": "", "pic": "🍎"}], "goal": 300000}};
 </script>
 <script>
 'use strict';
@@ -215,9 +226,21 @@ function ask(q){/* q:{title,text,pic,ans,opts?,unit?,h?,reward} → Promise<bool
     if(useInput){const inp=h('input','inbox');inp.inputMode='decimal';inp.placeholder='숫자';const b=h('button','btn go','확인');b.onclick=()=>{if(inp.value.trim())judge(inp.value.trim(),null)};inp.onkeydown=e=>{if(e.key==='Enter')b.click()};box.append(h('div','row'),msg);box.children[1].append(inp,h('span','jua',q.unit||''),b);setTimeout(()=>inp.focus(),60)}
     else{const row=h('div','opts');(q.opts||numOpts(q.ans)).forEach(o=>{const b=h('button','opt',typeof o==='number'?o.toLocaleString()+(q.unit||''):o);b.dataset.v=o;b.onclick=()=>{if(b.classList.contains('no')||b.classList.contains('ok'))return;judge(o,b)};row.appendChild(b)});box.append(row,msg)}
     $('#ov').classList.remove('hide')})}
+
+/* ── 공통 기능: 상점 · 미션 · 예보 · 임대료 ── */
+function rentToday(){return D.rent?Math.round(D.rent*(1+(S.day-1)*D.rentUp)/D.M)*D.M:0}
+function openShop(items,onBuy,title){
+  const box=h('div','',`<h2>${title||'🛒 업그레이드 상점'}</h2><div class="hint">가진 돈 <b>${won(S.money)}</b></div>`);const grid=h('div','shopgrid');
+  items.forEach(it=>{const full=it.max&&it.lv>=it.max;const b=h('button','shopitem'+(full?' full':''),`<b>${it.e}</b><span class="nm">${it.n}${it.max>1?` <small>Lv ${it.lv}/${it.max}</small>`:it.lv?' <small>✔ 보유</small>':''}</span><span class="ds">${it.d}</span><span class="pr">${full?'최고 단계':won(it.cost)}</span>`);
+    b.dataset.s=it.id;if(full||!canPay(it.cost))b.disabled=true;b.onclick=()=>{closeModal();if(!canPay(it.cost)){SND.bad();return}earn(-it.cost,null);S.g.spent=(S.g.spent||0)+it.cost;onBuy(it.id);SND.fan();FX.confetti&&0;banner(`${it.e} ${it.n}!`);save()};grid.appendChild(b)});
+  box.appendChild(grid);return modal(box,[['닫기','ghost']]);
+}
+function missionBox(){const m=S.g.mis;if(!m)return null;return h('div','mission'+(m.done?' done':''),`🎯 <b>오늘의 미션</b> ${m.t} <span>보상 ${won(m.r)} · ⭐+5</span>`)}
+function setMission(pool){if(!pool||!pool.length){S.g.mis=null;return}const k=Math.floor(rnd()*pool.length);const m=pool[k];S.g.mis={k,t:m.t,r:m.r||D.bonus*3,done:false}}
+function forecastText(){return S.g.fwx?`🔮 내일 예보: <b>${S.g.fwx}</b>`:''}
 /* ── 흐름 ── */
 let G;   // 게임 모듈
-function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();save()}}
+function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();if(G.missions)setMission(G.missions());save()}}
 function intro(){
   ensureDay();setTime(.35);clouds(3);G.scene();
   const c=h('div','card');
@@ -236,9 +259,12 @@ async function runDay(){
   $('#panel').querySelectorAll('button').forEach(b=>b.disabled=true);
   const rep=await G.day();               // 애니메이션 + 결과 계산
   setTime(.95);await wait(500);
+  const rent=Math.min(rentToday(),Math.max(0,S.money));if(rentToday()){earn(-rent,null);rep.lines.push(['🏠 오늘 임대료'+(rent<rentToday()?' (돈이 모자라 일부만)':''),'−'+won(rent),'#e04848']);rep.net-=rent}
+  let misOk=false;if(S.g.mis&&!S.g.mis.done&&G.missions){const pool=G.missions();const m=pool[S.g.mis.k];if(m&&m.test(rep)){misOk=true;S.g.mis.done=true;rep.lines.push(['🎯 미션 성공! '+S.g.mis.t,'+'+won(S.g.mis.r),'#7048e8'])}else rep.lines.push(['🎯 미션 실패',S.g.mis.t,'#adb5bd'])}
   const lines=rep.lines.map(([k,v,c])=>`<span>${k}</span><b style="color:${c||'inherit'}">${v}</b>`).join('');
   const net=rep.net;
   await modal(`<div class="big">${rep.emoji||'🌙'}</div><h2>${S.day}일째 결산</h2><div class="rep">${lines}<span class="tot">오늘 남은 돈</span><b class="tot" style="color:${net>=0?'#1f9d55':'#e04848'}">${net>=0?'+':''}${won(net)}</b></div>${rep.note?`<div class="hint">${rep.note}</div>`:''}`,[['장부 쓰러 가기 ✏️','go']]);
+  if(misOk){earn(S.g.mis.r,$('#hMoney'));S.rep=Math.min(100,S.rep+5);FX.confetti();SND.fan();hud()}
   const lq=G.ledger(rep);
   if(lq){const ok=await ask(Object.assign({title:'📒 오늘의 장부',reward:'⭐+3 · '+won(D.bonus)},lq));if(ok){S.rep=Math.min(100,S.rep+3);earn(D.bonus,$('#hMoney'))}}
   const kq=(D.quiz&&D.quiz.length&&S.day%2===0)?D.quiz[(S.day/2-1)%D.quiz.length]:null;
@@ -269,87 +295,127 @@ function markDone(){try{const id=GAME+'@'+LV;if(localStorage.getItem('class-done
 <script>
 /* 🌱 우리 반 꼬마 농장 */
 const CROP=Object.fromEntries(D.crops.map(c=>[c.id,c]));
-const WXN={sun:'☀️ 맑음',rain:'🌧️ 비',heat:'🔥 폭염',cloud:'⛅ 흐림'};
+const WXN={sun:'☀️ 맑음',rain:'🌧️ 비',heat:'🔥 폭염',cloud:'⛅ 흐림',storm:'🌪️ 태풍'};
+const F=new Set(D.feat||[]);
 const GAMEDEF={
-  init(){S.g.plots=Array.from({length:D.plots},()=>({c:null,age:0,w:false,dry:0,bug:false,dead:false}));S.g.tool=D.crops[0].id;S.g.sold=0;S.g.dead=0;S.g.harv=0},
+  init(){const g=S.g;g.plots=Array.from({length:D.plots},()=>({c:null,age:0,w:false,dry:0,bug:false,dead:false}));g.tool=D.crops[0].id;g.dead=0;g.harv=0;
+    g.up={spr:0,scare:0,green:0,coop:0};g.fert=0;g.order=null;g.ordersDone=0;g.eggs=0},
+  roll(){const r=rnd();let acc=0;for(const[k,p]of Object.entries(D.wxP)){acc+=p;if(r<acc)return k}return'sun'},
   newDay(){
-    const r=rnd();let acc=0,wx='sun';for(const[k,p]of Object.entries(D.wxP)){acc+=p;if(r<acc){wx=k;break}}S.g.wx=wx;
-    S.g.price={};D.crops.forEach(c=>S.g.price[c.id]=[0.8,0.9,1,1,1.1,1.2][ri(0,5)]);S.g.sp=pick(D.crops).id;S.g.price[S.g.sp]=1.5;
-    S.g.waterLeft=D.water;S.g.basket={};S.g.spent=0;S.g.rev=0;
-    S.g.plots.forEach(p=>{p.w=(wx==='rain');if(p.dead){p.c=null;p.dead=false;p.age=0}if(p.c&&!p.bug&&p.age<CROP[p.c].days&&rnd()<D.bugP)p.bug=true});
+    const g=S.g;g.wx=g.next||this.roll();g.next=this.roll();g.fwx=F.has('forecast')?WXN[g.next]:'';
+    g.price={};D.crops.forEach(c=>g.price[c.id]=[0.8,0.9,1,1,1.1,1.2][ri(0,5)]);g.sp=pick(D.crops).id;g.price[g.sp]=1.5;
+    g.waterLeft=D.water;g.basket={};g.spent=0;g.rev=0;g.fertUsed=0;
+    const bugP=D.bugP*(g.up.scare?.3:1);
+    g.plots.forEach(p=>{p.w=(g.wx==='rain'||g.wx==='storm');if(p.dead){p.c=null;p.dead=false;p.age=0}if(p.c&&!p.bug&&p.age<CROP[p.c].days&&rnd()<bugP)p.bug=true});
+    // 식당 주문
+    if(F.has('orders')&&(!g.order||g.order.done||g.order.due<S.day)&&S.day<D.days-2&&rnd()<.6){const c=pick(D.crops.filter(c=>c.days<=D.days-S.day-1));if(c){const q=ri(2,4);g.order={id:c.id,q,got:0,due:S.day+c.days+2,bonus:Math.round(c.sell*q*.8/D.M)*D.M,done:false}}}
   },
   wxIcon(){return WXN[S.g.wx].split(' ')[0]},
-  price(id){return Math.round(CROP[id].sell*S.g.price[id])},
-  how(){return[['🌰','씨앗을 골라 빈 밭에 심어요'],['🚿','물을 주면 하루에 한 칸씩 자라요'],['🐛','벌레가 생기면 눌러서 잡아요'],['🧺','다 자라면 눌러서 수확! 저녁에 시장에서 팔아요']]},
+  price(id){return Math.round(CROP[id].sell*S.g.price[id]/D.M)*D.M||CROP[id].sell},
+  how(){const a=[['🌰','씨앗을 골라 빈 밭에 심어요'],['🚿','물을 주면 하루에 한 칸씩 자라요'],['🐛','벌레가 생기면 눌러서 잡아요'],['🧺','다 자라면 눌러서 수확! 저녁에 시장에서 팔아요']];
+    if(this.shopItems().length)a.push(['🛒','상점에서 '+this.shopItems().map(x=>x.e).join('')+' 같은 설비를 사요']);if(F.has('orders'))a.push(['📋','식당 주문을 맞추면 보너스!']);return a},
   goalText(){return `${won(D.goal)} 모으기`},
   progress(){return S.money/D.goal},
   won(){return S.money>=D.goal},
-  summary(){return[['모은 돈',won(S.money)],['목표',won(D.goal)],['수확한 작물',S.g.harv+'개'],['시든 작물',S.g.dead+'개']]},
+  summary(){return[['모은 돈',won(S.money)],['목표',won(D.goal)],['수확한 작물',S.g.harv+'개'],['시든 작물',S.g.dead+'개']].concat(F.has('orders')?[['완료한 주문',S.g.ordersDone+'번']]:[])},
   stage(p){if(p.dead)return'🥀';if(!p.c)return'';const c=CROP[p.c];if(p.age>=c.days)return c.e;if(p.age===0)return'🌰';return p.age/c.days<.5?'🌱':'🌿'},
   scene(){
-    const w=$('#world');w.innerHTML='';
+    const w=$('#world'),g=S.g;w.innerHTML='';
     $('#ground').style.background='linear-gradient(#9bd36b,#7cc04f 30%,#6aa843)';
     w.appendChild(h('div','farmhouse','🏡'));w.appendChild(h('div','tree1 wiggle','🌳'));
-    const f=h('div','field');f.style.gridTemplateColumns=`repeat(${S.g.plots.length>6?4:3},1fr)`;
-    S.g.plots.forEach((p,i)=>{const d=h('button','plot'+(p.w?' wet':'')+(p.c&&!p.dead&&p.age>=CROP[p.c].days?' ripe':''),'');d.dataset.i=i;
+    if(g.up.scare)w.appendChild(h('div','scare wiggle','🧑‍🌾'));
+    if(g.up.coop)w.appendChild(h('div','coop',`🛖${'🐔'.repeat(g.up.coop)}`));
+    const f=h('div','field'+(g.up.green?' green':''));f.style.gridTemplateColumns=`repeat(${g.plots.length>6?4:3},1fr)`;
+    g.plots.forEach((p,i)=>{const d=h('button','plot'+(p.w?' wet':'')+(p.c&&!p.dead&&p.age>=CROP[p.c].days?' ripe':''),'');d.dataset.i=i;
       const st=this.stage(p);if(st){const s=h('span','pl'+(p.c&&p.age>=CROP[p.c].days&&!p.dead?' sparkle glow':''),st);d.appendChild(s)}
       if(p.c&&!p.dead&&p.age<CROP[p.c].days)d.appendChild(h('i','gauge',`<u style="width:${p.age/CROP[p.c].days*100}%"></u>`));
-      if(p.bug)d.appendChild(h('span','bug wiggle','🐛'));if(p.w)d.appendChild(h('span','dropi','💧'));
+      if(p.bug)d.appendChild(h('span','bug wiggle','🐛'));if(p.w)d.appendChild(h('span','dropi','💧'));if(i<g.up.spr*3)d.appendChild(h('span','sprk','⛲'));
       d.onclick=()=>this.tap(i,d);f.appendChild(d)});
     w.appendChild(f);
-    const b=h('div','board','<b>🏪 오늘 시장 값</b>'+D.crops.map(c=>`<div>${c.e} ${won(this.price(c.id))}${S.g.sp===c.id?' <em>특가!</em>':''}</div>`).join(''));w.appendChild(b);
-    const bk=h('div','basket',`🧺<small>${Object.values(S.g.basket||{}).reduce((a,b)=>a+b,0)}</small>`);bk.id='basket';w.appendChild(bk);
+    const b=h('div','board','<b>🏪 오늘 시장 값</b>'+D.crops.map(c=>`<div>${c.e} ${won(this.price(c.id))}${g.sp===c.id?' <em>특가!</em>':''}</div>`).join(''));w.appendChild(b);
+    const bk=h('div','basket',`🧺<small>${Object.values(g.basket||{}).reduce((a,b)=>a+b,0)}</small>`);bk.id='basket';w.appendChild(bk);
     for(let i=0;i<2;i++){const bf=h('div','fly','🦋');bf.style.animationDelay=(-i*3)+'s';bf.style.top=(30+i*15)+'%';w.appendChild(bf)}
   },
   panel(el){
     el.innerHTML='';const g=S.g;
-    el.appendChild(h('div','hint',`오늘 날씨 <b>${WXN[g.wx]}</b>${g.wx==='rain'?' · 비가 와서 물을 안 줘도 돼요!':g.wx==='heat'?' · 폭염! 물을 안 준 작물은 바로 시들어요':''} · 🚿 물 ${g.waterLeft}번 남음`));
+    el.appendChild(h('div','hint',`오늘 날씨 <b>${WXN[g.wx]}</b>${g.wx==='rain'?' · 비가 와서 물을 안 줘도 돼요!':g.wx==='heat'?' · 폭염! 물을 안 준 작물은 바로 시들어요':g.wx==='storm'?' · 태풍! 비닐하우스가 없으면 작물이 망가질 수 있어요':''} · 🚿 물 ${g.waterLeft}번 남음${g.fwx?' · '+forecastText():''}${rentToday()?` · 🏠 임대료 ${won(rentToday())}`:''}`));
+    const mb=missionBox();if(mb)el.appendChild(mb);
+    if(g.order&&!g.order.done&&g.order.due>=S.day){const o=g.order;el.appendChild(h('div','mission order',`📋 <b>식당 주문</b> ${CROP[o.id].e} ${CROP[o.id].n} <b>${o.q}개</b>를 <b>${o.due}일째</b>까지 시장에 팔아 주세요! (${o.got}/${o.q}) <span>보너스 ${won(o.bonus)}</span>`))}
     if(LV==='easy')el.appendChild(h('div','tip','💡 씨앗을 고르고 빈 밭을 눌러 심어요. 자라는 작물은 🚿 물뿌리개를 골라 눌러 주세요. 반짝이는 작물은 눌러서 수확!'));
     const row=h('div','row');
     D.crops.forEach(c=>{const b=h('button','tool'+(g.tool===c.id?' on':''),`<b>${c.e}</b>${c.n}<small>씨앗 ${won(c.cost)} · ${c.days}일</small><small>팔 때 약 ${won(c.sell)}</small>`);b.dataset.t=c.id;b.onclick=()=>{g.tool=c.id;SND.click();this.panel(el)};row.appendChild(b)});
     const wb=h('button','tool'+(g.tool==='water'?' on':''),`<b>🚿</b>물 주기<small>${g.waterLeft}번 남음</small>`);wb.dataset.t='water';wb.onclick=()=>{g.tool='water';SND.click();this.panel(el)};row.appendChild(wb);
+    if(F.has('fert')){const fb=h('button','tool'+(g.tool==='fert'?' on':''),`<b>🧪</b>비료<small>${g.fert}개 · 바로 한 칸 자람</small>`);fb.dataset.t='fert';fb.onclick=()=>{g.tool='fert';SND.click();this.panel(el)};row.appendChild(fb)}
     if(g.plots.length<D.maxPlots){const pb=h('button','tool',`<b>➕</b>밭 늘리기<small>${won(D.plotCost)}</small>`);pb.dataset.t='plot';pb.onclick=()=>{if(!canPay(D.plotCost)){SND.bad();FX.shake(pb);return}earn(-D.plotCost,pb);g.spent+=D.plotCost;g.plots.push({c:null,age:0,w:false,dry:0,bug:false,dead:false});SND.pop();this.scene();this.panel(el);save()};row.appendChild(pb)}
     el.appendChild(row);
-    const go=h('button','btn go big','🌙 하루 보내기 ▶');go.id='dayBtn';go.onclick=()=>runDay();const r2=h('div','row');r2.style.marginTop='10px';r2.appendChild(go);el.appendChild(r2);
+    const r2=h('div','row');r2.style.marginTop='10px';
+    if(this.shopItems().length){const sb=h('button','btn','🛒 상점');sb.id='shopBtn';sb.onclick=()=>openShop(this.shopItems(),id=>this.buy(id)).then(()=>{this.scene();this.panel($('#panel'))});r2.appendChild(sb)}
+    const go=h('button','btn go big','🌙 하루 보내기 ▶');go.id='dayBtn';go.onclick=()=>runDay();r2.appendChild(go);el.appendChild(r2);
   },
+  shopItems(){const g=S.g,it=[];
+    if(F.has('fert'))it.push({id:'fert',e:'🧪',n:'비료 3봉지',d:'작물에 뿌리면 바로 한 칸 자라요',cost:D.fertCost,lv:0,max:0});
+    if(F.has('scare'))it.push({id:'scare',e:'🧑‍🌾',n:'허수아비',d:'벌레가 70% 줄어요',cost:D.scareCost,lv:g.up.scare,max:1});
+    if(F.has('sprinkler'))it.push({id:'spr',e:'⛲',n:'스프링클러',d:'밭 3칸에 매일 저절로 물을 줘요',cost:D.sprCost,lv:g.up.spr,max:3});
+    if(F.has('greenhouse'))it.push({id:'green',e:'🏠',n:'비닐하우스',d:'폭염과 태풍에서 작물을 지켜요',cost:D.greenCost,lv:g.up.green,max:1});
+    if(F.has('coop'))it.push({id:'coop',e:'🐔',n:'닭장',d:`매일 달걀 3개 (사료 하루 ${won(D.feed)})`,cost:D.coopCost,lv:g.up.coop,max:2});
+    return it},
+  buy(id){const g=S.g;if(id==='fert')g.fert+=3;else g.up[id]++;if(id==='spr')this.autoWater()},
+  autoWater(){const g=S.g;g.plots.forEach((p,i)=>{if(i<g.up.spr*3&&p.c&&!p.dead)p.w=true})},
   tap(i,el){
     const g=S.g,p=g.plots[i];
     if(p.bug){p.bug=false;SND.pop();FX.burstOn(el,['💥','🐛','✨'],7);FX.floatOn(el,'벌레 잡았다!','#2f9e44');this.scene();save();return}
     if(p.c&&!p.dead&&p.age>=CROP[p.c].days){const c=CROP[p.c];g.basket[c.id]=(g.basket[c.id]||0)+D.yieldN;g.harv+=D.yieldN;p.c=null;p.age=0;p.w=false;SND.good();
-      const[x,y]=FX.at(el),[bx,by]=FX.at($('#basket'));const e=h('div','fx coinfly',c.e);e.style.left=x+'px';e.style.top=y+'px';e.style.fontSize='40px';document.body.appendChild(e);requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.left=bx+'px';e.style.top=by+'px'}));setTimeout(()=>e.remove(),750);
+      if(!FAST){const[x,y]=FX.at(el),[bx,by]=FX.at($('#basket'));const e=h('div','fx coinfly',c.e);e.style.left=x+'px';e.style.top=y+'px';e.style.fontSize='40px';document.body.appendChild(e);requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.left=bx+'px';e.style.top=by+'px'}));setTimeout(()=>e.remove(),750)}
       FX.burstOn(el,['✨','⭐'],6);setTimeout(()=>{this.scene();save()},FAST?0:300);return}
+    if(g.tool==='fert'){if(!p.c||p.dead){FX.floatOn(el,'자라는 작물에 뿌려요','#6b5b95');return}if(g.fert<=0){SND.bad();FX.floatOn(el,'비료가 없어요 (상점)','#e04848');return}
+      g.fert--;p.age=Math.min(CROP[p.c].days,p.age+1);SND.fan();FX.burstOn(el,['🧪','✨','🌟'],9);this.scene();this.panel($('#panel'));save();return}
     if(!p.c&&g.tool!=='water'){const c=CROP[g.tool];if(!c){SND.bad();return}if(!canPay(c.cost)){SND.bad();FX.floatOn(el,'돈이 모자라요','#e04848');return}
-      earn(-c.cost,null);g.spent+=c.cost;p.c=c.id;p.age=0;p.dry=0;p.w=g.wx==='rain';SND.pop();FX.burstOn(el,['🟫','✨'],5);this.scene();save();return}
+      earn(-c.cost,null);g.spent+=c.cost;p.c=c.id;p.age=0;p.dry=0;p.w=g.wx==='rain'||g.wx==='storm'||i<g.up.spr*3;SND.pop();FX.burstOn(el,['🟫','✨'],5);this.scene();save();return}
     if(p.c&&!p.dead&&g.tool==='water'){if(p.w){FX.floatOn(el,'이미 촉촉해요','#3a7bd5');return}if(g.waterLeft<=0){SND.bad();FX.floatOn(el,'물이 없어요','#e04848');return}
       p.w=true;g.waterLeft--;SND.splash();FX.burstOn(el,['💧','💦'],8);this.scene();this.panel($('#panel'));save();return}
-    if(p.c&&!p.dead&&g.tool!=='water'){FX.floatOn(el,`${CROP[p.c].n} 자라는 중 (${p.age}/${CROP[p.c].days})`,'#6b5b95')}
-    else SND.click();
+    if(p.c&&!p.dead){FX.floatOn(el,`${CROP[p.c].n} 자라는 중 (${p.age}/${CROP[p.c].days})`,'#6b5b95')}else SND.click();
   },
+  missions(){const g=S.g;return[
+    {t:'벌레 없이 하루 보내기',test:r=>r.bugsLeft===0},
+    {t:'작물 3개 이상 팔기',test:r=>r.soldN>=3},
+    {t:'시든 작물 없이 하루 보내기',test:r=>r.died===0&&r.growing>0},
+    {t:`오늘 ${won(D.crops[1].sell*2)} 넘게 벌기`,test:r=>r.rev>=D.crops[1].sell*2},
+  ]},
   async day(){
-    const g=S.g;weather(g.wx);
+    const g=S.g;this.autoWater();weather(g.wx);this.scene();
     for(let t=.3;t<=.8;t+=.1){setTime(t);await wait(260)}
-    let died=0,grew=0;
-    g.plots.forEach(p=>{if(!p.c||p.dead)return;const c=CROP[p.c];if(p.age>=c.days)return;
+    let died=0,grew=0,broke=0;const bugsLeft=g.plots.filter(p=>p.bug).length;
+    g.plots.forEach(p=>{if(!p.c||p.dead)return;const c=CROP[p.c];
+      if(g.wx==='storm'&&!g.up.green&&rnd()<.4){p.dead=true;broke++;return}
+      if(p.age>=c.days)return;
       if(p.bug){p.dry=0;return}
       if(p.w){p.age++;p.dry=0;grew++}
-      else if(g.wx==='heat'){p.dead=true;died++}
+      else if(g.wx==='heat'&&!g.up.green){p.dead=true;died++}
       else{p.dry++;if(p.dry>=2){p.dead=true;died++}}});
-    g.dead+=died;
+    g.dead+=died+broke;
     this.scene();document.querySelectorAll('.plot .pl').forEach(e=>e.classList.add('popin'));
-    if(grew)SND.pop();await wait(700);
+    if(grew)SND.pop();if(broke){banner('🌪️ 태풍 피해!');SND.boom()}await wait(700);
     setTime(.88);await wait(300);
-    // 시장 트럭
+    // 달걀
+    let eggRev=0;if(g.up.coop){const n=3*g.up.coop;g.eggs+=n;eggRev=n*D.eggP;const ce=document.querySelector('.coop');if(ce)FX.burstOn(ce,['🥚','🐣'],6)}
+    const feed=g.up.coop*D.feed;
     const items=Object.entries(g.basket).filter(([k,v])=>v>0);
     let rev=0;const lines=[];
     if(items.length){const tr=h('div','truck','🚚'+items.map(([k])=>CROP[k].e).join(''));$('#world').appendChild(tr);await wait(1300);
-      items.forEach(([k,v])=>{const pr=this.price(k);rev+=pr*v;lines.push([`${CROP[k].e} ${CROP[k].n} ${v}개 × ${won(pr)}`,won(pr*v),'#1f9d55'])});
-      earn(rev,tr);tr.remove()}
+      items.forEach(([k,v])=>{const pr=this.price(k);rev+=pr*v;lines.push([`${CROP[k].e} ${CROP[k].n} ${v}개 × ${won(pr)}`,won(pr*v),'#1f9d55'])});tr.remove()}
     else lines.push(['🧺 오늘 판 작물','없음']);
-    if(g.spent)lines.push(['🌰 씨앗·밭에 쓴 돈','−'+won(g.spent),'#e04848']);
-    if(died)lines.push(['🥀 시든 작물',died+'개','#e04848']);
-    g.rev=rev;const sold=items.map(([k,v])=>({id:k,n:CROP[k].n,q:v,p:this.price(k),cost:CROP[k].cost,sell:CROP[k].sell}));g.lastSold=sold;g.basket={};
+    // 주문
+    let ob=0;const o=g.order;if(o&&!o.done&&o.due>=S.day&&g.basket[o.id]){o.got=Math.min(o.q,o.got+g.basket[o.id]);if(o.got>=o.q){o.done=true;ob=o.bonus;g.ordersDone++;lines.push([`📋 식당 주문 완료! ${CROP[o.id].e}×${o.q}`,'+'+won(ob),'#7048e8'])}}
+    if(eggRev)lines.push([`🥚 달걀 ${3*g.up.coop}개 × ${won(D.eggP)}`,won(eggRev),'#1f9d55']);
+    earn(rev+eggRev+ob,$('#basket'));
+    if(feed){earn(-feed,null);lines.push(['🐔 닭 사료','−'+won(feed),'#e04848'])}
+    if(g.spent)lines.push(['🌰 씨앗·설비에 쓴 돈','−'+won(g.spent),'#e04848']);
+    if(died)lines.push(['🥀 시든 작물',died+'개','#e04848']);if(broke)lines.push(['🌪️ 태풍에 망가진 작물',broke+'개','#e04848']);
+    g.rev=rev;const sold=items.map(([k,v])=>({id:k,n:CROP[k].n,q:v,p:this.price(k),cost:CROP[k].cost,sell:CROP[k].sell}));g.basket={};
+    const growing=g.plots.filter(p=>p.c&&!p.dead).length;
     save();
-    return{lines,net:rev-g.spent,emoji:rev>0?'💰':'🌙',sold,spent:g.spent,note:died?'물을 주지 않으면 작물이 시들어요!':''};
+    return{lines,net:rev+eggRev+ob-feed-g.spent,emoji:rev>0?'💰':'🌙',sold,spent:g.spent,rev,died:died+broke,bugsLeft,soldN:items.reduce((a,[k,v])=>a+v,0),growing,
+      note:broke?'비닐하우스가 있으면 태풍을 막을 수 있어요!':died?'물을 주지 않으면 작물이 시들어요!':''};
   },
   ledger(r){
     const s=r.sold,P=S.g.plots;
@@ -358,11 +424,11 @@ const GAMEDEF={
       if(growing<P.length)return{text:`밭은 모두 <b>${P.length}칸</b>이에요. 그중 <b>${growing}칸</b>에 작물이 있어요.<br>비어 있는 밭은 몇 칸일까요?`,ans:P.length-growing,unit:'칸',pic:'🟫'};
       return{text:`밭 <b>${P.length}칸</b>에 모두 작물이 자라요. 밭을 <b>3칸</b> 더 늘리면 모두 몇 칸일까요?`,ans:P.length+3,unit:'칸',pic:'🟫'}}
     if(GRADE===2){const t=s.find(x=>x.p<=9&&x.q<=9);if(t)return{text:`${josa(t.n,'을','를')} <b>${t.q}개</b> 팔았어요. 1개에 <b>${t.p}코인</b>이면 모두 몇 코인일까요?`,ans:t.q*t.p,unit:'코인',h:`${t.p}단 곱셈구구`};
-      if(r.spent||S.g.rev)return{text:`씨앗에 <b>${r.spent}코인</b>을 쓰고, 시장에서 <b>${S.g.rev}코인</b>을 벌었어요.<br>번 돈과 쓴 돈의 차이는 몇 코인일까요?`,ans:Math.abs(S.g.rev-r.spent),unit:'코인',h:'큰 수에서 작은 수를 빼요'};
+      if(r.spent||r.rev)return{text:`씨앗에 <b>${r.spent}코인</b>을 쓰고, 시장에서 <b>${r.rev}코인</b>을 벌었어요.<br>번 돈과 쓴 돈의 차이는 몇 코인일까요?`,ans:Math.abs(r.rev-r.spent),unit:'코인',h:'큰 수에서 작은 수를 빼요'};
       return{text:`밭 <b>${P.length}칸</b>에 물을 <b>2번</b>씩 주면 모두 몇 번일까요?`,ans:P.length*2,unit:'번',h:'2단 곱셈구구'}}
     if(GRADE===3){const t=s[0];if(t)return{text:`${t.n} <b>${t.q}개</b>를 1개에 <b>${won(t.p)}</b>씩 팔았어요. 모두 얼마일까요?`,ans:t.q*t.p,unit:U,h:`${t.p} × ${t.q}`};
-      return{text:`씨앗을 사는 데 <b>${josa(won(r.spent),'을','를')}</b> 썼어요. 내일 같은 씨앗을 <b>3번</b> 더 사면 모두 얼마가 들까요?`,ans:r.spent*3,unit:U}}
-    if(GRADE===4){if(s.length&&S.g.rev>=r.spent)return{text:`오늘 시장에서 <b>${josa(won(S.g.rev),'을','를')}</b> 벌고, 씨앗과 밭에 <b>${josa(won(r.spent),'을','를')}</b> 썼어요. 오늘 남은 돈(번 돈 − 쓴 돈)은?`,ans:S.g.rev-r.spent,unit:U,h:'번 돈에서 쓴 돈을 빼요'};
+      return{text:`닭장 한 곳에서 하루에 달걀이 <b>3개</b>씩 나와요. 닭장 <b>4곳</b>에서 <b>7일</b> 동안 나오는 달걀은 모두 몇 개일까요?`,ans:84,unit:'개',pic:'🐔🥚',h:'3 × 4 × 7'}}
+    if(GRADE===4){if(s.length&&r.rev>=r.spent)return{text:`오늘 시장에서 <b>${josa(won(r.rev),'을','를')}</b> 벌고, 씨앗과 설비에 <b>${josa(won(r.spent),'을','를')}</b> 썼어요. 오늘 남은 돈(번 돈 − 쓴 돈)은?`,ans:r.rev-r.spent,unit:U,h:'번 돈에서 쓴 돈을 빼요'};
       return{text:`밭 한 칸을 늘리는 데 <b>${josa(won(D.plotCost),'이','가')}</b> 들어요. <b>12칸</b>을 늘리려면 모두 얼마가 들까요?`,ans:D.plotCost*12,unit:U}}
     if(GRADE===5){const t=s.find(x=>x.id===S.g.sp);if(t)return{text:`${josa(t.n,'은','는')} 오늘 특가로 원래 값의 <b>1.5배</b>예요. 원래 값이 <b>${josa(won(t.sell),'이면','면')}</b> 오늘 값은?`,ans:Math.round(t.sell*1.5),unit:U,h:`${t.sell} × 1.5`};
       const hs=S.hist.slice(-2).concat([{net:r.net}]);if(hs.length>=2&&hs.every(x=>x.net>0)){const sum=hs.reduce((a,b)=>a+b.net,0);if(sum%hs.length===0)return{text:`최근 <b>${hs.length}일</b> 동안 남은 돈이 ${hs.map(x=>won(x.net)).join(', ')}이에요. 하루 평균 얼마일까요?`,ans:sum/hs.length,unit:U,h:'모두 더해서 날수로 나눠요'}}
@@ -371,12 +437,17 @@ const GAMEDEF={
     return{text:`${t.n} 씨앗값은 <b>${won(t.cost)}</b>, 원래 판매 값은 <b>${josa(won(t.sell),'이에요','예요')}</b>.<br>이익(판매 값 − 씨앗값)은 씨앗값의 몇 %일까요?`,ans:Math.round((t.sell-t.cost)/t.cost*100),unit:'%',h:'이익 ÷ 씨앗값 × 100'};
   },
   bot(){
-    const g=S.g,left=D.days-S.day;
-    g.plots.forEach((p,i)=>{if(p.bug)this.tap(i,document.querySelector(`.plot[data-i="${i}"]`));});
-    g.plots.forEach((p,i)=>{if(p.c&&!p.dead&&p.age>=CROP[p.c].days)this.tap(i,document.querySelector(`.plot[data-i="${i}"]`))});
+    const g=S.g,left=D.days-S.day;const el=i=>document.querySelector(`.plot[data-i="${i}"]`);
+    g.plots.forEach((p,i)=>{if(p.bug)this.tap(i,el(i))});
+    g.plots.forEach((p,i)=>{if(p.c&&!p.dead&&p.age>=CROP[p.c].days)this.tap(i,el(i))});
+    const tryBuy=(id,cost,ok)=>{if(ok&&canPay(cost)&&S.money-cost>D.crops[0].cost*4){earn(-cost,null);g.spent+=cost;this.buy(id);return true}return false};
+    if(left>=4){tryBuy('spr',D.sprCost,F.has('sprinkler')&&g.up.spr<Math.ceil(g.plots.length/3));tryBuy('scare',D.scareCost,F.has('scare')&&!g.up.scare);
+      tryBuy('green',D.greenCost,F.has('greenhouse')&&!g.up.green&&left>=6);tryBuy('coop',D.coopCost,F.has('coop')&&g.up.coop<1&&left>=8)}
     if(g.plots.length<D.maxPlots&&left>=5&&S.money>D.plotCost*2.5){document.querySelector('.tool[data-t="plot"]')?.click()}
-    g.plots.forEach((p,i)=>{if(!p.c){const ok=D.crops.filter(c=>c.days<=left&&canPay(c.cost)).sort((a,b)=>(b.sell-b.cost)/b.days-(a.sell-a.cost)/a.days);if(ok.length){g.tool=ok[0].id;this.tap(i,document.querySelector(`.plot[data-i="${i}"]`))}}});
-    g.tool='water';g.plots.forEach((p,i)=>{if(p.c&&!p.dead&&!p.w&&p.age<CROP[p.c].days&&g.waterLeft>0)this.tap(i,document.querySelector(`.plot[data-i="${i}"]`))});
+    g.plots.forEach((p,i)=>{if(!p.c){const ok=D.crops.filter(c=>c.days<=left&&canPay(c.cost)).sort((a,b)=>(b.sell-b.cost)/b.days-(a.sell-a.cost)/a.days);
+      const o=g.order;const pref=o&&!o.done&&ok.find(c=>c.id===o.id&&S.day+c.days<=o.due)&&g.plots.filter(q=>q.c===o.id).length<o.q-o.got?o.id:null;
+      if(ok.length){g.tool=pref||ok[0].id;this.tap(i,el(i))}}});
+    this.autoWater();g.tool='water';g.plots.forEach((p,i)=>{if(p.c&&!p.dead&&!p.w&&p.age<CROP[p.c].days&&g.waterLeft>0)this.tap(i,el(i))});
     this.panel($('#panel'));
   },
 };

@@ -98,6 +98,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
 .how div{background:#f7f3fb;border-radius:16px;padding:10px;font-size:16px}
 .how b{display:block;font-size:34px;font-family:Jua;font-weight:400}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.shopitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid #ebe4f3;background:#fff;border-radius:18px;padding:10px 8px;box-shadow:0 4px 0 #ece6f3;text-align:center}
+.shopitem b{font-size:34px;font-weight:400}.shopitem .nm{font-family:Jua;font-size:18px}.shopitem .nm small{font-size:13px;color:#7a6f8c}.shopitem .ds{font-size:13px;color:#6b6280;line-height:1.35}
+.shopitem .pr{margin-top:4px;background:#fff6d6;border-radius:999px;padding:2px 10px;font-family:Jua}.shopitem.full{opacity:.6}.shopitem:disabled{opacity:.45}
+.mission{background:linear-gradient(90deg,#efe6ff,#fff);border:2px solid #c9b6f5;border-radius:14px;padding:7px 12px;margin:6px 0;font-size:16px;text-align:center}
+.mission span{display:inline-block;margin-left:6px;font-size:14px;color:#7048e8}.mission.done{background:#dff7e3;border-color:#7bd389}
+.trash{position:absolute;font-size:24px;border:none;background:none;padding:0;transform:translate(-50%,-50%);z-index:6;animation:tbob 1.6s ease-in-out infinite;cursor:pointer}
+@keyframes tbob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-65%)}}
 @media (max-width:560px){.hud .t{display:none}.btn.big{font-size:22px}}
 .shelterhouse{position:absolute;left:2%;top:18%;font-size:58px;text-align:center;line-height:1}.shelterhouse small{display:block;font:13px Jua;background:#fff;border-radius:8px;padding:1px 6px}
 .kennels{position:absolute;left:3%;right:3%;bottom:4%;display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
@@ -111,6 +119,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .fam{position:relative;border:none;background:#fff;border-radius:16px;padding:4px 8px;font-size:30px;box-shadow:0 4px 0 #0002;display:flex;align-items:center;gap:6px;max-width:300px;text-align:left}
 .fam .wish{font-size:13px;line-height:1.35}
 .walkout{position:absolute;left:40%;bottom:40%;font-size:40px;z-index:7;animation:walkout 1.2s ease-in forwards}@keyframes walkout{to{left:110%;bottom:50%}}
+.tag2{position:absolute;top:3px;left:5px;font-size:16px}
 .petinfo{display:flex;align-items:center;gap:12px;justify-content:center;margin:6px 0;font-size:17px;text-align:left}
 @media (max-width:620px){.kennels{grid-template-columns:repeat(3,1fr)}.kennel{min-height:96px}.famrow{top:3%;max-width:96%}.fam{font-size:22px}.fam .wish{font-size:11px}}
 </style>
@@ -124,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div class="ov hide" id="ov"><div class="box" id="box"></div></div>
 <script>
 const GRADE=6,GAME='shelter',KEY='sim-shelter-v1',INFO={"title": "동물 보호소", "emoji": "🐾"};
-const DATA={"easy": {"days": 8, "kennels": 6, "start": 40000, "energy": 13, "ready": 55, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.06, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 4, "goal": 4}, "normal": {"days": 9, "kennels": 6, "start": 35000, "energy": 11, "ready": 60, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.1, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 5, "goal": 5}, "hard": {"days": 10, "kennels": 6, "start": 30000, "energy": 9, "ready": 65, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.14, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 5, "goal": 5}};
+const DATA={"easy": {"kennels": 6, "playCost": 30000, "volCost": 20000, "vwage": 3000, "feederCost": 30000, "promoCost": 10000, "expandCost": 40000, "start": 40000, "energy": 13, "ready": 55, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.06, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "days": 10, "feat": ["playground", "volunteer", "feeder", "train", "promo", "events", "expand"], "rent": 3000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 6, "goal": 6}, "normal": {"kennels": 6, "playCost": 30000, "volCost": 20000, "vwage": 3000, "feederCost": 30000, "promoCost": 10000, "expandCost": 40000, "start": 35000, "energy": 11, "ready": 60, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.1, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "days": 12, "feat": ["playground", "volunteer", "feeder", "train", "promo", "events", "expand"], "rent": 3000, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 8, "goal": 8}, "hard": {"kennels": 6, "playCost": 30000, "volCost": 20000, "vwage": 3000, "feederCost": 30000, "promoCost": 10000, "expandCost": 40000, "start": 30000, "energy": 9, "ready": 65, "food": 2000, "med": 6000, "daily": 8000, "donate": 25000, "sickP": 0.14, "first": 3, "arrive": [1, 2], "fam": [1, 2], "sym": [{"k": "cold", "t": "기침을 하고 콧물이 나요", "a": "따뜻한 곳에서 쉬게 하고 약을 먹여요", "w": ["찬물로 목욕을 시켜요", "밖에서 오래 뛰게 해요"]}, {"k": "skin", "t": "몸을 자꾸 긁고 털이 빠져요", "a": "피부약을 바르고 깨끗이 씻겨요", "w": ["밥을 두 배로 줘요", "털을 모두 깎아 버려요"]}, {"k": "tummy", "t": "밥을 안 먹고 배가 아파 보여요", "a": "먹이를 조금씩 주고 소화를 돕는 약을 줘요", "w": ["간식을 잔뜩 줘요", "공놀이를 오래 해요"]}, {"k": "paw", "t": "다리를 절뚝거려요", "a": "다친 곳을 소독하고 붕대를 감아 줘요", "w": ["산책을 더 오래 시켜요", "목욕을 오래 시켜요"]}, {"k": "teeth", "t": "입 냄새가 나고 이빨이 누래요", "a": "동물용 칫솔로 이를 닦아 줘요", "w": ["사탕을 줘요", "물을 주지 않아요"]}], "story": "길을 잃은 동물들이 행복 보호소에 왔어요! 🐾 밥을 주고, 씻기고, 놀아 주고, 아프면 치료해요. 건강해진 동물에게 꼭 맞는 새 가족을 찾아 주세요.", "endWin": "모두 새 가족을 찾았어요! 💖", "endText": "보호소 동물들이 따뜻한 새 가족을 만났어요. 여러분은 최고의 보호소 선생님이에요!", "days": 14, "feat": ["playground", "volunteer", "feeder", "train", "promo", "events", "expand"], "rent": 3900, "rentUp": 0.1, "M": 1000, "unit": "원", "bonus": 5000, "quiz": [{"q": "심장이 하는 일은?", "a": "혈액을 온몸으로 보낸다", "o": ["혈액을 온몸으로 보낸다", "음식물을 소화한다", "소리를 듣는다"], "h": "", "pic": "❤️"}, {"q": "숨을 쉴 때 산소를 받아들이는 기관은?", "a": "폐", "o": ["폐", "위", "콩팥"], "h": "", "pic": "🫁"}, {"q": "먹이 사슬이 여러 개 얽혀 그물처럼 연결된 것은?", "a": "먹이 그물", "o": ["먹이 그물", "먹이 피라미드", "생산 사슬"], "h": "", "pic": "🕸️"}, {"q": "생물 다양성을 지키는 방법으로 알맞은 것은?", "a": "서식지를 보호한다", "o": ["서식지를 보호한다", "외래종을 마구 풀어 준다", "숲을 없앤다"], "h": "", "pic": "🌳"}], "target": 11, "goal": 11}};
 </script>
 <script>
 'use strict';
@@ -214,9 +223,21 @@ function ask(q){/* q:{title,text,pic,ans,opts?,unit?,h?,reward} → Promise<bool
     if(useInput){const inp=h('input','inbox');inp.inputMode='decimal';inp.placeholder='숫자';const b=h('button','btn go','확인');b.onclick=()=>{if(inp.value.trim())judge(inp.value.trim(),null)};inp.onkeydown=e=>{if(e.key==='Enter')b.click()};box.append(h('div','row'),msg);box.children[1].append(inp,h('span','jua',q.unit||''),b);setTimeout(()=>inp.focus(),60)}
     else{const row=h('div','opts');(q.opts||numOpts(q.ans)).forEach(o=>{const b=h('button','opt',typeof o==='number'?o.toLocaleString()+(q.unit||''):o);b.dataset.v=o;b.onclick=()=>{if(b.classList.contains('no')||b.classList.contains('ok'))return;judge(o,b)};row.appendChild(b)});box.append(row,msg)}
     $('#ov').classList.remove('hide')})}
+
+/* ── 공통 기능: 상점 · 미션 · 예보 · 임대료 ── */
+function rentToday(){return D.rent?Math.round(D.rent*(1+(S.day-1)*D.rentUp)/D.M)*D.M:0}
+function openShop(items,onBuy,title){
+  const box=h('div','',`<h2>${title||'🛒 업그레이드 상점'}</h2><div class="hint">가진 돈 <b>${won(S.money)}</b></div>`);const grid=h('div','shopgrid');
+  items.forEach(it=>{const full=it.max&&it.lv>=it.max;const b=h('button','shopitem'+(full?' full':''),`<b>${it.e}</b><span class="nm">${it.n}${it.max>1?` <small>Lv ${it.lv}/${it.max}</small>`:it.lv?' <small>✔ 보유</small>':''}</span><span class="ds">${it.d}</span><span class="pr">${full?'최고 단계':won(it.cost)}</span>`);
+    b.dataset.s=it.id;if(full||!canPay(it.cost))b.disabled=true;b.onclick=()=>{closeModal();if(!canPay(it.cost)){SND.bad();return}earn(-it.cost,null);S.g.spent=(S.g.spent||0)+it.cost;onBuy(it.id);SND.fan();FX.confetti&&0;banner(`${it.e} ${it.n}!`);save()};grid.appendChild(b)});
+  box.appendChild(grid);return modal(box,[['닫기','ghost']]);
+}
+function missionBox(){const m=S.g.mis;if(!m)return null;return h('div','mission'+(m.done?' done':''),`🎯 <b>오늘의 미션</b> ${m.t} <span>보상 ${won(m.r)} · ⭐+5</span>`)}
+function setMission(pool){if(!pool||!pool.length){S.g.mis=null;return}const k=Math.floor(rnd()*pool.length);const m=pool[k];S.g.mis={k,t:m.t,r:m.r||D.bonus*3,done:false}}
+function forecastText(){return S.g.fwx?`🔮 내일 예보: <b>${S.g.fwx}</b>`:''}
 /* ── 흐름 ── */
 let G;   // 게임 모듈
-function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();save()}}
+function ensureDay(){rnd=RNG(S.seed+S.day*7919);if(!S.g.inited){G.init();S.g.inited=true}if(S.g.mDay!==S.day){S.g.mDay=S.day;G.newDay();if(G.missions)setMission(G.missions());save()}}
 function intro(){
   ensureDay();setTime(.35);clouds(3);G.scene();
   const c=h('div','card');
@@ -235,9 +256,12 @@ async function runDay(){
   $('#panel').querySelectorAll('button').forEach(b=>b.disabled=true);
   const rep=await G.day();               // 애니메이션 + 결과 계산
   setTime(.95);await wait(500);
+  const rent=Math.min(rentToday(),Math.max(0,S.money));if(rentToday()){earn(-rent,null);rep.lines.push(['🏠 오늘 임대료'+(rent<rentToday()?' (돈이 모자라 일부만)':''),'−'+won(rent),'#e04848']);rep.net-=rent}
+  let misOk=false;if(S.g.mis&&!S.g.mis.done&&G.missions){const pool=G.missions();const m=pool[S.g.mis.k];if(m&&m.test(rep)){misOk=true;S.g.mis.done=true;rep.lines.push(['🎯 미션 성공! '+S.g.mis.t,'+'+won(S.g.mis.r),'#7048e8'])}else rep.lines.push(['🎯 미션 실패',S.g.mis.t,'#adb5bd'])}
   const lines=rep.lines.map(([k,v,c])=>`<span>${k}</span><b style="color:${c||'inherit'}">${v}</b>`).join('');
   const net=rep.net;
   await modal(`<div class="big">${rep.emoji||'🌙'}</div><h2>${S.day}일째 결산</h2><div class="rep">${lines}<span class="tot">오늘 남은 돈</span><b class="tot" style="color:${net>=0?'#1f9d55':'#e04848'}">${net>=0?'+':''}${won(net)}</b></div>${rep.note?`<div class="hint">${rep.note}</div>`:''}`,[['장부 쓰러 가기 ✏️','go']]);
+  if(misOk){earn(S.g.mis.r,$('#hMoney'));S.rep=Math.min(100,S.rep+5);FX.confetti();SND.fan();hud()}
   const lq=G.ledger(rep);
   if(lq){const ok=await ask(Object.assign({title:'📒 오늘의 장부',reward:'⭐+3 · '+won(D.bonus)},lq));if(ok){S.rep=Math.min(100,S.rep+3);earn(D.bonus,$('#hMoney'))}}
   const kq=(D.quiz&&D.quiz.length&&S.day%2===0)?D.quiz[(S.day/2-1)%D.quiz.length]:null;
@@ -267,6 +291,7 @@ function markDone(){try{const id=GAME+'@'+LV;if(localStorage.getItem('class-done
 </script>
 <script>
 /* 🐾 동물 보호소 */
+const F=new Set(D.feat||[]);
 const SPECIES=[{sp:'dog',e:'🐶',n:'강아지'},{sp:'cat',e:'🐱',n:'고양이'},{sp:'rabbit',e:'🐰',n:'토끼'},{sp:'hamster',e:'🐹',n:'햄스터'},{sp:'bird',e:'🦜',n:'앵무새'},{sp:'turtle',e:'🐢',n:'거북'}];
 const NAMES=['뭉치','콩이','보리','초코','두부','별이','망고','하늘','구름','쿠키','모카','호두','감자','단비','나비','사랑','토리','찹쌀','몽이','라떼'];
 const SIZE={dog:['큰','작은'],cat:['작은'],rabbit:['작은'],hamster:['작은'],bird:['작은'],turtle:['작은']};
@@ -279,39 +304,41 @@ const WISH=[
   {t:'털 알레르기가 있어요. <b>털이 없는 동물</b>을 원해요.',ok:a=>a.sp==='turtle'||a.sp==='bird'},
   {t:'<b>강아지</b>와 산책하는 게 꿈이에요!',ok:a=>a.sp==='dog'},
   {t:'집이 좁아요. <b>작고 조용한 동물</b>이면 좋겠어요.',ok:a=>a.size==='작은'&&a.per==='조용한'},
-];
+  {t:'처음 키워 봐요. <b>훈련받은 동물</b>이면 좋겠어요.',ok:a=>a.trained,feat:'train'},
+  {t:'<b>훈련받은 활발한 강아지</b>와 공놀이하고 싶어요!',ok:a=>a.trained&&a.sp==='dog'&&a.per==='활발한',feat:'train'},
+].filter(w=>!w.feat||F.has(w.feat));
 const FAMS=['👨‍👩‍👧','👩‍👦','👴','👨‍👩‍👦‍👦','👩‍👧','🧑‍🦰'];
 const GAMEDEF={
-  init(){S.g.an=[];S.g.fam=[];S.g.adopted=0;S.g.wrong=0;S.g.uid=0;S.g.sel=null;S.g.helped=0},
+  init(){const g=S.g;g.an=[];g.fam=[];g.adopted=0;g.wrong=0;g.uid=0;g.sel=null;g.up={play:0,feeder:0,vol:0,kennel:0};g.promo=0;g.ev=null},
+  kennels(){return D.kennels+2*S.g.up.kennel},
   newDay(){
-    const g=S.g;g.en=D.energy;g.spent=0;g.don=0;g.adToday=0;g.sel=null;g.actions=0;
-    // 밤사이 변화 (첫날 제외)
-    if(S.day>1)g.an.forEach(a=>{a.food=Math.max(0,a.food-ri(28,40));a.clean=Math.max(0,a.clean-ri(15,25));a.joy=Math.max(0,a.joy-ri(15,25));a.days++;
+    const g=S.g;g.en=D.energy+3*g.up.vol;g.spent=0;g.don=0;g.adToday=0;g.sel=null;g.ev=null;g.adDon=0;
+    if(F.has('events')&&S.day>1){const e=rnd();g.ev=e<.12?'storm':e<.24?'drive':null}
+    if(S.day>1)g.an.forEach(a=>{a.food=Math.max(0,a.food-Math.round(ri(28,40)*(g.up.feeder?.6:1)));a.clean=Math.max(0,a.clean-ri(15,25));a.joy=Math.max(0,a.joy-Math.round(ri(15,25)*(g.up.play?.5:1)));a.days++;
       if(!a.sick&&rnd()<(a.clean<40?.45:a.food<30?.3:D.sickP))a.sick=pick(D.sym).k});
-    // 새 동물
-    const n=Math.min(D.kennels-g.an.length,S.day===1?D.first:ri(D.arrive[0],D.arrive[1]));
-    for(let i=0;i<n;i++){const s=pick(SPECIES);g.an.push({id:++g.uid,sp:s.sp,e:s.e,kind:s.n,name:pick(NAMES),size:pick(SIZE[s.sp]),per:pick(['활발한','조용한']),food:ri(20,45),clean:ri(20,45),joy:ri(25,45),sick:rnd()<.35?pick(D.sym).k:null,days:0,isNew:true})}
-    // 가족 손님 (입양 가능한 동물에 맞는 바람이 하나 이상 있게)
-    g.fam=[];const nf=S.day===1?0:ri(D.fam[0],D.fam[1]);
-    for(let i=0;i<nf;i++){let wi;const cand=WISH.map((w,k)=>k).filter(k=>g.an.some(a=>WISH[k].ok(a)));wi=cand.length&&rnd()<.85?pick(cand):ri(0,WISH.length-1);g.fam.push({w:wi,f:pick(FAMS),done:false})}
-    // 하루 기부금
-    g.don=Math.round(S.rep*D.daily/50/D.M)*D.M;
+    const n=Math.min(this.kennels()-g.an.length,S.day===1?D.first:ri(D.arrive[0],D.arrive[1])+(g.ev==='storm'?2:0));
+    for(let i=0;i<n;i++){const s=pick(SPECIES);g.an.push({id:++g.uid,sp:s.sp,e:s.e,kind:s.n,name:pick(NAMES),size:pick(SIZE[s.sp]),per:pick(['활발한','조용한']),food:ri(20,45),clean:ri(20,45),joy:ri(25,45),sick:rnd()<.35?pick(D.sym).k:null,days:0,isNew:true,trained:false})}
+    g.fam=[];const nf=S.day===1?0:ri(D.fam[0],D.fam[1])+(g.promo?1:0);g.promo=0;
+    for(let i=0;i<nf;i++){const cand=WISH.map((w,k)=>k).filter(k=>g.an.some(a=>WISH[k].ok(Object.assign({},a,{trained:a.trained||F.has('train')}))));const wi=cand.length&&rnd()<.85?pick(cand):ri(0,WISH.length-1);g.fam.push({w:wi,f:pick(FAMS),done:false})}
+    g.don=Math.round(S.rep*D.daily/50/D.M)*D.M*(g.ev==='drive'?2:1);
   },
   ready(a){return a.food>=D.ready&&a.clean>=D.ready&&a.joy>=D.ready&&!a.sick},
-  how(){return[['🍖','밥 주기 · 🛁 씻기 · 🎾 놀아 주기'],['🩺','아픈 동물은 증상을 보고 알맞게 치료해요'],['❤️','건강하고 행복해지면 입양 준비 끝!'],['👨‍👩‍👧','가족의 바람에 꼭 맞는 동물을 짝지어 줘요']]},
+  how(){const a=[['🍖','밥 주기 · 🛁 씻기 · 🎾 놀아 주기'],['🩺','아픈 동물은 증상을 보고 알맞게 치료해요'],['❤️','건강하고 행복해지면 입양 준비 끝!'],['👨‍👩‍👧','가족의 바람에 꼭 맞는 동물을 짝지어 줘요']];
+    if(F.has('train'))a.push(['🎓','훈련받은 동물은 감사 기부금이 1.5배!']);if(this.shopItems().length)a.push(['🛒','상점에서 놀이터·자원봉사자 등을 들여요']);return a},
   goalText(){return `${D.target}마리 입양 보내기`},
   progress(){return S.g.adopted/D.target},
   won(){return S.g.adopted>=D.target&&S.money>=0},
-  done(){return false},
   summary(){return[['입양 보낸 동물',S.g.adopted+'마리'],['목표',D.target+'마리'],['남은 돈',won(S.money)],['잘못 짝지은 횟수',S.g.wrong+'번']]},
   bar(v,c){return `<i class="sb"><u style="width:${v}%;background:${c}"></u></i>`},
   scene(){
     const w=$('#world'),g=S.g;w.innerHTML='';
     $('#ground').style.background='linear-gradient(#f3e3c3,#ead3a8 40%,#e2c793)';
     w.appendChild(h('div','shelterhouse','🏠<small>행복 보호소</small>'));
-    const k=h('div','kennels');
-    for(let i=0;i<D.kennels;i++){const a=g.an[i];const d=h('button','kennel'+(a&&g.sel===a.id?' sel':''),'');d.dataset.i=i;
-      if(a){d.dataset.id=a.id;d.innerHTML=`<span class="pet ${a.sick?'sickpet':'bob'}" style="animation-delay:${-i*.3}s">${a.e}</span>${a.sick?'<span class="tag">🤒</span>':this.ready(a)?'<span class="tag heart">❤️</span>':''}<small>${a.name}</small><div class="bars">${this.bar(a.food,'#ff9f43')}${this.bar(a.clean,'#4d96ff')}${this.bar(a.joy,'#ff6b9a')}</div>`;
+    const deco=[];if(g.up.play)deco.push('🛝');if(g.up.feeder)deco.push('🍽️');if(g.up.vol)deco.push('🙋'.repeat(g.up.vol));if(deco.length)w.appendChild(h('div','staffbar',deco.join(' ')));
+    if(g.ev)w.appendChild(h('div','evflag',g.ev==='storm'?'🌧️ 태풍! 동물이 많이 왔어요':'💝 기부의 날!'));
+    const k=h('div','kennels');k.style.gridTemplateColumns=`repeat(${Math.min(this.kennels(),window.innerWidth<620?3:this.kennels()>6?5:6)},1fr)`;
+    for(let i=0;i<this.kennels();i++){const a=g.an[i];const d=h('button','kennel'+(a&&g.sel===a.id?' sel':''),'');d.dataset.i=i;
+      if(a){d.dataset.id=a.id;d.innerHTML=`<span class="pet ${a.sick?'sickpet':'bob'}" style="animation-delay:${-i*.3}s">${a.e}</span>${a.sick?'<span class="tag">🤒</span>':this.ready(a)?'<span class="tag heart">❤️</span>':''}${a.trained?'<span class="tag2">🎓</span>':''}<small>${a.name}</small><div class="bars">${this.bar(a.food,'#ff9f43')}${this.bar(a.clean,'#4d96ff')}${this.bar(a.joy,'#ff6b9a')}</div>`;
         if(a.isNew){d.classList.add('popin');a.isNew=false}}
       else d.innerHTML='<span class="emptyk">빈 집</span>';
       d.onclick=()=>{if(!a)return;g.sel=a.id;SND.click();this.scene();this.panel($('#panel'))};k.appendChild(d)}
@@ -321,78 +348,104 @@ const GAMEDEF={
   },
   panel(el){
     el.innerHTML='';const g=S.g;const a=g.an.find(x=>x.id===g.sel);
-    el.appendChild(h('div','hint',`⚡ 오늘 할 수 있는 일 <b>${g.en}번</b> 남음 · 🏠 보호 중 ${g.an.length}마리 · ❤️ 입양 ${g.adopted}/${D.target}마리 · 🍖 밥 1번 ${won(D.food)} · 💊 약 ${won(D.med)}`));
+    el.appendChild(h('div','hint',`⚡ 오늘 할 수 있는 일 <b>${g.en}번</b> 남음 · 🏠 ${g.an.length}/${this.kennels()}마리 · ❤️ 입양 ${g.adopted}/${D.target}마리 · 🍖 밥 ${won(D.food)} · 💊 약 ${won(D.med)}${rentToday()?` · 🏠 임대료 ${won(rentToday())}`:''}`));
+    const mb=missionBox();if(mb)el.appendChild(mb);
     if(LV==='easy')el.appendChild(h('div','tip','💡 동물을 눌러 고른 다음 돌봐 주세요. 막대 세 개(🟧밥 · 🟦깨끗함 · 🩷기분)가 모두 길어지고 아프지 않으면 ❤️가 떠요. 그다음 위쪽 가족을 눌러 짝지어 주세요!'));
-    if(a){const info=h('div','petinfo',`<span class="big" style="font-size:48px">${a.e}</span><div><b class="jua" style="font-size:22px">${a.name}</b> · ${a.size} ${a.kind} · ${a.per} 성격<br>🍖 ${a.food} · 🛁 ${a.clean} · 🎾 ${a.joy}${a.sick?` · <b style="color:#e03131">🤒 ${D.sym.find(s=>s.k===a.sick).t}</b>`:''}</div>`);el.appendChild(info);
-      const row=h('div','row');
-      [['feed','🍖','밥 주기',1],['wash','🛁','씻기',1],['play','🎾','놀아 주기',1],['vet','🩺','진료하기',2]].forEach(([k,e,n,c])=>{const b=h('button','tool',`<b>${e}</b>${n}<small>⚡${c}${k==='feed'?' · '+won(D.food):k==='vet'?' · '+won(D.med):''}</small>`);b.dataset.a=k;
-        if(g.en<c||(k==='vet'&&!a.sick))b.disabled=true;b.onclick=()=>this.act(k,a);row.appendChild(b)});el.appendChild(row)}
+    if(a){const info=h('div','petinfo',`<span class="big" style="font-size:48px">${a.e}</span><div><b class="jua" style="font-size:22px">${a.name}</b> · ${a.size} ${a.kind} · ${a.per} 성격${a.trained?' · 🎓 훈련 완료':''}<br>🍖 ${a.food} · 🛁 ${a.clean} · 🎾 ${a.joy}${a.sick?` · <b style="color:#e03131">🤒 ${D.sym.find(s=>s.k===a.sick).t}</b>`:''}</div>`);el.appendChild(info);
+      const row=h('div','row');const acts=[['feed','🍖','밥 주기',1],['wash','🛁','씻기',1],['play','🎾','놀아 주기',1],['vet','🩺','진료하기',2]];if(F.has('train'))acts.push(['train','🎓','훈련하기',2]);
+      acts.forEach(([k,e,n,c])=>{const b=h('button','tool',`<b>${e}</b>${n}<small>⚡${c}${k==='feed'?' · '+won(D.food):k==='vet'?' · '+won(D.med):''}</small>`);b.dataset.a=k;
+        if(g.en<c||(k==='vet'&&!a.sick)||(k==='train'&&a.trained))b.disabled=true;b.onclick=()=>this.act(k,a);row.appendChild(b)});el.appendChild(row)}
     else el.appendChild(h('div','hint','👆 위에서 돌봐 줄 동물을 눌러 고르세요.'));
-    const go=h('button','btn go big','🌙 하루 마치기 ▶');go.id='dayBtn';go.onclick=()=>runDay();const r2=h('div','row');r2.style.marginTop='10px';r2.appendChild(go);el.appendChild(r2);
+    const r2=h('div','row');r2.style.marginTop='10px';
+    if(this.shopItems().length){const sb=h('button','btn','🛒 상점');sb.id='shopBtn';sb.onclick=()=>openShop(this.shopItems(),id=>this.buy(id)).then(()=>{this.scene();this.panel($('#panel'))});r2.appendChild(sb)}
+    const go=h('button','btn go big','🌙 하루 마치기 ▶');go.id='dayBtn';go.onclick=()=>runDay();r2.appendChild(go);el.appendChild(r2);
   },
+  shopItems(){const g=S.g,it=[];
+    if(F.has('playground'))it.push({id:'play',e:'🛝',n:'놀이터',d:'밤사이 기분이 덜 떨어져요',cost:D.playCost,lv:g.up.play,max:1});
+    if(F.has('volunteer'))it.push({id:'vol',e:'🙋',n:'자원봉사자',d:`매일 할 일 +3번 · 하루 ${won(D.vwage)}`,cost:D.volCost,lv:g.up.vol,max:2});
+    if(F.has('feeder'))it.push({id:'feeder',e:'🍽️',n:'자동 급식기',d:'밤사이 배고픔이 덜해요',cost:D.feederCost,lv:g.up.feeder,max:1});
+    if(F.has('promo'))it.push({id:'promo',e:'📢',n:'입양 홍보',d:'내일 가족이 한 팀 더 와요',cost:D.promoCost,lv:g.promo,max:1});
+    if(F.has('expand'))it.push({id:'kennel',e:'🏠',n:'보호소 넓히기',d:'동물 집 +2칸',cost:D.expandCost,lv:g.up.kennel,max:2});
+    return it},
+  buy(id){const g=S.g;if(id==='promo')g.promo=1;else g.up[id]++;if(id==='vol')g.en+=3},
   petEl(a){return document.querySelector(`.kennel[data-id="${a.id}"]`)},
   async act(k,a){
     const g=S.g,el=this.petEl(a);
     if(k==='feed'){if(!canPay(D.food)){SND.bad();FX.floatOn(el,'돈이 모자라요','#e04848');return}earn(-D.food,null);g.spent+=D.food;a.food=Math.min(100,a.food+45);g.en--;SND.pop();FX.burstOn(el,['🍖','🦴','😋'],7)}
     if(k==='wash'){a.clean=Math.min(100,a.clean+50);g.en--;SND.splash();FX.burstOn(el,['🫧','🫧','✨','🧼'],10)}
     if(k==='play'){a.joy=Math.min(100,a.joy+45);g.en--;SND.good();FX.burstOn(el,['🎾','💖','💕'],8)}
+    if(k==='train'){a.trained=true;g.en-=2;a.joy=Math.min(100,a.joy+10);SND.fan();FX.burstOn(el,['🎓','⭐','✨'],10);FX.floatOn(el,'앉아! 손! 훈련 완료!','#7048e8')}
     if(k==='vet'){if(!canPay(D.med)){SND.bad();FX.floatOn(el,'돈이 모자라요','#e04848');return}
       const sy=D.sym.find(s=>s.k===a.sick);g.en-=2;earn(-D.med,null);g.spent+=D.med;this.scene();this.panel($('#panel'));
       const ok=await ask({title:'🩺 진료실',pic:a.e+'🤒',text:`${a.name}의 증상: <b>${sy.t}</b><br>어떻게 돌봐 줘야 할까요?`,ans:sy.a,opts:shuffle([sy.a,...sy.w])});
       if(ok){a.sick=null;a.joy=Math.min(100,a.joy+10);FX.burstOn(this.petEl(a)||$('#world'),['💊','✨','💚'],9);FX.floatOn(this.petEl(a)||$('#world'),'다 나았어요!','#2f9e44')}}
-    g.actions++;if(this.ready(a)){const e=this.petEl(a);if(e)FX.burstOn(e,['❤️','💖'],6)}
+    if(this.ready(a)){const e=this.petEl(a);if(e)FX.burstOn(e,['❤️','💖'],6)}
     this.scene();this.panel($('#panel'));save();
   },
   async adopt(i,btn){
     const g=S.g,f=g.fam[i];const ready=g.an.filter(a=>this.ready(a));
     if(!ready.length){SND.bad();FX.floatOn(btn,'아직 입양 준비된 동물이 없어요 (❤️)','#e04848');return}
     const box=h('div',''),W=WISH[f.w];box.innerHTML=`<div class="big">${f.f}</div><h2>입양 상담</h2><div class="q">"${W.t}"</div><div class="hint">❤️ 입양 준비가 된 동물 중에서 골라요</div>`;
-    const row=h('div','row');ready.forEach(a=>{const b=h('button','tool',`<b>${a.e}</b>${a.name}<small>${a.size} ${a.kind}</small><small>${a.per}</small>`);b.dataset.id=a.id;b.onclick=()=>{closeModal();this.match(i,a)};row.appendChild(b)});
+    const row=h('div','row');ready.forEach(a=>{const b=h('button','tool',`<b>${a.e}</b>${a.name}<small>${a.size} ${a.kind}</small><small>${a.per}${a.trained?' · 🎓':''}</small>`);b.dataset.id=a.id;b.onclick=()=>{closeModal();this.match(i,a)};row.appendChild(b)});
     box.appendChild(row);modal(box,[['다음에','ghost']]);
   },
   async match(i,a){
     const g=S.g,f=g.fam[i],W=WISH[f.w];const fe=document.querySelector(`.fam[data-f="${i}"]`);
     if(W.ok(a)){f.done=true;g.adopted++;g.adToday++;g.an=g.an.filter(x=>x.id!==a.id);if(g.sel===a.id)g.sel=null;
       SND.fan();const pe=this.petEl(a);if(pe)FX.burstOn(pe,['❤️','💖','💕','🏡'],14);if(fe)FX.burstOn(fe,['❤️','🎉','💖'],12);
-      const don=D.donate;S.rep=Math.min(100,S.rep+6);banner(`${a.e} ${a.name} 입양 성공!`);await wait(400);earn(don,fe||$('#hMoney'));
-      const walk=h('div','walkout',`${f.f}${a.e}💕`);$('#world').appendChild(walk);await wait(1200);walk.remove();
+      const don=Math.round(D.donate*(a.trained?1.5:1)/D.M)*D.M;g.adDon+=don;S.rep=Math.min(100,S.rep+6);banner(`${a.e} ${a.name} 입양 성공!`);await wait(400);earn(don,fe||$('#hMoney'));
+      if(!FAST){const walk=h('div','walkout',`${f.f}${a.e}💕`);$('#world').appendChild(walk);await wait(1200);walk.remove()}
       if(g.adopted>=D.target)FX.confetti()}
     else{g.wrong++;S.rep=Math.max(0,S.rep-5);SND.bad();if(fe){FX.shake(fe);FX.floatOn(fe,'바람과 맞지 않아요 😢','#e04848')}}
     this.scene();this.panel($('#panel'));hud();save();
   },
+  missions(){return[
+    {t:'오늘 1마리 이상 입양 보내기',test:r=>r.ad>=1},
+    {t:'아픈 동물 없이 하루 마치기',test:r=>r.sickN===0},
+    {t:'모든 동물 배부르게 (밥 60 이상)',test:r=>r.fullAll},
+    {t:'❤️ 입양 준비된 동물 2마리 만들기',test:r=>r.readyN+r.ad>=2},
+  ]},
   async day(){
     const g=S.g;
+    const sickN=g.an.filter(a=>a.sick).length,fullAll=g.an.length>0&&g.an.every(a=>a.food>=60),readyN=g.an.filter(a=>this.ready(a)).length;
     for(let t=.3;t<=.8;t+=.1){setTime(t);await wait(220)}
     document.querySelectorAll('.pet').forEach(p=>p.classList.add('wiggle'));
     const left=g.fam.filter(f=>!f.done).length;if(left){S.rep=Math.max(0,S.rep-2*left)}
     g.fam=[];this.scene();
-    const sickN=g.an.filter(a=>a.sick).length,hungry=g.an.filter(a=>a.food<20).length;if(hungry)S.rep=Math.max(0,S.rep-3*hungry);
-    earn(g.don,document.querySelector('.shelterhouse'));await wait(500);
-    const lines=[['💝 오늘 들어온 기부금',won(g.don),'#1f9d55']];
-    if(g.adToday)lines.push([`🏡 입양 성공 ${g.adToday}마리 (감사 기부금 포함)`,'+'+won(g.adToday*D.donate),'#1f9d55']);
-    if(g.spent)lines.push(['🍖 밥·약에 쓴 돈','−'+won(g.spent),'#e04848']);
+    const hungry=g.an.filter(a=>a.food<20).length;if(hungry)S.rep=Math.max(0,S.rep-3*hungry);
+    const wages=g.up.vol*D.vwage;
+    earn(g.don,document.querySelector('.shelterhouse'));await wait(400);if(wages)earn(-wages,null);
+    const lines=[[`💝 오늘 들어온 기부금${g.ev==='drive'?' (기부의 날 ×2)':''}`,won(g.don),'#1f9d55']];
+    if(g.adToday)lines.push([`🏡 입양 성공 ${g.adToday}마리 감사 기부금`,'+'+won(g.adDon),'#1f9d55']);
+    if(wages)lines.push(['🙋 자원봉사자 간식비','−'+won(wages),'#e04848']);
+    if(g.spent)lines.push(['🍖 밥·약·상점에 쓴 돈','−'+won(g.spent),'#e04848']);
     lines.push(['🐾 보호 중인 동물',g.an.length+'마리']);if(sickN)lines.push(['🤒 아픈 동물',sickN+'마리','#e04848']);
-    const r={lines,net:g.don+g.adToday*D.donate-g.spent,emoji:g.adToday?'💖':'🌙',note:left?`입양 상담을 못 한 가족 ${left}팀이 그냥 돌아갔어요.`:hungry?'배고픈 동물이 있어요. 내일은 밥을 꼭 챙겨 주세요!':'',spent:g.spent,ad:g.adToday,n:g.an.length,feeds:Math.round(g.spent/D.food)};
+    const r={lines,net:g.don+g.adDon-g.spent-wages,emoji:g.adToday?'💖':'🌙',note:left?`입양 상담을 못 한 가족 ${left}팀이 그냥 돌아갔어요.`:hungry?'배고픈 동물이 있어요. 내일은 밥을 꼭 챙겨 주세요!':'',spent:g.spent+wages,ad:g.adToday,n:g.an.length,sickN,fullAll,readyN};
     save();return r;
   },
   ledger(r){
     const n=S.g.an.length;
     if(GRADE===1){const a=n+r.ad,b=r.ad;if(b>0)return{text:`보호소에 동물이 <b>${a}마리</b> 있었어요. 오늘 <b>${b}마리</b>가 입양을 갔어요.<br>남은 동물은 몇 마리일까요?`,ans:a-b,unit:'마리',pic:'🐶🐱🐰'};
-      return{text:`오늘 강아지 밥을 <b>3번</b>, 고양이 밥을 <b>4번</b> 줬어요. 밥을 모두 몇 번 줬을까요?`,ans:7,unit:'번',pic:'🍖'}}
+      const x=ri(2,6),y=ri(2,6);return{text:`오늘 강아지 밥을 <b>${x}번</b>, 고양이 밥을 <b>${y}번</b> 줬어요. 밥을 모두 몇 번 줬을까요?`,ans:x+y,unit:'번',pic:'🍖'}}
     if(GRADE===2){const k=ri(2,9),c=ri(2,5);return{text:`간식 한 봉지에 뼈다귀 간식이 <b>${c}개</b>씩 들어 있어요. <b>${k}봉지</b>에는 모두 몇 개일까요?`,ans:k*c,unit:'개',pic:'🦴',h:`${c}단 곱셈구구`}}
-    if(GRADE===3){const t=Math.max(2,Math.round(r.spent/D.food)||3);return{text:`밥 한 번에 <b>${josa(won(D.food),'이','가')}</b> 들어요. 밥을 <b>${t}번</b> 주면 모두 얼마일까요?`,ans:t*D.food,unit:U,h:`${D.food} × ${t}`}}
-    if(GRADE===4){if(r.net<0)return{text:`밥 한 번에 <b>${josa(won(D.food),'이','가')}</b> 들어요. 동물 <b>${Math.max(2,n)}마리</b>에게 하루에 <b>2번</b>씩, <b>30일</b> 동안 밥을 주면 모두 얼마일까요?`,ans:D.food*Math.max(2,n)*2*30,unit:U};return{text:`오늘 들어온 돈은 <b>${won(r.net+r.spent)}</b>, 쓴 돈은 <b>${josa(won(r.spent),'이에요','예요')}</b>. 오늘 남은 돈(들어온 돈 − 쓴 돈)은?`,ans:r.net,unit:U}}
+    if(GRADE===3){const t=ri(3,9);return{text:`밥 한 번에 <b>${josa(won(D.food),'이','가')}</b> 들어요. 밥을 <b>${t}번</b> 주면 모두 얼마일까요?`,ans:t*D.food,unit:U,h:`${D.food} × ${t}`}}
+    if(GRADE===4){if(r.net<0)return{text:`밥 한 번에 <b>${josa(won(D.food),'이','가')}</b> 들어요. 동물 <b>${Math.max(2,n)}마리</b>에게 하루에 <b>2번</b>씩, <b>30일</b> 동안 밥을 주면 모두 얼마일까요?`,ans:D.food*Math.max(2,n)*2*30,unit:U};
+      return{text:`오늘 들어온 돈은 <b>${won(r.net+r.spent)}</b>, 쓴 돈은 <b>${josa(won(r.spent),'이에요','예요')}</b>. 오늘 남은 돈(들어온 돈 − 쓴 돈)은?`,ans:r.net,unit:U}}
     if(GRADE===5){const kg=[1.2,1.8,2.4,3.6][ri(0,3)],m=[2,3,4,6][ri(0,3)];const ans=Math.round(kg/m*100)/100;return{text:`사료 <b>${kg}kg</b>을 동물 <b>${m}마리</b>에게 똑같이 나눠 주면 한 마리에 몇 kg일까요?`,ans,unit:'kg',opts:shuffle([...new Set([ans,Math.round(kg*m*10)/10,Math.round((ans+.1)*100)/100])]),h:`${kg} ÷ ${m}`}}
     const all=S.g.adopted+n;if(all>0&&S.g.adopted>0&&(S.g.adopted*100)%all===0)return{text:`지금까지 보호소에 온 동물 <b>${all}마리</b> 중 <b>${S.g.adopted}마리</b>가 입양을 갔어요.<br>입양 간 동물은 전체의 몇 %일까요?`,ans:S.g.adopted*100/all,unit:'%',h:'입양 수 ÷ 전체 × 100'};
     const u=[4,5,6,8,10,12][ri(0,5)];return{text:`사료 <b>20kg</b> 중에서 <b>${u}kg</b>을 썼어요. 쓴 사료는 전체의 몇 %일까요?`,ans:u*5,unit:'%',h:`${u} ÷ 20 × 100`};
   },
   bot(){
-    const g=S.g;
-    const order=g.an.slice().sort((a,b)=>(this.score(b))-(this.score(a)));
+    const g=S.g,left=D.days-S.day;
+    const tryBuy=(id,cost,ok)=>{if(ok&&canPay(cost)&&S.money-cost>D.food*12){earn(-cost,null);g.spent+=cost;this.buy(id);return true}return false};
+    if(left>=3){tryBuy('vol',D.volCost,F.has('volunteer')&&g.up.vol<2);tryBuy('play',D.playCost,F.has('playground')&&!g.up.play);tryBuy('feeder',D.feederCost,F.has('feeder')&&!g.up.feeder);
+      tryBuy('kennel',D.expandCost,F.has('expand')&&g.up.kennel<1&&g.an.length>=this.kennels()-1)}
+    const order=g.an.slice().sort((a,b)=>this.score(b)-this.score(a));
     for(const a of order){if(g.en<=0)break;
-      if(a.sick&&g.en>=2&&canPay(D.med)){const sy=D.sym.find(s=>s.k===a.sick);g.en-=2;earn(-D.med,null);g.spent+=D.med;a.sick=null;continue}
-      for(const[k,f]of[['food','feed'],['clean','wash'],['joy','play']]){while(a[k]<D.ready&&g.en>0&&(k!=='food'||canPay(D.food))){g.en--;if(k==='food'){earn(-D.food,null);g.spent+=D.food;a.food=Math.min(100,a.food+45)}else a[k]=Math.min(100,a[k]+(k==='clean'?50:45))}}}
-    g.fam.forEach((f,i)=>{if(f.done)return;const a=g.an.find(x=>this.ready(x)&&WISH[f.w].ok(x));if(a){f.done=true;g.adopted++;g.adToday++;g.an=g.an.filter(x=>x.id!==a.id);S.rep=Math.min(100,S.rep+6);earn(D.donate,null)}});
+      if(a.sick&&g.en>=2&&canPay(D.med)){g.en-=2;earn(-D.med,null);g.spent+=D.med;a.sick=null;continue}
+      for(const k of['food','clean','joy']){while(a[k]<D.ready&&g.en>0&&(k!=='food'||canPay(D.food))){g.en--;if(k==='food'){earn(-D.food,null);g.spent+=D.food;a.food=Math.min(100,a.food+45)}else a[k]=Math.min(100,a[k]+(k==='clean'?50:45))}}
+      if(F.has('train')&&!a.trained&&this.ready(a)&&g.en>=2&&g.fam.some(f=>!f.done&&WISH[f.w].ok(Object.assign({},a,{trained:true}))&&!WISH[f.w].ok(a))){a.trained=true;g.en-=2}}
+    g.fam.forEach((f,i)=>{if(f.done)return;const a=g.an.find(x=>this.ready(x)&&WISH[f.w].ok(x));if(a){f.done=true;g.adopted++;g.adToday++;g.an=g.an.filter(x=>x.id!==a.id);S.rep=Math.min(100,S.rep+6);const don=Math.round(D.donate*(a.trained?1.5:1)/D.M)*D.M;g.adDon+=don;earn(don,null)}});
     this.scene();this.panel($('#panel'));save();
   },
   score(a){let s=0;if(a.sick)s-=20;s-=(Math.max(0,D.ready-a.food)+Math.max(0,D.ready-a.clean)+Math.max(0,D.ready-a.joy))/10;return s},
