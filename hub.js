@@ -66,8 +66,13 @@ function joinFromURL(){try{const q=new URLSearchParams(location.search).get('joi
 function joinLink(base,url,cls){const s=btoa(unescape(encodeURIComponent(JSON.stringify({u:url,c:cls})))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');return base+'?join='+s}
 function summary(){const p=profile()||{};const s=stats();const P=points();return{name:p.name||'',num:+p.num||0,av:p.av||0,acc:p.acc||'',title:p.title||s.title,xp:s.xp,level:s.level,ndone:s.ndone,esc:s.byCat.esc,hard:s.nhard,badges:s.badges,missions:s.missions,bal:s.bal,spent:P.spent.slice(-30),collect:s.collect,total:s.total,recent:s.recent.map(r=>r.id+'@'+r.lv),grade:window.HUB_GRADE,ts:Date.now()}}
 async function push(){const c=getCfg();const p=profile();if(!c.url||!p)return{ok:false,off:true};try{const r=await fetch(c.url,{method:'POST',body:JSON.stringify({a:'push',c:c.cls||'class',n:+p.num,d:summary()})});return await r.json()}catch(e){return{ok:false,err:String(e)}}}
-async function pull(){const c=getCfg();if(!c.url)return null;try{const r=await fetch(c.url+(c.url.includes('?')?'&':'?')+'a=pull&c='+encodeURIComponent(c.cls||'class')+'&t='+Date.now());const j=await r.json();
-  const p=profile();if(p&&j&&j.grants){const P=points();P.sync=+(j.grants[String(+p.num)]||0);LS.set('hub-points',P)}if(j&&j.cfg)LS.set('hub-classcfg',j.cfg);return j}catch(e){return null}}
+async function pull(){const c=getCfg();if(!c.url)return null;let j=null,why='';
+  /* 1) POST로 가져오기 (선생님 연결 테스트가 되는 방식과 같아요) */
+  try{const r=await fetch(c.url,{method:'POST',body:JSON.stringify({a:'pull',c:c.cls||'class'})});const t=await r.text();try{j=JSON.parse(t)}catch(e){why='POST 응답이 JSON이 아니에요'}}catch(e){why='POST '+e}
+  /* 2) 예전 서버 코드라면 GET으로 */
+  if(!j||!j.ok){try{const r=await fetch(c.url+(c.url.includes('?')?'&':'?')+'a=pull&c='+encodeURIComponent(c.cls||'class')+'&t='+Date.now());const t=await r.text();try{const g=JSON.parse(t);if(g&&g.ok)j=g;else if(!j)j=g}catch(e){why+=' / GET 응답이 JSON이 아니에요'}}catch(e){why+=' / GET '+e}}
+  if(!j)return{ok:false,msg:'서버 응답 없음 ('+why+')'};if(!j.ok)return j;
+  const p=profile();if(p&&j.grants){const P=points();P.sync=+(j.grants[String(+p.num)]||0);LS.set('hub-points',P)}if(j.cfg)LS.set('hub-classcfg',j.cfg);return j}
 async function post(body){const c=getCfg();if(!c.url)return{ok:false,off:true};try{const r=await fetch(c.url,{method:'POST',body:JSON.stringify(Object.assign({c:c.cls||'class'},body))});return await r.json()}catch(e){return{ok:false,err:String(e)}}}
 /* ── 학급 설정 기본값 ── */
 const DEF_MISSIONS=['친구 한 명을 진심으로 칭찬하기 💬','오늘 배운 것을 한 문장으로 말하기 📝','교실 바닥 쓰레기 3개 줍기 🧹','물 한 컵 마시고 스트레칭 1분 🧘','모르는 친구 도와주기 🤝','책 10쪽 읽기 📖','선생님께 질문 하나 하기 🙋','가족에게 고맙다고 말하기 💌','신발 정리하기 👟','오늘 기분을 그림으로 그리기 🎨'];
