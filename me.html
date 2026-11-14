@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>내 캐릭터 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--main:#f2c14e;--ink:#f4f1ff;--card:#22264a;--line:#363c6e}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -10%,color-mix(in srgb,var(--main) 32%,#171a33),#0e1022 70%) fixed;min-height:100vh;font-size:18px}
+h1,h2,h3,button,.jua{font-family:'Jua','Gowun Dodum',sans-serif;font-weight:400}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+.top{position:sticky;top:0;z-index:30;display:flex;gap:8px;align-items:center;padding:8px 14px;background:#0e1022d9;backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.top a{color:var(--ink);text-decoration:none;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 12px}
+.top .t{font-family:Jua;font-size:20px}.sp{flex:1}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:24px}
+.btn{background:var(--main);color:#14122a;border-radius:14px;padding:10px 18px;font-size:19px;box-shadow:0 4px 0 color-mix(in srgb,var(--main) 50%,#000)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+.btn.ghost{background:#2e3364;color:var(--ink);box-shadow:0 4px 0 #0008;border:2px solid var(--line)}
+.btn.sm{font-size:15px;padding:6px 12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{background:#0b0d1d;border:2px solid var(--line);border-radius:12px;padding:9px 12px;font-size:18px;width:100%}
+textarea{min-height:120px;resize:vertical}
+label{display:block;margin:10px 0 4px;opacity:.85}
+.grid{display:grid;gap:10px}.g2{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.g4{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.muted{opacity:.7}.center{text-align:center}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-block;background:#ffffff14;border:1px solid #ffffff2a;border-radius:999px;padding:3px 11px;font-size:15px;margin:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:#2e3364;border:2px solid var(--line);border-radius:14px;padding:9px 15px;font-size:18px}.tabs button.on{background:var(--main);color:#14122a;border-color:var(--main)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#000d;border:2px solid var(--main);border-radius:16px;padding:12px 22px;z-index:200;font-family:Jua;font-size:20px;animation:tin .3s}
+@keyframes tin{from{opacity:0;transform:translate(-50%,20px)}}
+.modal{position:fixed;inset:0;background:#000a;z-index:150;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .panel{max-width:640px;width:100%;max-height:92vh;overflow:auto}
+.big-code{font-family:Jua;font-size:clamp(28px,6vw,46px);letter-spacing:3px;background:#0b0d1d;border:3px dashed var(--main);border-radius:16px;padding:12px;text-align:center;word-break:break-all}
+.conf{position:fixed;top:-40px;z-index:300;font-size:26px;pointer-events:none;animation:fall 2.6s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+.hero{display:flex;gap:26px;align-items:center;flex-wrap:wrap}.heroav{padding:20px 10px}.heroinfo{flex:1;min-width:260px}
+.avb{font-size:34px;background:#2e3364;border:3px solid var(--line);border-radius:14px;padding:6px 0}.avb.on{border-color:var(--main);background:#3b4180}
+.badge{background:#ffffff0a;border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;opacity:.55}.badge.on{opacity:1;border-color:#ffd54f;background:#ffd54f14}.badge .be{font-size:46px}
+.dex{display:block;text-decoration:none;color:var(--ink);background:#ffffff08;border:2px solid var(--line);border-radius:16px;padding:10px;text-align:center;opacity:.6}.dex.on{opacity:1;border-color:var(--main)}.dex .de{font-size:40px}.dex .dn{font-size:15px;min-height:2.4em}.dex .ds span{color:#555;font-size:20px}.dex .ds span.y{color:#ffd54f}
+.accb{background:#2e3364;border:3px solid var(--line);border-radius:16px;padding:10px;color:var(--ink)}.accb.on{border-color:var(--main)}.accb:disabled{opacity:.4}
+.xpt{width:100%;border-collapse:collapse;margin-bottom:10px}.xpt td,.xpt th{border-bottom:1px solid var(--line);padding:8px;text-align:center}.xpt td:first-child{text-align:left}
+
+</style>
+<script src="hub-config.js"></script>
+<script>window.HUB_GRADE=6;window.HUB_GAMES=[{"id": "g6-airport", "cat": "esc", "e": "✈️", "t": "세계 일주 공항", "f": "g6-airport.html"}, {"id": "g6-body", "cat": "esc", "e": "🫀", "t": "인체 탐험 캡슐", "f": "g6-body.html"}, {"id": "g6-bank", "cat": "esc", "e": "🏦", "t": "은행 금고 대작전", "f": "g6-bank.html"}, {"id": "g6-moon", "cat": "esc", "e": "🌒", "t": "달빛 천문대", "f": "g6-moon.html"}, {"id": "g6-invent", "cat": "esc", "e": "💡", "t": "발명가의 전기 공방", "f": "g6-invent.html"}, {"id": "defense", "cat": "arc", "e": "🏰", "t": "계산 디펜스", "f": "defense.html"}, {"id": "race", "cat": "arc", "e": "🏎️", "t": "계산 레이싱 그랑프리", "f": "race.html"}, {"id": "idle", "cat": "arc", "e": "👑", "t": "꼬마 왕국 키우기", "f": "idle.html"}, {"id": "quiz-balloon", "cat": "quiz", "e": "🎈", "t": "정답 풍선 팡팡", "f": "balloon.html"}, {"id": "quiz-sort", "cat": "quiz", "e": "🏭", "t": "척척 분류 공장", "f": "sort.html"}, {"id": "quiz-tug", "cat": "quiz", "e": "🪢", "t": "우리 반 줄다리기 퀴즈", "f": "tug.html"}, {"id": "quiz-memory", "cat": "quiz", "e": "🃏", "t": "기억력 짝꿍 카드", "f": "memory.html"}, {"id": "quiz-ox", "cat": "quiz", "e": "🐸", "t": "OX 징검다리", "f": "ox.html"}, {"id": "story", "cat": "new", "e": "📖", "t": "갈림길 이야기", "f": "story.html"}, {"id": "board", "cat": "new", "e": "🎲", "t": "땅따먹기 대모험", "f": "landgame.html"}, {"id": "code", "cat": "new", "e": "🤖", "t": "코딩 로봇 탐험", "f": "code.html"}, {"id": "tteok", "cat": "sim", "e": "🍢", "t": "떡볶이 가게 사장님", "f": "tteok.html"}, {"id": "farm", "cat": "sim", "e": "🌱", "t": "우리 반 꼬마 농장", "f": "farm.html"}, {"id": "park", "cat": "sim", "e": "🎢", "t": "놀이공원 사장님", "f": "park.html"}, {"id": "shelter", "cat": "sim", "e": "🐾", "t": "동물 보호소", "f": "shelter.html"}, {"id": "island", "cat": "sim", "e": "🏝️", "t": "무인도에서 살아남기", "f": "island.html"}, {"id": "space", "cat": "esc", "e": "🚀", "t": "우주정거장 탈출", "f": "space.html"}, {"id": "museum", "cat": "esc", "e": "🏛️", "t": "한밤의 박물관 탈출", "f": "museum.html"}, {"id": "pirate", "cat": "esc", "e": "🏴‍☠️", "t": "해적선의 보물", "f": "pirate.html"}, {"id": "wizard", "cat": "esc", "e": "🧙", "t": "마법사의 탑", "f": "wizard.html"}, {"id": "time", "cat": "esc", "e": "🕰️", "t": "시간 여행 연구소", "f": "time.html"}, {"id": "timecapsule-1", "cat": "esc", "e": "📦", "t": "1일차 · 단서를 쫓아라", "f": "timecapsule-1.html"}, {"id": "timecapsule-2", "cat": "esc", "e": "🕵️", "t": "2일차 · 용의자는 셋", "f": "timecapsule-2.html"}, {"id": "timecapsule-3", "cat": "esc", "e": "🗝️", "t": "3일차 · X의 정체", "f": "timecapsule-3.html"}];</script>
+<script src="hub.js"></script>
+</head>
+<body>
+<div class="top"><a href="index.html">🏠 게임 교실</a><span class="t">🧑‍🚀 내 캐릭터</span><span class="sp"></span><a href="class.html">🏫 우리 반</a></div>
+<div class="wrap" id="app"></div>
+<script>
+const $=s=>document.querySelector(s);const H=HUB;const E=H.esc;
+function toast(t){const e=document.createElement('div');e.className='toast';e.innerHTML=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2200)}
+function confetti(n){const em=['🎉','✨','⭐','🎊','💫'];for(let i=0;i<(n||40);i++){const e=document.createElement('div');e.className='conf';e.textContent=em[i%5];e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*1.2+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),4200)}}
+function modal(html){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="panel">${html}</div>`;m.onclick=e=>{if(e.target===m)m.remove()};document.body.appendChild(m);return m}
+H.injectCSS();
+</script>
+<script>
+/* 내 캐릭터 */
+H.joinFromURL()&&toast('🔗 우리 반에 연결됐어요!');
+function setup(edit){const p=H.profile()||{av:0};let av=p.av||0;
+  $('#app').innerHTML=`<div class="panel center" style="max-width:640px;margin:20px auto"><h2>${edit?'✏️ 캐릭터 고치기':'✨ 나만의 캐릭터 만들기'}</h2><p class="muted">게임을 끝까지 깰 때마다 경험치(XP)가 쌓여서 레벨이 올라가요!</p>
+  <div id="pv" style="margin:16px 0"></div>
+  <div class="grid" style="grid-template-columns:repeat(8,1fr);gap:6px" id="avs">${H.AVATARS.map((a,i)=>`<button class="avb${i===av?' on':''}" data-i="${i}">${a}</button>`).join('')}</div>
+  <div class="row" style="margin-top:12px"><div style="flex:2"><label>이름 (별명도 좋아요)</label><input id="nm" maxlength="10" value="${E(p.name||'')}" placeholder="예: 김하늘"></div><div style="flex:1"><label>번호</label><input id="nu" type="number" min="1" max="40" value="${p.num||''}" placeholder="예: 7"></div></div>
+  <p class="muted" style="font-size:14px">번호는 선생님 화면에서 나를 찾을 때 써요. 꼭 내 번호를 적어 주세요!</p>
+  <button class="btn" id="ok" style="margin-top:8px">${edit?'저장하기':'🚀 시작하기'}</button>${edit?' <button class="btn ghost" id="cc">취소</button>':''}</div>`;
+  const pv=()=>{$('#pv').innerHTML=H.avatar({av,acc:p.acc},H.stats().level,110)};pv();
+  document.querySelectorAll('.avb').forEach(b=>b.onclick=()=>{av=+b.dataset.i;document.querySelectorAll('.avb').forEach(x=>x.classList.toggle('on',x===b));pv()});
+  $('#ok').onclick=()=>{const name=$('#nm').value.trim(),num=parseInt($('#nu').value);if(!name){toast('이름을 적어 주세요!');return}if(!(num>=1&&num<=40)){toast('번호(1~40)를 적어 주세요!');return}
+    H.saveProfile(Object.assign(p,{name,num,av,created:p.created||Date.now()}));if(!edit)confetti(40);main()};if(edit)$('#cc').onclick=main}
+let TAB='badge';
+function main(){const p=H.profile();if(!p)return setup(false);const s=H.stats();const cfg=H.getCfg();
+  $('#app').innerHTML=`<div class="panel hero"><div class="heroav">${H.avatar(p,s.level,150)}</div><div class="heroinfo">
+    <div class="row"><h1 style="margin:0;font-size:34px">${E(p.name)}</h1><span class="chip">${p.num}번</span><button class="btn ghost sm" id="edit">✏️ 고치기</button></div>
+    <div class="row" style="margin:6px 0"><select id="title" style="width:auto;font-size:17px">${s.titles.map(t=>`<option ${t===(p.title||s.title)?'selected':''}>${E(t)}</option>`).join('')}</select><span class="muted" style="font-size:14px">← 칭호를 골라 달 수 있어요</span></div>
+    <div class="row" style="font-family:Jua;font-size:22px;margin:8px 0 6px">⭐ 레벨 ${s.level} <span style="font-size:16px;opacity:.8">${s.xp.toLocaleString()} XP · 다음 레벨까지 ${(s.nxt-s.xp).toLocaleString()} XP</span></div>
+    <div class="hub-bar" style="height:18px"><i style="width:${Math.round(s.prog*100)}%"></i></div>
+    <div class="row" style="margin-top:10px"><span class="chip">🎮 완료 ${s.ndone}</span><span class="chip">🔐 탈출 ${s.byCat.esc}</span><span class="chip">🔥 어려움 ${s.nhard}</span><span class="chip">🏅 배지 ${s.badges.length}/${H.BADGES.length}</span><span class="chip">💖 칭찬 ${s.bal}점</span><span class="chip">📚 도감 ${s.collect}/${s.total}</span></div></div></div>
+  <div class="tabs">${[['badge','🏅 배지'],['dex','📚 게임 도감'],['look','🎨 꾸미기'],['xp','📈 경험치 얻는 법'],['send','📮 선생님께 보내기']].map(([k,n])=>`<button data-t="${k}" class="${TAB===k?'on':''}">${n}</button>`).join('')}</div><div id="tab"></div>`;
+  $('#edit').onclick=()=>setup(true);$('#title').onchange=e=>{p.title=e.target.value;H.saveProfile(p);H.push();toast('칭호를 바꿨어요!')};
+  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{TAB=b.dataset.t;main()});
+  const T=$('#tab');
+  if(TAB==='badge')T.innerHTML=`<div class="grid g4">${H.BADGES.map(b=>{const on=s.badges.includes(b.id);return `<div class="badge ${on?'on':''}"><div class="be">${on?b.e:'🔒'}</div><b>${b.n}</b><div class="muted" style="font-size:14px">${b.d}</div></div>`}).join('')}</div>`;
+  if(TAB==='dex'){const cats=Object.keys(H.CAT);T.innerHTML=cats.map(c=>{const gs=H.GAMES.filter(g=>g.cat===c);if(!gs.length)return'';return `<div class="panel"><h2>${H.CAT[c].e} ${H.CAT[c].n} <span class="muted" style="font-size:16px">${gs.filter(g=>s.done[g.id]).length}/${gs.length}</span></h2><div class="grid g4">${gs.map(g=>{const d=s.done[g.id]||{};const any=Object.keys(d).length;return `<a class="dex ${any?'on':''}" href="${g.f}"><div class="de">${any?g.e:'❔'}</div><div class="dn">${any?E(g.t):'아직 몰라요'}</div><div class="ds">${['easy','normal','hard'].map(l=>`<span class="${d[l]!==undefined?'y':''}">★</span>`).join('')}</div></a>`}).join('')}</div></div>`}).join('')+'<p class="muted center">★ 왼쪽부터 쉬움·보통·어려움 완료 표시예요.</p>'}
+  if(TAB==='look'){T.innerHTML=`<div class="panel"><h2>🎨 액세서리</h2><p class="muted">레벨이 오르면 새 액세서리가 열려요!</p><div class="grid g4">${H.ACCS.map(a=>{const ok=s.level>=a.lv;return `<button class="accb ${p.acc===a.e?'on':''}" data-e="${a.e}" ${ok?'':'disabled'}><div style="font-size:40px">${a.e||'🚫'}</div>${a.n}<div class="muted" style="font-size:13px">${ok?'':`🔒 Lv.${a.lv}`}</div></button>`}).join('')}</div></div>`;
+    T.querySelectorAll('.accb').forEach(b=>b.onclick=()=>{p.acc=b.dataset.e;H.saveProfile(p);H.push();main()})}
+  if(TAB==='xp')T.innerHTML=`<div class="panel"><h2>📈 경험치(XP) 얻는 법</h2><table class="xpt"><tr><th>무엇을</th><th>🟢 쉬움</th><th>🟡 보통</th><th>🔴 어려움</th></tr>${Object.values(H.CAT).map(c=>`<tr><td>${c.e} ${c.n}</td>${c.xp.map(x=>`<td>+${x}</td>`).join('')}</tr>`).join('')}<tr><td>🎯 오늘의 미션 완료</td><td colspan="3">+20 (하루 한 번)</td></tr><tr><td>💖 칭찬 포인트</td><td colspan="3">받은 포인트의 절반만큼 XP</td></tr></table><p class="muted">같은 게임도 난이도마다 따로 경험치를 받아요. 게임을 <b>끝까지</b> 깨야 경험치가 들어와요!</p><h3>⭐ 레벨표</h3><div class="row">${[2,3,5,7,10,12,15].map(L=>`<span class="chip">Lv.${L} = ${H.thr(L).toLocaleString()} XP</span>`).join('')}</div><h3>👑 칭호</h3><div class="row">${H.TITLES.map(t=>`<span class="chip">Lv.${t[0]} ${t[1]}</span>`).join('')}</div></div>`;
+  if(TAB==='send'){const code=H.resultCode();T.innerHTML=`<div class="panel center"><h2>📮 선생님께 보내기</h2>${cfg.url?`<p>🔗 우리 반에 <b>연결되어 있어요</b>. 게임을 하면 자동으로 선생님 화면에 올라가요.</p><button class="btn" id="sync">🔄 지금 바로 보내기</button><p class="muted" id="sm"></p><hr style="border-color:#ffffff22">`:''}<p>${cfg.url?'인터넷이 안 될 때는':'선생님이 "결과 코드"를 달라고 하면'} 아래 코드를 보여 드리세요.</p><div class="big-code">${code}</div><p class="muted" style="font-size:14px">이 코드에는 내 번호·레벨·경험치·배지 수 같은 기록이 담겨 있어요.</p>
+    <details style="margin-top:14px;text-align:left"><summary>🔗 우리 반 연결 (선생님이 알려 주실 때만)</summary><label>연결 주소</label><input id="cu" value="${E(cfg.url)}" placeholder="https://script.google.com/macros/s/.../exec"><label>학급 코드</label><input id="cc" value="${E(cfg.cls)}" placeholder="예: 6-3"><button class="btn sm" id="cs" style="margin-top:8px">저장</button></details></div>`;
+    if(cfg.url)$('#sync').onclick=async()=>{$('#sm').textContent='보내는 중…';const r=await H.push();$('#sm').textContent=r&&r.ok?'✅ 보냈어요!':'⚠️ 보내지 못했어요. 인터넷 연결을 확인해 주세요.'};
+    $('#cs').onclick=()=>{H.setCfg({url:$('#cu').value.trim(),cls:$('#cc').value.trim()});toast('저장했어요!');main()}}
+}
+main();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>갈림길 이야기 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--main:#c792ea;--ink:#f4f1ff;--bg1:#171a33;--bg2:#0e1022;--card:#22264a;--line:#363c6e}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -20%,color-mix(in srgb,var(--main) 35%,var(--bg1)),var(--bg2) 70%);min-height:100vh;font-size:18px;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+h1,h2,h3,.jua,button,.hud{font-family:'Jua','Gowun Dodum',sans-serif;font-weight:400}
+button{font:inherit;color:inherit;cursor:pointer;border:0}
+.hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;background:#0e1022cc;backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.hud a{text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 11px}
+.hud .t{font-size:19px;white-space:nowrap}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px 11px;font-size:17px;white-space:nowrap}
+.lvpill{background:var(--main);color:#14122a;border-radius:999px;padding:3px 10px;font-size:14px}
+.sp{flex:1}
+.ib{background:var(--card);border:2px solid var(--line);border-radius:50%;width:36px;height:36px;padding:0;font-size:17px}
+#app{max-width:1100px;margin:0 auto;padding:10px}
+.btn{background:var(--main);color:#14122a;border-radius:16px;padding:12px 22px;font-size:21px;box-shadow:0 5px 0 color-mix(in srgb,var(--main) 55%,#000);transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--main) 55%,#000)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 5px 0 #0007;border:2px solid var(--line)}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px}
+.center{text-align:center}.muted{opacity:.7}
+.intro{max-width:720px;margin:20px auto;text-align:center}
+.intro .big{font-size:90px;line-height:1.1;filter:drop-shadow(0 6px 16px #0008)}
+.intro h1{font-size:40px;margin:6px 0;color:var(--main)}
+.intro p{line-height:1.7}
+.rules{text-align:left;background:#0003;border-radius:16px;padding:12px 18px;margin:14px 0;line-height:1.8}
+/* 분수 */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1;margin:0 3px;font-size:.82em}
+.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:2px solid currentColor;padding-bottom:2px}.fr i:last-child{padding-top:2px}
+/* 키패드 */
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;max-width:420px;margin:0 auto}
+.kp button{background:#2e3364;border-radius:14px;padding:12px 0;font-size:26px;box-shadow:0 4px 0 #0008}
+.kp button:active{transform:translateY(3px);box-shadow:0 1px 0 #0008}
+.kp .ok{background:var(--main);color:#14122a;grid-row:span 2}
+.kp .del{background:#5a3550}
+.disp{background:#0b0d1d;border:3px solid var(--line);border-radius:16px;min-height:62px;font-size:38px;text-align:center;padding:6px;margin:0 auto 8px;max-width:420px;letter-spacing:2px;font-family:Jua}
+.disp.bad{animation:shake .35s;border-color:#ff5a6e}.disp.good{border-color:#5eea9a}
+/* 효과 */
+.fx{position:fixed;z-index:80;pointer-events:none;font-family:Jua;transform:translate(-50%,-50%);white-space:nowrap}
+.float{animation:floatUp 1.1s ease-out forwards;font-size:26px;text-shadow:0 2px 0 #000,0 0 8px #000}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-240%) scale(1)}}
+.part{font-size:22px;transition:transform .8s ease-out,opacity .8s}
+.conf{position:fixed;top:-40px;z-index:90;font-size:26px;pointer-events:none;animation:fall 2.6s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+.shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.popin{animation:popin .4s cubic-bezier(.3,1.6,.6,1)}@keyframes popin{0%{transform:scale(.2)}100%{transform:scale(1)}}
+.banner{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:85;font-family:Jua;font-size:52px;color:#fff;text-shadow:0 4px 0 #0008,0 0 24px var(--main);pointer-events:none;animation:banner 1.7s ease forwards;white-space:nowrap}
+@keyframes banner{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}35%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80%)}}
+.modal{position:fixed;inset:0;z-index:70;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .panel{max-width:620px;width:100%;text-align:center}
+#err{position:fixed;inset:0;z-index:999;background:#000c;display:none;align-items:center;justify-content:center;padding:20px}
+#err .panel{max-width:460px;text-align:center}
+
+.shud{display:flex;gap:10px;justify-content:center;font-family:Jua;font-size:20px;margin:6px 0 10px}.shud span{background:#0007;border-radius:999px;padding:4px 14px}
+.scene{max-width:760px;margin:0 auto;background:var(--card);border:3px solid var(--line);border-radius:26px;padding:20px;text-align:center}
+.sbg{font-size:84px;letter-spacing:10px;line-height:1.2;margin:4px 0 12px;filter:drop-shadow(0 8px 10px #0008)}
+.stx{font-size:22px;line-height:1.7;min-height:3.4em;background:#0b0d1d;border-radius:16px;padding:14px 18px;text-align:left;cursor:pointer}
+.sch{display:grid;gap:10px;margin-top:14px}.cb,.qb{background:#2e3364;border:3px solid var(--line);border-radius:16px;padding:14px;font-size:20px;color:var(--ink);text-align:left;transition:transform .1s}
+.cb:hover:not(:disabled){transform:translateX(6px);border-color:var(--main)}.qb{text-align:center;font-family:Jua;font-size:28px}.sch:has(.qb){grid-template-columns:1fr 1fr}
+.qb.good{background:#1f8a55;border-color:#5eea9a}.qb.bad{background:#8a1f35;border-color:#ff5a6e}.qz{font-family:Jua;font-size:clamp(26px,4vw,38px);margin-top:12px}
+.endbox{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}.endc{background:#0006;border:2px dashed var(--line);border-radius:14px;padding:8px 14px;opacity:.6}.endc.on{opacity:1;border:2px solid #ffd54f;background:#ffd54f18}
+
+</style>
+</head>
+<body class="g6">
+<div class="hud"><a href="index.html">🏠</a><span class="t">📖 갈림길 이야기</span><span class="lvpill" id="lvPill"></span><span class="sp"></span><span id="hudX"></span><button class="ib" id="mute" title="소리">🔊</button></div>
+<div id="app"></div>
+<div id="err"><div class="panel"><h2>앗, 문제가 생겼어요 😢</h2><p>게임이 업데이트되었거나 저장 정보가 꼬였을 수 있어요.</p><button class="btn" id="errReset">처음부터 다시 하기</button></div></div>
+<script>
+const GRADE=6,GAME='story',KEY='arc-story-v1',TITLE='갈림길 이야기',EMOJI='📖';
+</script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'};
+const QS=new URLSearchParams(location.search);
+let LV=QS.get('lv');if(!LVN[LV]){try{LV=localStorage.getItem('class-level')}catch(e){}}if(!LVN[LV])LV='normal';
+const FAST=QS.get('fast')==='1';
+const SKEY=LV==='normal'?KEY:KEY+'-'+LV;
+const SAVE_V=1;
+const L=(e,n,h)=>LV==='easy'?e:LV==='hard'?h:n;
+$('#lvPill').textContent=LVN[LV];
+window.addEventListener('error',e=>{console.error(e.message);$('#err').style.display='flex'});
+$('#errReset').onclick=()=>{try{localStorage.removeItem(SKEY)}catch(e){}location.href=location.pathname+'?lv='+LV};
+function loadSave(fresh){try{if(QS.get('reset')==='1')localStorage.removeItem(SKEY);const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v===SAVE_V)return Object.assign(fresh(),s)}catch(e){}return fresh()}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
+function markDone(){try{const id=GAME+'@'+LV;if(localStorage.getItem('class-done-skip-'+id)===String(S.end))return;const d=JSON.parse(localStorage.getItem('class-done')||'{}')||{};if(!d[id]){d[id]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}catch(e){}}
+function h(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+const fmt=n=>{n=Math.floor(n);if(n<10000)return n.toLocaleString();if(n<1e8){const m=n/1e4;return (m<100?(Math.floor(m*10)/10):Math.floor(m)).toLocaleString()+'만'}return (Math.floor(n/1e6)/100).toLocaleString()+'억'};
+/* ── 소리 ── */
+let MUTE=false;try{MUTE=localStorage.getItem('arc-mute')==='1'}catch(e){}
+$('#mute').textContent=MUTE?'🔇':'🔊';$('#mute').onclick=()=>{MUTE=!MUTE;$('#mute').textContent=MUTE?'🔇':'🔊';try{localStorage.setItem('arc-mute',MUTE?'1':'0')}catch(e){}};
+let AC=null;function tone(f,d,type,vol){if(MUTE||FAST)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.value=vol||.12;o.connect(g);g.connect(AC.destination);const t=AC.currentTime;g.gain.setValueAtTime(vol||.12,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d)}catch(e){}}
+const SND={good:()=>{tone(660,.12,'triangle');setTimeout(()=>tone(990,.16,'triangle'),70)},bad:()=>tone(160,.3,'sawtooth',.08),boom:()=>{tone(90,.35,'square',.12);tone(60,.4,'sawtooth',.08)},coin:()=>tone(1200,.08,'square',.05),win:()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.25,'triangle'),i*130)),lose:()=>[392,330,262].forEach((f,i)=>setTimeout(()=>tone(f,.3,'sawtooth',.07),i*180)),go:()=>tone(880,.4,'square',.06),beep:()=>tone(440,.15,'square',.06)};
+/* ── 효과 ── */
+function floatAt(x,y,txt,color){const e=h('div','fx float',txt);e.style.left=x+'px';e.style.top=y+'px';if(color)e.style.color=color;document.body.appendChild(e);setTimeout(()=>e.remove(),1200)}
+function burst(x,y,em,n){for(let i=0;i<(n||10);i++){const e=h('div','fx part',em||'✨');e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);const a=Math.random()*6.28,r=40+Math.random()*80;requestAnimationFrame(()=>{e.style.transform=`translate(calc(-50% + ${Math.cos(a)*r}px),calc(-50% + ${Math.sin(a)*r}px)) scale(.5)`;e.style.opacity=0});setTimeout(()=>e.remove(),900)}}
+function confetti(n){const em=['🎉','✨','⭐','🎊','💫'];for(let i=0;i<(n||40);i++){const e=h('div','conf',em[i%5]);e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*1.2+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),4200)}}
+function banner(t){const e=h('div','banner',t);document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+function rect(el){const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
+/* ── 문제 만들기 ── */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const rnd=v=>Math.round(v*10000)/10000;
+const N=v=>({t:'n',v:rnd(v)});
+const FR=(n,d)=>{const g=gcd(Math.abs(n),d);n/=g;d/=g;return d===1?N(n):{t:'f',n,d}};
+const aval=a=>a.t==='n'?a.v:a.n/a.d;
+const astr=a=>a.t==='n'?String(a.v):`${a.n}/${a.d}`;
+const ahtml=a=>a.t==='n'?String(a.v):`<span class="fr"><i>${a.n}</i><i>${a.d}</i></span>`;
+const qhtml=s=>s.replace(/\[(\d+)\/(\d+)\]/g,'<span class="fr"><i>$1</i><i>$2</i></span>');
+const qfull=q=>qhtml(q)+(/□|[가-힣]/.test(q)?'':' = ?');
+const dec=x=>Math.round(x*100)/100;
+const D10=(x)=>String(dec(x));
+function GEN(){
+  const g=GRADE,lv=LV;const Q=(q,a,ex)=>({q,a,exact:!!ex});
+  if(g===1){
+    if(lv==='easy')return pick([()=>{const a=R(1,9),b=R(1,10-a);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(3,10),b=R(1,a-1);return Q(`${a} − ${b}`,N(a-b))}])();
+    if(lv==='normal')return pick([()=>{const a=R(5,9),b=R(11-a,9);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(11,18),o=a-10,b=R(o+1,9);return Q(`${a} − ${b}`,N(a-b))},()=>{const a=R(1,9),b=R(1,9),c=R(1,9);return Q(`${a} + ${b} + ${c}`,N(a+b+c))}])();
+    return pick([()=>{const t1=R(1,7),t2=R(1,9-t1),o1=R(0,8),o2=R(0,9-o1);return Q(`${t1*10+o1} + ${t2*10+o2}`,N((t1+t2)*10+o1+o2))},()=>{const t1=R(3,9),t2=R(1,t1-1),o1=R(2,9),o2=R(0,o1);return Q(`${t1*10+o1} − ${t2*10+o2}`,N((t1-t2)*10+o1-o2))},()=>{const a=R(2,9)*10,b=R(1,9-a/10)*10;return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(5,9),b=R(11-a,9);return Q(`${a} + ${b}`,N(a+b))}])();
+  }
+  if(g===2){
+    if(lv==='easy')return pick([()=>{const a=R(15,89),b=R(Math.max(2,11-a%10),9);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(15,59),b=R(13,39);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(31,95),b=R(12,a-10);return Q(`${a} − ${b}`,N(a-b))}])();
+    if(lv==='normal')return pick([()=>{const a=R(2,5),b=R(1,9);return Q(`${a} × ${b}`,N(a*b))},()=>{const a=R(2,5),b=R(2,9);return Q(`${b} × ${a}`,N(a*b))},()=>{const a=R(25,79),b=R(16,49);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(41,95),b=R(17,a-12);return Q(`${a} − ${b}`,N(a-b))}])();
+    return pick([()=>{const a=R(2,9),b=R(2,9);return Q(`${a} × ${b}`,N(a*b))},()=>{const a=R(3,9),b=R(3,9);return Q(`${a} × □ = ${a*b}`,N(b))},()=>{const a=R(6,9),b=R(6,9);return Q(`${a} × ${b}`,N(a*b))},()=>{const a=R(15,49),b=R(15,39),c=R(10,a+b-10);return Q(`${a} + ${b} − ${c}`,N(a+b-c))}])();
+  }
+  if(g===3){
+    if(lv==='easy')return pick([()=>{const a=R(105,599),b=R(108,399);return Q(`${a} + ${b}`,N(a+b))},()=>{const a=R(301,980),b=R(105,a-60);return Q(`${a} − ${b}`,N(a-b))},()=>{const a=R(2,9),b=R(2,9);return Q(`${a*b} ÷ ${a}`,N(b))}])();
+    if(lv==='normal')return pick([()=>{const a=R(12,49),b=R(3,9);return Q(`${a} × ${b}`,N(a*b))},()=>{const b=R(3,9),q=R(3,9);return Q(`${b*q} ÷ ${b}`,N(q))},()=>{const b=R(2,4),q=R(11,24);return Q(`${b*q} ÷ ${b}`,N(q))},()=>{const a=R(110,320),b=R(2,3);return Q(`${a} × ${b}`,N(a*b))}])();
+    return pick([()=>{const a=R(13,39),b=R(12,29);return Q(`${a} × ${b}`,N(a*b))},()=>{const a=R(102,299),b=R(3,6);return Q(`${a} × ${b}`,N(a*b))},()=>{const b=R(3,9),q=R(21,Math.floor(999/b));return Q(`${b*q} ÷ ${b}`,N(q))}])();
+  }
+  if(g===4){
+    if(lv==='easy')return pick([()=>{const d=R(5,12),a=R(1,d-2),b=R(1,d-1-a);return Q(`[${a}/${d}] + [${b}/${d}]`,{t:'f',n:a+b,d},false)},()=>{const a=R(11,49),b=R(11,29);return Q(`${a} × ${b}`,N(a*b))},()=>{const a=R(11,59)/10,b=R(11,39)/10;return Q(`${D10(a)} + ${D10(b)}`,N(a+b))}]).call();
+    if(lv==='normal')return pick([()=>{const a=R(110,450),b=R(12,35);return Q(`${a} × ${b}`,N(a*b))},()=>{const b=R(12,25),q=R(12,Math.floor(999/b));return Q(`${b*q} ÷ ${b}`,N(q))},()=>{const d=R(4,12),n=R(1,d-1);return Q(`1 − [${n}/${d}]`,{t:'f',n:d-n,d})},()=>{const a=R(15,79)/10,b=R(12,49)/10;return Math.random()<.5?Q(`${D10(a)} + ${D10(b)}`,N(a+b)):Q(`${D10(a+b)} − ${D10(b)}`,N(a))}])();
+    return pick([()=>{const a=R(101,899)/100,b=R(101,499)/100;return Math.random()<.5?Q(`${D10(a)} + ${D10(b)}`,N(a+b)):Q(`${D10(a+b)} − ${D10(b)}`,N(a))},()=>{const b=R(12,28),q=R(101,Math.floor(9999/b));return Q(`${b*q} ÷ ${b}`,N(q))},()=>{const a=R(205,899),b=R(21,68);return Q(`${a} × ${b}`,N(a*b))},()=>{const d=R(5,9),a=R(d+1,2*d-1),b=R(1,a-d);return Q(`[${a}/${d}] − [${b}/${d}]`,{t:'f',n:a-b,d})}])();
+  }
+  if(g===5){
+    const cop=(lo,hi)=>{let a,b;do{a=R(lo,hi);b=R(lo,hi)}while(a===b||gcd(a,b)!==1);return[a,b]};
+    if(lv==='easy')return pick([()=>{const k=R(2,9),[m,n]=cop(2,7);return Q(`${k*m}, ${k*n}의 최대공약수`,N(k))},()=>{const [m,n]=cop(2,9),k=R(1,3);return Q(`${m*k}, ${n*k}의 최소공배수`,N(m*n*k))},()=>{const [n,d]=cop(1,9).sort((x,y)=>x-y),k=R(2,6);return n===d?Q('1 + 1',N(2)):Q(`[${n*k}/${d*k}] → 기약분수`,FR(n,d),true)}])();
+    if(lv==='normal')return pick([()=>{const b=R(2,8),d=R(2,9);const a=R(1,b-1),c=R(1,d-1);return Q(`[${a}/${b}] + [${c}/${d}]`,FR(a*d+c*b,b*d))},()=>{let b=R(2,8),d=R(2,9);let a=R(1,b-1),c=R(1,d-1);if(a*d<c*b){[a,b,c,d]=[c,d,a,b]}if(a*d===c*b)return Q(`[${a}/${b}] + [${c}/${d}]`,FR(a*d+c*b,b*d));return Q(`[${a}/${b}] − [${c}/${d}]`,FR(a*d-c*b,b*d))},()=>{const d=R(3,12),n=R(1,d-1),k=R(2,9);return Q(`[${n}/${d}] × ${k}`,FR(n*k,d))},()=>{const a=R(12,59)/10,k=R(2,9);return Q(`${D10(a)} × ${k}`,N(a*k))}])();
+    return pick([()=>{const a=R(11,49)/10,b=R(11,39)/10;return Q(`${D10(a)} × ${D10(b)}`,N(a*b))},()=>{const b=R(2,9),d=R(2,9),a=R(1,b-1),c=R(1,d-1);return Q(`[${a}/${b}] × [${c}/${d}]`,FR(a*c,b*d))},()=>{const m=R(12,40),xs=[R(-6,6),R(-6,6),R(-6,6)];xs.push(-xs[0]-xs[1]-xs[2]);const v=xs.map(x=>m+x);return Q(`${v.join(', ')}의 평균`,N(m))},()=>{const a=R(102,499)/100,k=R(3,12);return Q(`${D10(a)} × ${k}`,N(a*k))}])();
+  }
+  /* 6학년 */
+  if(lv==='easy')return pick([()=>{const d=R(2,9),n=R(1,d-1),k=R(2,6);return Q(`[${n}/${d}] ÷ ${k}`,FR(n,d*k))},()=>{const q=R(11,39)/10,k=R(2,6);return Q(`${D10(q*k)} ÷ ${k}`,N(q))},()=>{const [n,d]=pick([[1,2],[1,4],[3,4],[1,5],[2,5],[3,5],[4,5],[1,10],[7,10],[9,20],[3,20],[6,25],[17,25]]);return Q(`[${n}/${d}] = □ %`,N(n*100/d))}])();
+  if(lv==='normal')return pick([()=>{const b=R(2,9),d=R(2,9),a=R(1,b-1),c=R(1,d-1);return Q(`[${a}/${b}] ÷ [${c}/${d}]`,FR(a*d,b*c))},()=>{const q=R(2,9),b=R(2,9)/10;return Q(`${D10(q*b)} ÷ ${D10(b)}`,N(q))},()=>{const a=R(2,9),b=R(2,9),k=R(2,8);return Q(`${a} : ${b} = ${a*k} : □`,N(b*k))},()=>{const q=R(12,48)/10,b=R(2,8)/10;return Q(`${D10(q*b)} ÷ ${D10(b)}`,N(q))}])();
+  return pick([()=>{const p=R(1,7),q=R(2,8),k=R(2,12);if(p===q)return Q(`${p*k*2}을(를) 1 : 1로 나누면 한쪽은?`,N(p*k));return Q(`${(p+q)*k}을(를) ${p} : ${q}로 나누면 큰 쪽은?`,N(Math.max(p,q)*k))},()=>{const r=R(2,10);return Q(`반지름 ${r}cm인 원의 넓이 (원주율 3.14)`,N(3.14*r*r))},()=>{const d=R(3,20);return Q(`지름 ${d}cm인 원의 둘레 (원주율 3.14)`,N(3.14*d))},()=>{const p=pick([5,10,15,20,25,30,35,40,45,60,75]),n=R(2,20)*20;return Q(`${n}의 ${p}%`,N(n*p/100))},()=>{const a=R(2,9),b=R(2,9),c=R(2,9);return Q(`가로 ${a}cm, 세로 ${b}cm, 높이 ${c}cm 직육면체의 부피 (cm³)`,N(a*b*c))}])();
+}
+function parseAns(s){s=String(s).trim();if(!s)return null;if(/^\d+\/\d+$/.test(s)){const [n,d]=s.split('/').map(Number);if(!d)return null;return{t:'f',n,d,v:n/d}}if(/^\d*\.?\d+$/.test(s))return{t:'n',v:Number(s)};return null}
+function check(input,Qo){const p=parseAns(input);if(!p)return false;if(Qo.exact){if(p.t!=='f')return Qo.a.t==='n'&&Math.abs(p.v-Qo.a.v)<1e-9;return gcd(p.n,p.d)===1&&Math.abs(p.v-aval(Qo.a))<1e-9}return Math.abs(p.v-aval(Qo.a))<1e-6}
+function choices(a){const out=[a];const seen=new Set([rnd(aval(a))]);const add=c=>{if(!c)return;const v=rnd(aval(c));if(v>0&&!seen.has(v)&&out.length<4){seen.add(v);out.push(c)}};
+  if(a.t==='f'){const {n,d}=a;shuffle([{t:'f',n:n+1,d},{t:'f',n:Math.max(1,n-1),d},{t:'f',n,d:d+1},{t:'f',n:d,d:n},{t:'f',n,d:Math.max(2,d-1)},{t:'f',n:n+2,d}]).forEach(add);let k=3;while(out.length<4)add({t:'f',n:n+k++,d})}
+  else{const v=a.v;const dp=(String(v).split('.')[1]||'').length;const st=dp?Math.pow(10,-dp):1;shuffle([v+st,v-st,v+10*st,v-10*st,v+2*st,dp?v*10:v+10,v-2*st,v+st*5]).forEach(x=>add(N(x)));let k=3;while(out.length<4)add(N(v+st*k++))}
+  return shuffle(out)}
+/* 키패드 */
+function keypad(onSubmit,opts){opts=opts||{};const box=h('div','kpwrap');const disp=h('div','disp','&nbsp;');const kp=h('div','kp');let val='';
+  const keys=['7','8','9','⌫','4','5','6','OK','1','2','3','0',GRADE>=4?'.':'',GRADE>=4?'/':''];
+  const set=v=>{val=v;disp.innerHTML=val?val.replace(/(\d+)\/(\d*)/,'<span class="fr"><i>$1</i><i>$2&#8203;</i></span>'):'&nbsp;'};
+  const press=k=>{if(k==='⌫')set(val.slice(0,-1));else if(k==='OK'){if(val)onSubmit(val,api)}else if(val.length<9){if((k==='.'||k==='/')&&(val.includes('.')||val.includes('/')||!val))return;set(val+k)}tone(700,.03,'square',.03)};
+  keys.forEach(k=>{if(k===''&&false)return;const b=h('button',k==='OK'?'ok':k==='⌫'?'del':'',k===''?'&nbsp;':k);if(k==='')b.disabled=true,b.style.opacity=.25;else b.onclick=()=>press(k);kp.appendChild(b)});
+  box.append(disp,kp);const api={el:box,clear:()=>set(''),flash:ok=>{disp.classList.remove('good','bad');void disp.offsetWidth;disp.classList.add(ok?'good':'bad');setTimeout(()=>disp.classList.remove('good','bad'),500)},press,get:()=>val};
+  const onKey=e=>{if(!box.isConnected){document.removeEventListener('keydown',onKey);return}if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('⌫');else if(e.key==='Enter')press('OK');else if(e.key==='.'&&GRADE>=4)press('.');else if(e.key==='/'&&GRADE>=4)press('/')};
+  document.addEventListener('keydown',onKey);return api}
+let S;
+</script>
+<script>
+/* ── 갈림길 이야기 (선택형 모험) ── */
+const BAND=GRADE<=2?0:GRADE<=4?1:2;
+const STORIES=[
+{t:'반짝별을 찾아서',e:'⭐',intro:'밤하늘에서 아기 별 <b>반짝이</b>가 숲속으로 떨어졌어요! 반짝이를 하늘 집으로 데려다줄 수 있을까요?',
+ n:{
+ s1:{bg:'🌲🌙🌲',txt:'숲 입구에서 작은 빛이 훌쩍훌쩍 울고 있어요. "흑흑, 하늘 집에 가고 싶어…" 아기 별 반짝이예요!',ch:[['"괜찮아? 내가 도와줄게!" 손을 내민다',{f:1},'s2'],['"바빠서 안 돼." 모른 척 지나간다',{},'s1b']]},
+ s1b:{bg:'🌲⭐🌲',txt:'몇 걸음 가다 뒤를 돌아보니 반짝이가 혼자 쪼그려 앉아 있어요. 마음이 쿡 찔려요.',ch:[['다시 돌아가서 "미안해, 같이 가자!"',{f:1},'s2']]},
+ s2:{bg:'🐿️🌰🌳',txt:'갈림길에서 다람쥐가 도토리를 세다가 헷갈려 울상이에요. "누가 좀 도와줄래?"',ch:[['다람쥐를 도와준다',{},'q1'],['서둘러 강 쪽으로 간다',{},'s4']]},
+ q1:{quiz:1,bg:'🐿️🌰🌰',txt:'다람쥐: "이 문제를 풀어 줘!"',ok:'s3',no:'s3b'},
+ s3:{bg:'🐿️🗺️✨',txt:'"고마워!" 다람쥐가 별 지도를 건네요. "하늘 계단은 큰 동굴 너머에 있어!"',ch:[['지도를 들고 강으로 간다',{f:1},'s4']]},
+ s3b:{bg:'🐿️🌰',txt:'조금 틀렸지만 다람쥐는 도와주려 한 마음이 고맙대요. "같이 다시 세 보자!"',ch:[['함께 다시 센다',{f:1},'s4']]},
+ s4:{bg:'🌊🪵🌊',txt:'강에 놓인 다리가 끊어졌어요! 강가에서 거북이 할아버지가 낮잠을 자고 있어요.',ch:[['공손하게 "거북이 할아버지, 도와주세요" 부탁한다',{f:1},'q2'],['혼자 헤엄쳐 건너 본다',{h:-1},'q2']]},
+ q2:{quiz:1,bg:'🐢🌊',txt:'거북이 할아버지: "허허, 이 문제를 맞히면 태워 주마."',ok:'s6',no:'s6'},
+ s6:{bg:'⛰️🕳️⛰️',txt:'캄캄한 동굴 앞이에요. 안에서 "끄응… 끄응…" 무서운 소리가 들려요.',ch:[['용기를 내서 들어간다',{},'s7'],['반짝이 손을 꼭 잡고 함께 들어간다',{f:1},'s7']]},
+ s7:{bg:'🐻🍯🕯️',txt:'소리의 주인공은 배고픈 아기 곰이었어요! 아기 곰이 꿀단지를 바라보며 울어요.',ch:[['내 간식을 나누어 준다',{f:1},'q3'],['"미안, 우린 바빠!" 지나간다',{},'q3']]},
+ q3:{quiz:1,bg:'🚪✨🌟',txt:'동굴 끝에 하늘 계단의 문이 있어요. 문에 수수께끼가 적혀 있어요!',ok:'end',no:'end'},
+ },
+ ends:{best:['🌟 최고의 엔딩: 별빛 친구','반짝이와 숲속 친구들이 모두 모여 하늘 계단을 함께 올랐어요. 반짝이가 하늘에서 가장 밝게 빛나며 매일 밤 인사해요. "고마워, 내 친구!"'],good:['⭐ 좋은 엔딩: 하늘 집으로','반짝이는 무사히 하늘 집에 도착했어요. 밤마다 반짝반짝 우리 집 창문을 비춰 줘요.'],normal:['🌙 보통 엔딩: 조금 늦은 귀가','길이 조금 험했지만 반짝이는 하늘로 돌아갔어요. 다음엔 친구들을 더 많이 도와줄 수 있을 거예요!'],bad:['💤 다시 도전!','기운이 다 빠져 잠이 들었어요… 다시 처음부터 도전해 볼까요?']}},
+{t:'시간 여행 일기장',e:'📔',intro:'할아버지의 낡은 일기장을 펼치자 빛이 번쩍! <b>시간 여행</b>이 시작됐어요. 일기장의 빈칸을 채워야 집으로 돌아올 수 있대요.',
+ n:{
+ s1:{bg:'🏯🧺🏮',txt:'눈을 떠 보니 북적이는 조선 시대 장터예요! 짚신 장수 할머니가 물건을 떨어뜨려 쩔쩔매고 있어요.',ch:[['얼른 달려가 짚신을 주워 드린다',{f:1},'q1'],['구경부터 하러 간다',{},'s2']]},
+ q1:{quiz:1,bg:'👵🧮',txt:'할머니: "고맙구나! 그런데 오늘 판 짚신 값을 계산하다 헷갈렸단다."',ok:'s1c',no:'s2'},
+ s1c:{bg:'👵📜',txt:'"총명하구나!" 할머니가 일기장의 첫 조각을 건네요. 거기엔 "다음은 미래로"라고 적혀 있어요.',ch:[['일기장 조각을 붙인다',{w:1},'s2']]},
+ s2:{bg:'🏮👦🏮',txt:'장터 구석에서 길을 잃은 꼬마가 엄마를 찾으며 울고 있어요.',ch:[['꼬마와 함께 엄마를 찾아 준다',{f:1},'s3'],['포졸에게 알리고 내 길을 간다',{},'s3']]},
+ s3:{bg:'🌀⏳🌀',txt:'시간의 문이 열렸어요! 들어가자 반짝이는 미래 도시가 펼쳐져요. 그런데 청소 로봇이 고장 나 쓰레기가 가득해요.',ch:[['로봇을 고쳐 본다',{},'q2'],['쓰레기를 직접 줍는다',{f:1},'s4']]},
+ q2:{quiz:1,bg:'🤖🔧',txt:'로봇 화면: "수리 암호를 입력하시오."',ok:'s4w',no:'s4'},
+ s4w:{bg:'🤖✨',txt:'로봇이 삐빅 깨어나 도시를 깨끗하게 청소해요! "감사합니다, 시간 여행자님!"',ch:[['로봇과 하이파이브!',{w:1},'s4']]},
+ s4:{bg:'🏙️🌳♻️',txt:'미래의 시장님이 물어요. "새 공원을 지을까, 큰 주차장을 지을까? 너라면 어떻게 하겠니?"',ch:[['나무가 많은 공원 + 자전거 길',{f:1},'s5'],['주차장을 아주 크게!',{},'s5']]},
+ s5:{bg:'📔🕰️',txt:'마지막 일기장 빈칸이 빛나요. 집으로 가는 문을 열 마지막 문제예요!',ch:[['문제를 푼다',{},'q3']]},
+ q3:{quiz:1,bg:'🚪⏳',txt:'일기장: "빈칸을 채워라!"',ok:'end',no:'end'},
+ },
+ ends:{best:['🌟 최고의 엔딩: 시간 지킴이','과거와 미래 사람들을 모두 도왔어요! 일기장 마지막 장에 할아버지의 글씨가 나타났어요. "너도 이제 훌륭한 시간 지킴이구나."'],good:['⭐ 좋은 엔딩: 무사 귀환','무사히 집으로 돌아왔어요. 일기장 속에는 내가 만난 사람들의 이야기가 새로 적혀 있어요.'],normal:['🌙 보통 엔딩: 아쉬운 여행','집으로 돌아왔지만 일기장의 몇 칸은 비어 있어요. 다음 여행에선 더 많은 사람을 도와줄 수 있을 거예요!'],bad:['💤 다시 도전!','시간의 소용돌이에 휩쓸렸어요… 다시 처음부터!']}},
+{t:'무인도 탐사대의 선택',e:'🏝️',intro:'과학 탐사선이 폭풍을 만나 <b>무인도</b>에 불시착했어요! 탐사대장인 나는 친구들과 함께 구조될 때까지 섬에서 버텨야 해요.',
+ n:{
+ s1:{bg:'🏝️🚤💨',txt:'친구들이 서로 자기 의견만 내세우며 다투고 있어요. "바닷가에 있자!" "아니, 산으로 가야 해!"',ch:[['모두의 의견을 차례로 들어 보고 투표한다',{f:1},'s2'],['"대장인 내 말대로 해!" 혼자 결정한다',{},'s2']]},
+ s2:{bg:'💧🌴🔥',txt:'가장 급한 건 마실 물이에요. 빗물을 모으는 장치를 만들기로 했어요.',ch:[['설계를 계산해 본다',{},'q1']]},
+ q1:{quiz:1,bg:'📐💧',txt:'장치 설계도: "계산 결과를 써 넣으시오."',ok:'s3w',no:'s3'},
+ s3w:{bg:'💧✨',txt:'빗물 장치가 완벽하게 작동해요! 친구들이 박수를 쳐요.',ch:[['물을 모두에게 공평하게 나눈다',{f:1,w:1},'s3']]},
+ s3:{bg:'🤕🌿',txt:'친구 하나가 발목을 다쳤어요. 산 위에서 신호를 보내려면 빨리 가야 하는데…',ch:[['다친 친구를 부축하며 천천히 함께 간다',{f:1},'s4'],['다친 친구는 두고 빨리 올라간다',{h:-1},'s4']]},
+ s4:{bg:'🗑️🌊🐢',txt:'해변에 플라스틱 쓰레기가 잔뜩 밀려와 바다거북이 그물에 걸려 있어요!',ch:[['거북이를 구하고 쓰레기를 모아 정리한다',{f:1},'q2'],['구조가 급하니 그냥 지나간다',{},'q2']]},
+ q2:{quiz:1,bg:'🐢♻️',txt:'모은 쓰레기로 뗏목 재료를 계산해요.',ok:'s5w',no:'s5'},
+ s5w:{bg:'🛶✨',txt:'쓰레기를 재활용해 튼튼한 뗏목까지 만들었어요!',ch:[['뗏목을 해변에 묶어 둔다',{w:1},'s5']]},
+ s5:{bg:'⛰️🔥📡',txt:'드디어 산꼭대기! 멀리 배가 보여요. 정확한 신호를 보내야 해요.',ch:[['신호 암호를 계산한다',{},'q3']]},
+ q3:{quiz:1,bg:'📡🚢',txt:'구조 신호: "암호를 보내라!"',ok:'end',no:'end'},
+ },
+ ends:{best:['🌟 최고의 엔딩: 최고의 탐사대','구조선 선장이 놀라요. "다친 친구도, 바다거북도, 섬도 지켰구나!" 탐사대는 뉴스에 "지구를 지킨 어린이들"로 소개됐어요.'],good:['⭐ 좋은 엔딩: 무사 구조','모두 무사히 구조되었어요. 친구들이 말해요. "네가 대장이라 든든했어!"'],normal:['🌙 보통 엔딩: 아슬아슬 구조','구조는 되었지만 서로 서운한 마음이 남았어요. 다음엔 친구들의 마음을 더 살펴볼까요?'],bad:['💤 다시 도전!','기운이 다 떨어져 버렸어요… 다시 처음부터 도전!']}},
+];
+const ST=STORIES[BAND];
+let AUTO=false;
+const GAMEDEF={
+  boot(){S=loadSave(()=>({v:SAVE_V,end:0,endings:[],runs:0}));this.intro()},
+  intro(){const got=S.endings||[];
+    $('#hudX').innerHTML=got.length?`<span class="chip">📖 엔딩 ${got.length}/3</span>`:'';
+    $('#app').innerHTML=`<div class="intro"><div class="big">${ST.e}</div><h1>${ST.t}</h1><p>${ST.intro}</p>
+    <div class="rules">🧭 갈림길마다 <b>어떻게 할지</b> 골라요. 선택에 따라 이야기가 달라져요!<br>💛 친구를 돕고 배려하면 <b>우정</b>이, ⭐ 문제를 맞히면 <b>지혜</b>가 쌓여요.<br>❤️ 기운이 다 떨어지면 처음부터 다시! 엔딩은 모두 <b>3가지</b>예요.</div>
+    <div class="endbox">${['best','good','normal'].map(k=>`<div class="endc ${got.includes(k)?'on':''}">${got.includes(k)?ST.ends[k][0]:'🔒 ???'}</div>`).join('')}</div>
+    <button class="btn" id="go">📖 이야기 시작</button></div>`;$('#go').onclick=()=>this.start()},
+  start(){this.st={f:0,w:0,h:L(5,4,3),node:'s1',log:[]};S.runs++;save();this.show()},
+  hud(){const s=this.st;return `<div class="shud"><span>❤️ ${'❤️'.repeat(Math.max(0,s.h)).slice(0)}</span><span>💛 우정 ${s.f}</span><span>⭐ 지혜 ${s.w}</span></div>`},
+  show(){const s=this.st;if(s.node==='end')return this.ending();const N=ST.n[s.node];
+    if(N.quiz){const q=GEN();this.Q=q;const ch=choices(q.a);
+      $('#app').innerHTML=`${this.hud()}<div class="scene popin"><div class="sbg">${N.bg}</div><div class="stx">${N.txt}</div><div class="qz">${qfull(q.q)}</div><div class="sch">${ch.map((c,i)=>`<button class="qb" data-i="${i}">${ahtml(c)}</button>`).join('')}</div></div>`;
+      document.querySelectorAll('.qb').forEach(b=>b.onclick=()=>{const ok=Math.abs(aval(ch[+b.dataset.i])-aval(q.a))<1e-9;document.querySelectorAll('.qb').forEach(x=>x.disabled=true);b.classList.add(ok?'good':'bad');
+        if(ok){s.w++;SND.good();floatAt(rect(b).x,rect(b).y-30,'⭐ 지혜 +1','#ffe066')}else{s.h--;SND.bad();const g=[...document.querySelectorAll('.qb')].find((x,i)=>Math.abs(aval(ch[i])-aval(q.a))<1e-9);g&&g.classList.add('good');floatAt(rect(b).x,rect(b).y-30,'❤️ -1','#ff6b6b')}
+        setTimeout(()=>{if(s.h<=0)return this.ending('bad');s.node=ok?N.ok:N.no;this.show()},AUTO?5:ok?900:1600)});
+      if(AUTO)setTimeout(()=>{const i=ch.findIndex(c=>Math.abs(aval(c)-aval(q.a))<1e-9);document.querySelectorAll('.qb')[i].click()},5);return}
+    $('#app').innerHTML=`${this.hud()}<div class="scene popin"><div class="sbg">${N.bg}</div><div class="stx" id="stx"></div><div class="sch">${N.ch.map((c,i)=>`<button class="cb" data-i="${i}">${c[0]}</button>`).join('')}</div></div>`;
+    this.type($('#stx'),N.txt);
+    document.querySelectorAll('.cb').forEach(b=>b.onclick=()=>{const c=N.ch[+b.dataset.i];const e=c[1];if(e.f){s.f+=e.f;floatAt(rect(b).x,rect(b).y-30,'💛 우정 +'+e.f,'#ffd54f')}if(e.w){s.w+=e.w;floatAt(rect(b).x,rect(b).y-30,'⭐ 지혜 +'+e.w,'#ffe066')}if(e.h){s.h+=e.h;floatAt(rect(b).x,rect(b).y-30,'❤️ '+e.h,'#ff6b6b');SND.bad()}else SND.beep();
+      s.log.push(c[0]);document.querySelectorAll('.cb').forEach(x=>x.disabled=true);setTimeout(()=>{if(s.h<=0)return this.ending('bad');s.node=c[2];this.show()},AUTO?5:500)});
+    if(AUTO)setTimeout(()=>document.querySelector('.cb').click(),5)},
+  type(el,t){if(AUTO||FAST){el.innerHTML=t;return}let i=0;const go=()=>{i+=2;el.innerHTML=t.slice(0,i);if(i<t.length)this.tt=setTimeout(go,22)};clearTimeout(this.tt);go();el.onclick=()=>{clearTimeout(this.tt);el.innerHTML=t}},
+  ending(force){const s=this.st;const k=force||(s.f>=4&&s.w>=3?'best':s.f>=2&&s.w>=2?'good':'normal');const E2=ST.ends[k];
+    if(k!=='bad'){S.endings=S.endings||[];if(!S.endings.includes(k))S.endings.push(k);S.end=Date.now();save();markDone();confetti(k==='best'?80:40);SND.win()}else SND.lose();
+    $('#app').innerHTML=`<div class="intro popin"><div class="big">${k==='best'?'🌟':k==='good'?'⭐':k==='normal'?'🌙':'💤'}</div><h1>${E2[0]}</h1><p style="font-size:20px">${E2[1]}</p><p>💛 우정 ${s.f} · ⭐ 지혜 ${s.w} · ❤️ ${Math.max(0,s.h)}</p>
+    <div class="endbox">${['best','good','normal'].map(x=>`<div class="endc ${(S.endings||[]).includes(x)?'on':''}">${(S.endings||[]).includes(x)?ST.ends[x][0]:'🔒 ???'}</div>`).join('')}</div>
+    <p class="muted">${k==='best'?'모든 엔딩을 모아 볼까요?':'💡 친구를 돕고, 문제를 꼼꼼히 풀면 더 좋은 엔딩을 볼 수 있어요!'}</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn" id="again">🔁 다른 선택으로 다시</button><a class="btn ghost" style="text-decoration:none" href="index.html">🏠 게임 교실</a></div></div>`;
+    $('#again').onclick=()=>this.start();this.done=true},
+};
+window.__auto=()=>new Promise(res=>{AUTO=true;GAMEDEF.start();const iv=setInterval(()=>{if(GAMEDEF.done){clearInterval(iv);res({ok:!!S.end,endings:S.endings})}},30)});
+
+</script>
+<script>
+GAMEDEF.boot();
+</script>
+</body>
+</html>

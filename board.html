@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>선생님 전자칠판 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--main:#f2c14e;--ink:#f4f1ff;--card:#22264a;--line:#363c6e}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -10%,color-mix(in srgb,var(--main) 32%,#171a33),#0e1022 70%) fixed;min-height:100vh;font-size:18px}
+h1,h2,h3,button,.jua{font-family:'Jua','Gowun Dodum',sans-serif;font-weight:400}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+.top{position:sticky;top:0;z-index:30;display:flex;gap:8px;align-items:center;padding:8px 14px;background:#0e1022d9;backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.top a{color:var(--ink);text-decoration:none;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 12px}
+.top .t{font-family:Jua;font-size:20px}.sp{flex:1}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:24px}
+.btn{background:var(--main);color:#14122a;border-radius:14px;padding:10px 18px;font-size:19px;box-shadow:0 4px 0 color-mix(in srgb,var(--main) 50%,#000)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+.btn.ghost{background:#2e3364;color:var(--ink);box-shadow:0 4px 0 #0008;border:2px solid var(--line)}
+.btn.sm{font-size:15px;padding:6px 12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{background:#0b0d1d;border:2px solid var(--line);border-radius:12px;padding:9px 12px;font-size:18px;width:100%}
+textarea{min-height:120px;resize:vertical}
+label{display:block;margin:10px 0 4px;opacity:.85}
+.grid{display:grid;gap:10px}.g2{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.g4{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.muted{opacity:.7}.center{text-align:center}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-block;background:#ffffff14;border:1px solid #ffffff2a;border-radius:999px;padding:3px 11px;font-size:15px;margin:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:#2e3364;border:2px solid var(--line);border-radius:14px;padding:9px 15px;font-size:18px}.tabs button.on{background:var(--main);color:#14122a;border-color:var(--main)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#000d;border:2px solid var(--main);border-radius:16px;padding:12px 22px;z-index:200;font-family:Jua;font-size:20px;animation:tin .3s}
+@keyframes tin{from{opacity:0;transform:translate(-50%,20px)}}
+.modal{position:fixed;inset:0;background:#000a;z-index:150;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .panel{max-width:640px;width:100%;max-height:92vh;overflow:auto}
+.big-code{font-family:Jua;font-size:clamp(28px,6vw,46px);letter-spacing:3px;background:#0b0d1d;border:3px dashed var(--main);border-radius:16px;padding:12px;text-align:center;word-break:break-all}
+.conf{position:fixed;top:-40px;z-index:300;font-size:26px;pointer-events:none;animation:fall 2.6s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+body{font-size:20px}.wrap{max-width:1500px}
+.sumrow{gap:10px}.sum{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px 18px;text-align:center;flex:1;min-width:140px}.sum b{display:block;font-family:Jua;font-size:36px;color:var(--main)}.sum.q{flex:2;font-family:Jua;font-size:22px}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(var(--sz)*6.4),1fr));gap:12px}
+.st{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px 10px 12px;text-align:center;color:var(--ink);transition:transform .12s}.st:hover{transform:translateY(-4px);border-color:var(--main)}.st.empty{opacity:.5}
+.st .nm{font-family:Jua;font-size:calc(var(--sz)*.8);margin-top:12px}.st .tt{font-size:14px;opacity:.75;min-height:1.2em}.st .mini{font-size:14px;opacity:.85}
+.chip.big{font-size:20px;padding:6px 14px}.detail{text-align:center}
+.hp{position:relative;height:30px;background:#0007;border-radius:999px;overflow:hidden;border:2px solid #ff5a6e;margin:8px 0}.hp i{display:block;height:100%;background:linear-gradient(90deg,#ff1744,#ff8a80);transition:width 1s}.hp span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Jua;font-size:17px;text-shadow:0 1px 2px #000}
+.hp.big{height:54px;max-width:900px;margin:16px auto}.hp.big span{font-size:28px}
+.qbig{text-align:center}.qbig h1{font-size:54px;margin:6px 0}.qboss{font-size:220px;line-height:1.1;filter:drop-shadow(0 14px 24px #000c);animation:bob 2.4s ease-in-out infinite}.qboss.dead{animation:boom 1s}@keyframes bob{50%{transform:translateY(-16px)}}@keyframes boom{0%{transform:scale(.3)}60%{transform:scale(1.3)}}
+.qbig.hit .qboss{animation:hit .6s 3}@keyframes hit{30%{transform:translateX(-20px) rotate(-8deg);filter:brightness(2) drop-shadow(0 0 30px red)}70%{transform:translateX(20px) rotate(8deg)}}
+.bb{font-size:40px;background:#2e3364;border:3px solid var(--line);border-radius:14px;padding:4px 10px}.bb.on{border-color:var(--main)}
+.wbox{position:relative;max-width:560px;margin:0 auto}.bigwheel{width:100%;filter:drop-shadow(0 10px 20px #000a)}.wptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:54px;color:#fff;text-shadow:0 3px 0 #000}
+.wresult{font-family:Jua;font-size:46px;margin:14px auto;background:#0b0d1d;border:4px dashed var(--main);border-radius:22px;padding:16px 28px;display:inline-block;animation:pop .5s cubic-bezier(.3,1.6,.6,1)}@keyframes pop{from{transform:scale(.2)}}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}.pk{margin:0;background:#2e3364;border-radius:12px;padding:8px 10px;cursor:pointer;font-size:17px}.pk input{width:auto;margin-right:6px}
+.ticket{background:repeating-linear-gradient(45deg,#3b2d10,#3b2d10 10px,#46361a 10px,#46361a 20px);border:2px dashed #ffd54f;border-radius:14px;padding:12px}.ticket.used{opacity:.5}.ticket .tc{font-family:Jua;font-size:24px;letter-spacing:2px;color:#ffd54f;margin:4px 0}
+.coupons{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin:10px 0}.coupon{border:2px dashed #ffd54f;border-radius:14px;padding:10px;text-align:center;background:#3b2d10}.coupon .cc{font-family:Jua;font-size:26px;letter-spacing:2px;color:#ffd54f}
+.btn.on{outline:3px solid var(--main)}
+@media print{.top,.tabs,.wrap>*:not(.modal){display:none}.modal{position:static;background:none}.coupon{background:#fff;color:#000;border-color:#000}.coupon .cc{color:#000}}
+
+</style>
+<script src="hub-config.js"></script>
+<script>window.HUB_GRADE=6;window.HUB_GAMES=[{"id": "g6-airport", "cat": "esc", "e": "✈️", "t": "세계 일주 공항", "f": "g6-airport.html"}, {"id": "g6-body", "cat": "esc", "e": "🫀", "t": "인체 탐험 캡슐", "f": "g6-body.html"}, {"id": "g6-bank", "cat": "esc", "e": "🏦", "t": "은행 금고 대작전", "f": "g6-bank.html"}, {"id": "g6-moon", "cat": "esc", "e": "🌒", "t": "달빛 천문대", "f": "g6-moon.html"}, {"id": "g6-invent", "cat": "esc", "e": "💡", "t": "발명가의 전기 공방", "f": "g6-invent.html"}, {"id": "defense", "cat": "arc", "e": "🏰", "t": "계산 디펜스", "f": "defense.html"}, {"id": "race", "cat": "arc", "e": "🏎️", "t": "계산 레이싱 그랑프리", "f": "race.html"}, {"id": "idle", "cat": "arc", "e": "👑", "t": "꼬마 왕국 키우기", "f": "idle.html"}, {"id": "quiz-balloon", "cat": "quiz", "e": "🎈", "t": "정답 풍선 팡팡", "f": "balloon.html"}, {"id": "quiz-sort", "cat": "quiz", "e": "🏭", "t": "척척 분류 공장", "f": "sort.html"}, {"id": "quiz-tug", "cat": "quiz", "e": "🪢", "t": "우리 반 줄다리기 퀴즈", "f": "tug.html"}, {"id": "quiz-memory", "cat": "quiz", "e": "🃏", "t": "기억력 짝꿍 카드", "f": "memory.html"}, {"id": "quiz-ox", "cat": "quiz", "e": "🐸", "t": "OX 징검다리", "f": "ox.html"}, {"id": "story", "cat": "new", "e": "📖", "t": "갈림길 이야기", "f": "story.html"}, {"id": "board", "cat": "new", "e": "🎲", "t": "땅따먹기 대모험", "f": "landgame.html"}, {"id": "code", "cat": "new", "e": "🤖", "t": "코딩 로봇 탐험", "f": "code.html"}, {"id": "tteok", "cat": "sim", "e": "🍢", "t": "떡볶이 가게 사장님", "f": "tteok.html"}, {"id": "farm", "cat": "sim", "e": "🌱", "t": "우리 반 꼬마 농장", "f": "farm.html"}, {"id": "park", "cat": "sim", "e": "🎢", "t": "놀이공원 사장님", "f": "park.html"}, {"id": "shelter", "cat": "sim", "e": "🐾", "t": "동물 보호소", "f": "shelter.html"}, {"id": "island", "cat": "sim", "e": "🏝️", "t": "무인도에서 살아남기", "f": "island.html"}, {"id": "space", "cat": "esc", "e": "🚀", "t": "우주정거장 탈출", "f": "space.html"}, {"id": "museum", "cat": "esc", "e": "🏛️", "t": "한밤의 박물관 탈출", "f": "museum.html"}, {"id": "pirate", "cat": "esc", "e": "🏴‍☠️", "t": "해적선의 보물", "f": "pirate.html"}, {"id": "wizard", "cat": "esc", "e": "🧙", "t": "마법사의 탑", "f": "wizard.html"}, {"id": "time", "cat": "esc", "e": "🕰️", "t": "시간 여행 연구소", "f": "time.html"}, {"id": "timecapsule-1", "cat": "esc", "e": "📦", "t": "1일차 · 단서를 쫓아라", "f": "timecapsule-1.html"}, {"id": "timecapsule-2", "cat": "esc", "e": "🕵️", "t": "2일차 · 용의자는 셋", "f": "timecapsule-2.html"}, {"id": "timecapsule-3", "cat": "esc", "e": "🗝️", "t": "3일차 · X의 정체", "f": "timecapsule-3.html"}];</script>
+<script src="hub.js"></script>
+</head>
+<body>
+<div class="top"><a href="index.html">🏠 게임 교실</a><span class="t">👩‍🏫 선생님 전자칠판</span><span class="sp"></span></div>
+<div class="wrap" id="app"></div>
+<script>
+const $=s=>document.querySelector(s);const H=HUB;const E=H.esc;
+function toast(t){const e=document.createElement('div');e.className='toast';e.innerHTML=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2200)}
+function confetti(n){const em=['🎉','✨','⭐','🎊','💫'];for(let i=0;i<(n||40);i++){const e=document.createElement('div');e.className='conf';e.textContent=em[i%5];e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*1.2+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),4200)}}
+function modal(html){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="panel">${html}</div>`;m.onclick=e=>{if(e.target===m)m.remove()};document.body.appendChild(m);return m}
+H.injectCSS();
+</script>
+<script>
+const GAS_CODE="/**\n * 우리 반 게임 교실 · 학급 연결 서버 (Google Apps Script)\n * 1) 구글 스프레드시트를 새로 만들고 [확장 프로그램 → Apps Script]를 눌러요.\n * 2) 이 코드를 모두 붙여 넣고, 아래 TEACHER_PIN을 선생님 전자칠판 비밀번호와 똑같이 바꿔요.\n * 3) [배포 → 새 배포 → 유형: 웹 앱] / 실행: 나 / 액세스 권한: 모든 사용자 → 배포\n * 4) 나온 \"웹 앱 URL\"(…/exec)을 선생님 전자칠판 [설정]의 연결 주소에 붙여 넣어요.\n */\nconst TEACHER_PIN = '1234';   // ← 꼭 바꾸세요! (전자칠판 비밀번호와 같게)\n\nfunction sheet_(name, header) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let sh = ss.getSheetByName(name);\n  if (!sh) { sh = ss.insertSheet(name); sh.appendRow(header); }\n  return sh;\n}\nfunction out_(obj) {\n  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);\n}\nfunction rows_(sh) { const v = sh.getDataRange().getValues(); v.shift(); return v; }\n\nfunction pull_(cls) {\n  const st = rows_(sheet_('students', ['cls', 'num', 'data', 'updated']))\n    .filter(r => String(r[0]) === cls)\n    .map(r => { let d = {}; try { d = JSON.parse(r[2]); } catch (e) {} return { n: Number(r[1]), d: d, ts: r[3] }; });\n  const grants = {}, glog = [];\n  rows_(sheet_('grants', ['cls', 'num', 'amount', 'reason', 'time'])).forEach(r => {\n    if (String(r[0]) !== cls) return;\n    const n = String(Number(r[1]));\n    grants[n] = (grants[n] || 0) + Number(r[2] || 0);\n    glog.push({ n: Number(r[1]), amt: Number(r[2]), reason: r[3], at: r[4] });\n  });\n  let cfg = {};\n  rows_(sheet_('config', ['cls', 'data', 'updated'])).forEach(r => { if (String(r[0]) === cls) { try { cfg = JSON.parse(r[1]); } catch (e) {} } });\n  return { ok: true, students: st, grants: grants, glog: glog.slice(-80), cfg: cfg, delivered: cfg.delivered || [] };\n}\n\nfunction doGet(e) {\n  const p = e.parameter || {};\n  if (p.a === 'pull') return out_(pull_(String(p.c || 'class')));\n  return out_({ ok: true, msg: '우리 반 게임 교실 연결 서버가 잘 작동하고 있어요!' });\n}\n\nfunction doPost(e) {\n  const lock = LockService.getScriptLock();\n  lock.waitLock(10000);\n  try {\n    const b = JSON.parse(e.postData.contents);\n    const cls = String(b.c || 'class');\n    if (b.a === 'push') {\n      const sh = sheet_('students', ['cls', 'num', 'data', 'updated']);\n      const v = sh.getDataRange().getValues();\n      const json = JSON.stringify(b.d || {}).slice(0, 45000);\n      for (let i = 1; i < v.length; i++) {\n        if (String(v[i][0]) === cls && Number(v[i][1]) === Number(b.n)) {\n          sh.getRange(i + 1, 3, 1, 2).setValues([[json, new Date()]]);\n          return out_({ ok: true });\n        }\n      }\n      sh.appendRow([cls, Number(b.n), json, new Date()]);\n      return out_({ ok: true });\n    }\n    if (String(b.pin) !== String(TEACHER_PIN)) return out_({ ok: false, msg: '비밀번호가 Apps Script의 TEACHER_PIN과 달라요.' });\n    if (b.a === 'grant') {\n      const sh = sheet_('grants', ['cls', 'num', 'amount', 'reason', 'time']);\n      (b.nums || []).forEach(n => sh.appendRow([cls, Number(n), Number(b.amt || 0), String(b.reason || ''), new Date()]));\n      return out_({ ok: true });\n    }\n    if (b.a === 'cfg') {\n      const sh = sheet_('config', ['cls', 'data', 'updated']);\n      const v = sh.getDataRange().getValues();\n      const json = JSON.stringify(b.cfg || {});\n      for (let i = 1; i < v.length; i++) {\n        if (String(v[i][0]) === cls) { sh.getRange(i + 1, 2, 1, 2).setValues([[json, new Date()]]); return out_({ ok: true }); }\n      }\n      sh.appendRow([cls, json, new Date()]);\n      return out_({ ok: true });\n    }\n    if (b.a === 'test') return out_({ ok: true, msg: '연결 성공! 비밀번호도 맞아요.' });\n    return out_({ ok: false, msg: 'unknown action' });\n  } catch (err) {\n    return out_({ ok: false, msg: String(err) });\n  } finally {\n    lock.releaseLock();\n  }\n}\n";
+/* 선생님 전자칠판 */
+const BK='hub-board';
+const BD=()=>Object.assign({roster:{},manual:{},grants:[],ser:1,delivered:[],quest:null,shop:null,missions:null,notice:'',size:28},H.LS.get(BK,{}));
+const saveBD=b=>H.LS.set(BK,b);
+const pinHash=p=>H.chk('pin:'+p)+String(p).length;
+let SYNC=null,TAB='home',SORT='num',LASTQ=null;
+function unlocked(){try{return sessionStorage.getItem('hub-board-ok')==='1'}catch(e){return false}}
+function lock(){const b=BD();const first=!b.pin;
+  $('#app').innerHTML=`<div class="panel center" style="max-width:480px;margin:40px auto"><div style="font-size:70px">👩‍🏫</div><h2>${first?'선생님 비밀번호 만들기':'선생님 전자칠판'}</h2><p class="muted">${first?'처음 한 번만 정해요. 학생들이 모르는 숫자 4자리 이상으로 정해 주세요.':'비밀번호를 입력하세요.'}</p>
+  <input id="pin" type="password" inputmode="numeric" placeholder="비밀번호" style="text-align:center;font-size:28px;letter-spacing:6px">${first?'<input id="pin2" type="password" inputmode="numeric" placeholder="한 번 더" style="text-align:center;font-size:28px;letter-spacing:6px;margin-top:8px">':''}
+  <button class="btn" id="go" style="margin-top:12px;width:100%">${first?'만들기':'열기'}</button><p class="muted" style="font-size:14px;margin-top:14px">학생 화면이 아니라 선생님 화면이에요. 🔒</p></div>`;
+  const go=()=>{const v=$('#pin').value.trim();if(v.length<4){toast('4자리 이상 입력해 주세요');return}
+    if(first){if(v!==$('#pin2').value.trim()){toast('두 번 입력한 비밀번호가 달라요');return}b.pin=pinHash(v);saveBD(b)}else if(pinHash(v)!==b.pin){toast('비밀번호가 달라요');return}
+    try{sessionStorage.setItem('hub-board-ok','1');sessionStorage.setItem('hub-board-pin',v)}catch(e){}start()};
+  $('#go').onclick=go;$('#pin').onkeydown=e=>{if(e.key==='Enter')go()}}
+const PIN=()=>{try{return sessionStorage.getItem('hub-board-pin')||''}catch(e){return''}};
+function cfgOut(){const b=BD();const C=H.classCfg();return{quest:b.quest||C.quest,shop:b.shop||C.shop,missions:b.missions||C.missions,notice:b.notice||'',qprog:questProg(),delivered:b.delivered||[]}}
+async function pushCfg(){const b=BD();H.LS.set('hub-classcfg',cfgOut());if(!H.getCfg().url)return;const r=await H.post({a:'cfg',pin:PIN(),cfg:cfgOut()});if(!r.ok)toast('⚠️ 학급 서버에 저장하지 못했어요: '+(r.msg||'연결 확인'))}
+function students(){const b=BD();const map={};
+  Object.entries(b.roster).forEach(([n,nm])=>map[n]={n:+n,name:nm});
+  Object.entries(b.manual||{}).forEach(([n,d])=>{map[n]=Object.assign(map[n]||{n:+n},{d:Object.assign({},d,{src:'code'})})});
+  ((SYNC&&SYNC.students)||[]).forEach(st=>{const n=String(st.n);const old=map[n]&&map[n].d;if(!old||!old.ts||(st.d.ts||0)>=old.ts)map[n]=Object.assign(map[n]||{n:st.n},{d:Object.assign({},st.d,{src:'sync'})})});
+  Object.values(map).forEach(s=>{s.name=s.name||(s.d&&s.d.name)||(s.n+'번')});return Object.values(map).sort((a,b)=>a.n-b.n)}
+function questProg(){const b=BD();const q=b.quest||H.DEF_QUEST;return students().reduce((a,s)=>a+(+((s.d||{})[q.metric==='esc'?'esc':q.metric])||0),0)}
+function grantsOf(n){const g=SYNC&&SYNC.grants?+(SYNC.grants[String(n)]||0):0;return g}
+async function refresh(silent){if(!H.getCfg().url)return;const r=await H.pull();if(r&&r.ok){SYNC=r;if(!silent)toast('🔄 학생 기록을 새로 불러왔어요');render()}else if(!silent)toast('⚠️ 학급 서버에 연결하지 못했어요')}
+function start(){render();refresh(true);setInterval(()=>{if(TAB==='home'||TAB==='quest')refresh(true)},30000)}
+function stCard(s){const d=s.d;if(!d)return `<button class="st empty" data-n="${s.n}"><span class="hub-av" style="--s:64px;--c:#555"><span class="hub-av-e">💤</span></span><div class="nm">${s.n}. ${E(s.name)}</div><div class="muted" style="font-size:14px">기록 없음</div></button>`;
+  const prog=(d.xp-H.thr(d.level))/(H.thr(d.level+1)-H.thr(d.level));
+  return `<button class="st" data-n="${s.n}">${H.avatar({av:d.av,acc:d.acc},d.level,70)}<div class="nm">${s.n}. ${E(s.name)}</div><div class="tt">${E(d.title||'')}</div><div class="hub-bar" style="margin:6px 0"><i style="width:${Math.round(prog*100)}%"></i></div><div class="mini">⭐${d.xp} · 🎮${d.ndone} · 🏅${(d.badges||[]).length||d.nbadges||0} · 💖${d.bal!=null?d.bal:''}</div></button>`}
+function render(){if(!unlocked())return lock();const b=BD(),cfg=H.getCfg();
+  $('#app').innerHTML=`<div class="tabs">${[['home','📊 학급 현황'],['quest','⚔️ 학급 퀘스트'],['wheel','🎡 룰렛·뽑기'],['praise','💖 칭찬·상점'],['set','⚙️ 설정']].map(([k,n])=>`<button data-t="${k}" class="${TAB===k?'on':''}">${n}</button>`).join('')}<span class="sp"></span>${cfg.url?'<button class="btn ghost sm" id="rf">🔄 새로고침</button>':''}<button class="btn ghost sm" id="fs">⛶ 전체 화면</button></div><div id="tab"></div>`;
+  document.querySelectorAll('.tabs [data-t]').forEach(x=>x.onclick=()=>{TAB=x.dataset.t;render()});if($('#rf'))$('#rf').onclick=()=>refresh();$('#fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()};
+  ({home,quest,wheel,praise,set})[TAB]()}
+function home(){const S=students(),b=BD(),cfg=H.getCfg();const act=S.filter(s=>s.d);const q=b.quest||H.DEF_QUEST,qp=questProg();
+  const list=S.slice().sort(SORT==='lv'?(x,y)=>((y.d||{}).xp||0)-((x.d||{}).xp||0):(x,y)=>x.n-y.n);
+  $('#tab').innerHTML=`<div class="row sumrow"><div class="sum"><b>${act.length}</b>명 참여</div><div class="sum"><b>${act.length?(act.reduce((a,s)=>a+s.d.level,0)/act.length).toFixed(1):'-'}</b>평균 레벨</div><div class="sum"><b>${act.reduce((a,s)=>a+(s.d.ndone||0),0)}</b>완료한 게임</div><div class="sum"><b>${act.reduce((a,s)=>a+(s.d.esc||0),0)}</b>탈출한 방탈출</div><div class="sum q">${q.e} ${E(q.n)}<div class="hp"><i style="width:${Math.max(0,100-qp/q.goal*100)}%"></i><span>${Math.max(0,q.goal-qp)} / ${q.goal}</span></div></div></div>
+  <div class="row" style="margin:6px 0 10px"><span class="muted">정렬:</span><button class="btn ghost sm ${SORT==='num'?'on':''}" id="so1">번호순</button><button class="btn ghost sm" id="so2">레벨순</button><span class="sp"></span><span class="muted" style="font-size:15px">${cfg.url?'🔗 자동 연결 중 · 30초마다 새로고침':'📝 결과 코드 방식 (설정에서 자동 연결 가능)'}</span>${!cfg.url?'<button class="btn sm" id="addc">➕ 결과 코드 입력</button>':''}</div>
+  ${S.length?`<div class="stgrid" style="--sz:${b.size}px">${list.map(stCard).join('')}</div>`:`<div class="panel center"><h2>아직 학생이 없어요</h2><p>⚙️ 설정에서 <b>학생 명단</b>을 넣거나, 학생들이 게임을 하면 자동으로 나타나요.</p></div>`}`;
+  $('#so1').onclick=()=>{SORT='num';home()};$('#so2').onclick=()=>{SORT='lv';home()};if($('#addc'))$('#addc').onclick=addCodes;
+  document.querySelectorAll('.st').forEach(x=>x.onclick=()=>detail(+x.dataset.n))}
+function addCodes(){const m=modal(`<h2>➕ 결과 코드 입력</h2><p class="muted">학생이 <b>내 캐릭터 → 📮 선생님께 보내기</b>에서 보여 주는 코드를 적어 주세요. 여러 개는 한 줄에 하나씩!</p><textarea id="codes" placeholder="예: 7.1K2.5.9.4.1.6.3.12.2-AB"></textarea><button class="btn" id="ok" style="margin-top:10px">추가하기</button><p id="res"></p>`);
+  m.querySelector('#ok').onclick=()=>{const b=BD();let ok=0,bad=[];m.querySelector('#codes').value.split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach(c=>{const d=H.decodeResult(c);if(!d||!d.num){bad.push(c);return}b.manual[d.num]=Object.assign(d,{ts:Date.now(),badges:[]});ok++});saveBD(b);m.querySelector('#res').innerHTML=`✅ ${ok}명 추가${bad.length?`<br>⚠️ 잘못된 코드: ${bad.map(E).join(', ')}`:''}`;home()}}
+function detail(n){const s=students().find(x=>x.n===n);if(!s)return;const d=s.d||{};const m=modal(`<div class="detail">${d.level?H.avatar({av:d.av,acc:d.acc},d.level,180):'<div style="font-size:120px">💤</div>'}<h1 style="margin:14px 0 4px;font-size:44px">${n}. ${E(s.name)}</h1><div style="font-size:22px">${E(d.title||'')}</div>
+  ${d.level?`<div class="row" style="justify-content:center;font-family:Jua;font-size:26px;margin:10px 0">⭐ Lv.${d.level} · ${d.xp} XP</div><div class="hub-bar" style="height:20px;max-width:420px;margin:0 auto"><i style="width:${Math.round((d.xp-H.thr(d.level))/(H.thr(d.level+1)-H.thr(d.level))*100)}%"></i></div>
+  <div class="row" style="justify-content:center;margin:14px 0"><span class="chip big">🎮 완료 ${d.ndone}</span><span class="chip big">🔐 탈출 ${d.esc}</span><span class="chip big">🔥 어려움 ${d.hard}</span><span class="chip big">🎯 미션 ${d.missions}</span><span class="chip big">💖 ${d.bal}점</span>${d.collect!=null?`<span class="chip big">📚 도감 ${d.collect}/${d.total}</span>`:''}</div>
+  ${(d.badges||[]).length?`<div class="row" style="justify-content:center;font-size:20px">${d.badges.map(id=>{const bg=H.BADGES.find(x=>x.id===id);return bg?`<span class="chip big">${bg.e} ${bg.n}</span>`:''}).join('')}</div>`:''}
+  ${(d.recent||[]).length?`<p class="muted">최근: ${d.recent.map(r=>{const [id,lv]=r.split('@');const g=H.GMAP[id];return g?g.e+' '+E(g.t)+' ('+({easy:'쉬움',normal:'보통',hard:'어려움'})[lv]+')':''}).filter(Boolean).join(' · ')}</p>`:''}
+  <p class="muted" style="font-size:14px">${d.src==='code'?'📝 결과 코드로 받은 기록':'🔗 자동 연결 기록'} · ${d.ts?new Date(d.ts).toLocaleString():''}</p>`:'<p>아직 기록이 없어요.</p>'}
+  <div class="row" style="justify-content:center;margin-top:10px">${[1,3,5,10].map(a=>`<button class="btn" data-a="${a}">💖 +${a}</button>`).join('')}</div></div>`);
+  m.querySelector('.panel').style.maxWidth='900px';m.querySelectorAll('[data-a]').forEach(x=>x.onclick=()=>{give([n],+x.dataset.a,'칭찬');m.remove()})}
+async function give(nums,amt,reason){const b=BD(),cfg=H.getCfg();
+  if(cfg.url){const r=await H.post({a:'grant',pin:PIN(),nums,amt,reason});if(r.ok){b.grants.push({nums,amt,reason,at:Date.now(),how:'sync'});saveBD(b);confetti(30);toast(`💖 ${nums.length}명에게 ${amt}점을 보냈어요!`);refresh(true);return}toast('⚠️ 서버 전송 실패 → 쿠폰으로 만들게요');}
+  const codes=nums.map(n=>{const c=H.couponCode(cfg.cls,n,amt,b.ser++);return{n,c}});b.grants.push({nums,amt,reason,at:Date.now(),how:'coupon',codes});saveBD(b);
+  const S=students();modal(`<h2>🎟️ 칭찬 쿠폰 (${amt}점 · ${E(reason)})</h2><p class="muted">학생이 <b>우리 반 → 칭찬 쿠폰 번호 입력</b>에 적으면 포인트가 들어가요. 쿠폰은 한 번만 쓸 수 있어요.</p><div class="coupons">${codes.map(x=>`<div class="coupon"><b>${x.n}. ${E((S.find(s=>s.n===x.n)||{}).name||'')}</b><div class="cc">${x.c}</div><div class="muted">💖 ${amt}점</div></div>`).join('')}</div><button class="btn ghost" onclick="window.print()">🖨️ 인쇄하기</button>`)}
+const BOSSES=['🐉','👾','🦖','🐙','👹','🤖','🧟','🦑','🐲','👻'];
+function quest(){const b=BD(),q=b.quest||H.DEF_QUEST,qp=questProg(),dead=qp>=q.goal;const hit=LASTQ!=null&&qp>LASTQ;LASTQ=qp;
+  const S=students().filter(s=>s.d);const top=S.map(s=>({s,v:+(s.d[q.metric]||0)})).sort((a,b)=>b.v-a.v).slice(0,5);
+  $('#tab').innerHTML=`<div class="panel qbig ${hit?'hit':''}"><div class="qboss ${dead?'dead':''}">${dead?'💥':q.e}</div><h1>${E(q.n)}</h1><p style="font-size:24px">${E(q.msg||'')}</p><div class="hp big"><i style="width:${Math.max(0,100-qp/q.goal*100)}%"></i><span>❤️ ${Math.max(0,q.goal-qp)} / ${q.goal}</span></div>
+    ${dead?'<h2 style="color:#ffd54f;font-size:44px">🎉 우리 반 승리!</h2>':''}<div class="row" style="justify-content:center;margin-top:14px">${top.map((t,i)=>`<span class="chip big">${['🥇','🥈','🥉','🏅','🏅'][i]} ${E(t.s.name)} ${t.v}</span>`).join('')}</div></div>
+  <details class="panel"><summary class="jua" style="font-size:20px">✏️ 퀘스트 바꾸기</summary><div class="row" style="margin-top:10px">${BOSSES.map(e=>`<button class="bb ${q.e===e?'on':''}" data-e="${e}">${e}</button>`).join('')}</div>
+    <label>보스 이름</label><input id="qn" value="${E(q.n)}"><label>목표 (반 전체 합계)</label><div class="row"><select id="qm" style="flex:1">${[['ndone','완료한 게임 수'],['esc','탈출한 방탈출 수'],['xp','경험치 합계'],['missions','완료한 미션 수'],['level','레벨 합계']].map(([k,n])=>`<option value="${k}" ${q.metric===k?'selected':''}>${n}</option>`).join('')}</select><input id="qg" type="number" min="1" value="${q.goal}" style="flex:1"></div>
+    <label>학생들에게 보일 설명</label><input id="qmsg" value="${E(q.msg||'')}"><button class="btn" id="qs" style="margin-top:10px">저장하기</button></details>`;
+  let be=q.e;document.querySelectorAll('.bb').forEach(x=>x.onclick=()=>{be=x.dataset.e;document.querySelectorAll('.bb').forEach(y=>y.classList.toggle('on',y===x))});
+  $('#qs').onclick=()=>{const b2=BD();b2.quest={e:be,n:$('#qn').value.trim()||'보스',metric:$('#qm').value,goal:Math.max(1,+$('#qg').value||1),msg:$('#qmsg').value.trim()};saveBD(b2);pushCfg();toast('퀘스트를 저장했어요!');quest()};
+  if(dead&&hit)confetti(80)}
+let WMODE='mission';
+function wheel(){const b=BD();const ms=b.missions||H.DEF_MISSIONS;const S=students();const items=WMODE==='mission'?ms:S.map(s=>s.n+'. '+s.name);
+  const n=Math.max(items.length,1),cols=['#ef5350','#ffa726','#ffee58','#66bb6a','#42a5f5','#7e57c2','#ec407a','#26c6da'];
+  const segs=items.map((t,i)=>{const a0=i/n*360-90,a1=(i+1)/n*360-90,r=200;const p=a=>[250+r*Math.cos(a*Math.PI/180),250+r*Math.sin(a*Math.PI/180)];const [x0,y0]=p(a0),[x1,y1]=p(a1);const am=(a0+a1)/2;const [tx,ty]=[250+130*Math.cos(am*Math.PI/180),250+130*Math.sin(am*Math.PI/180)];
+    return `<path d="M250 250 L${x0} ${y0} A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${x1} ${y1} Z" fill="${cols[i%cols.length]}" stroke="#fff" stroke-width="2"/><text x="${tx}" y="${ty}" font-size="${n>16?11:n>10?14:17}" font-family="Jua" text-anchor="middle" dominant-baseline="middle" transform="rotate(${am+180*(am>90&&am<270)} ${tx} ${ty})" fill="#1a1a2e">${E(String(t).slice(0,n>12?7:11))}</text>`}).join('');
+  $('#tab').innerHTML=`<div class="row" style="justify-content:center;margin-bottom:10px"><button class="btn ${WMODE==='mission'?'':'ghost'}" id="wm1">🎯 미션 룰렛</button><button class="btn ${WMODE==='student'?'':'ghost'}" id="wm2">🙋 학생 뽑기</button></div>
+  <div class="wbox"><svg viewBox="0 0 500 500" class="bigwheel"><g id="wg">${items.length?segs:'<circle cx="250" cy="250" r="200" fill="#333"/>'}</g><circle cx="250" cy="250" r="34" fill="#fff" stroke="#22264a" stroke-width="6"/><text x="250" y="258" text-anchor="middle" font-size="26">🎡</text></svg><div class="wptr">▼</div></div>
+  <div class="center"><button class="btn" id="spin" style="font-size:28px;padding:14px 40px">돌리기!</button></div><div id="wres" class="center"></div>
+  ${WMODE==='mission'?`<details class="panel"><summary class="jua" style="font-size:20px">✏️ 미션 목록 바꾸기 (학생 화면 「오늘의 미션」에도 쓰여요)</summary><textarea id="mlist" style="min-height:200px;margin-top:10px">${E(ms.join('\n'))}</textarea><button class="btn" id="msave" style="margin-top:8px">저장</button></details>`:''}`;
+  $('#wm1').onclick=()=>{WMODE='mission';wheel()};$('#wm2').onclick=()=>{WMODE='student';wheel()};
+  let rot=0;$('#spin').onclick=()=>{if(!items.length)return;const i=Math.floor(Math.random()*n);const target=360*6+(360-(i+.5)/n*360);rot=rot-rot%360+target;const g=$('#wg');g.style.transition='transform 4s cubic-bezier(.15,.85,.2,1)';g.style.transformOrigin='250px 250px';g.style.transform=`rotate(${rot}deg)`;$('#spin').disabled=true;$('#wres').innerHTML='';
+    setTimeout(()=>{$('#spin').disabled=false;const t=items[i];let html=`<div class="wresult">${E(t)}</div>`;if(WMODE==='student'){const s=S[i];if(s&&s.d)html=`<div class="wresult">${H.avatar({av:s.d.av,acc:s.d.acc},s.d.level,120)}<div>${E(t)}</div></div>`}$('#wres').innerHTML=html;confetti(40)},4100)};
+  if($('#msave'))$('#msave').onclick=()=>{const b2=BD();b2.missions=$('#mlist').value.split('\n').map(x=>x.trim()).filter(Boolean);saveBD(b2);pushCfg();toast('미션 목록을 저장했어요!');wheel()}}
+function praise(){const b=BD(),S=students(),C=H.classCfg();const shop=b.shop||C.shop;
+  const reqs=[];S.forEach(s=>((s.d||{}).spent||[]).forEach(t=>reqs.push(Object.assign({who:s},t))));reqs.sort((a,b)=>b.at-a.at);
+  $('#tab').innerHTML=`<div class="panel"><h2>💖 칭찬 포인트 주기</h2><div class="row" style="margin-bottom:8px"><button class="btn ghost sm" id="all">모두 선택</button><button class="btn ghost sm" id="none">선택 해제</button></div>
+    <div class="pick">${S.map(s=>`<label class="pk"><input type="checkbox" value="${s.n}"> ${s.n}. ${E(s.name)}</label>`).join('')||'<span class="muted">설정에서 학생 명단을 먼저 넣어 주세요.</span>'}</div>
+    <div class="row" style="margin-top:10px"><input id="rs" placeholder="칭찬 이유 (예: 발표를 잘했어요)" style="flex:2">${[1,3,5,10].map(a=>`<button class="btn" data-a="${a}">+${a}</button>`).join('')}</div>
+    <p class="muted" style="font-size:14px">${H.getCfg().url?'🔗 자동 연결: 학생 화면에 바로 포인트가 들어가요.':'📝 쿠폰 방식: 쿠폰 번호가 만들어져요. 학생이 「우리 반」에서 입력하면 포인트가 들어가요.'}</p></div>
+  <div class="panel"><h2>🎫 교환 요청 ${reqs.length?`(${reqs.filter(r=>!(b.delivered||[]).includes(r.id)).length}개 남음)`:''}</h2>${reqs.length?`<div class="grid g2">${reqs.map(r=>{const dv=(b.delivered||[]).includes(r.id);return `<div class="ticket ${dv?'used':''}"><b>${r.e||'🎫'} ${E(r.n)}</b> · ${r.who.n}. ${E(r.who.name)}<div class="tc">${r.id}</div><button class="btn sm ${dv?'ghost':''}" data-d="${r.id}">${dv?'↩️ 되돌리기':'✅ 지급 완료'}</button></div>`}).join('')}</div>`:`<p class="muted">${H.getCfg().url?'아직 교환 요청이 없어요.':'쿠폰 방식에서는 학생이 보여 주는 교환권(T로 시작하는 번호)을 확인해 주세요.'}</p>`}</div>
+  <div class="panel"><h2>🛒 학급 상점 물건</h2><div id="shopl">${shop.map((it,i)=>`<div class="row shoprow" data-i="${i}"><input class="se" value="${E(it.e)}" style="width:70px;text-align:center"><input class="sn" value="${E(it.n)}" style="flex:2"><input class="sc" type="number" value="${it.cost}" style="width:100px"><span>점</span><button class="btn ghost sm del">🗑️</button></div>`).join('')}</div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="add">➕ 물건 추가</button><button class="btn sm" id="ss">저장하기</button></div></div>`;
+  $('#all').onclick=()=>document.querySelectorAll('.pk input').forEach(x=>x.checked=true);$('#none').onclick=()=>document.querySelectorAll('.pk input').forEach(x=>x.checked=false);
+  document.querySelectorAll('[data-a]').forEach(x=>x.onclick=()=>{const nums=[...document.querySelectorAll('.pk input:checked')].map(i=>+i.value);if(!nums.length){toast('학생을 먼저 골라 주세요');return}give(nums,+x.dataset.a,$('#rs').value.trim()||'칭찬')});
+  document.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{const b2=BD();const id=x.dataset.d;b2.delivered=b2.delivered||[];b2.delivered=b2.delivered.includes(id)?b2.delivered.filter(y=>y!==id):b2.delivered.concat(id);saveBD(b2);pushCfg();praise()});
+  const rows=()=>[...document.querySelectorAll('.shoprow')].map((r,i)=>({id:'s'+(i+1)+'_'+r.querySelector('.sn').value.trim().slice(0,4),e:r.querySelector('.se').value.trim()||'🎁',n:r.querySelector('.sn').value.trim(),cost:Math.max(1,+r.querySelector('.sc').value||1)})).filter(x=>x.n);
+  document.querySelectorAll('.del').forEach(x=>x.onclick=()=>{x.closest('.shoprow').remove()});
+  $('#add').onclick=()=>{const b2=BD();b2.shop=rows().concat({id:'n'+Date.now(),e:'🎁',n:'새 보상',cost:20});saveBD(b2);praise()};
+  $('#ss').onclick=()=>{const b2=BD();b2.shop=rows();saveBD(b2);pushCfg();toast('상점을 저장했어요!');praise()}}
+function set(){const b=BD(),cfg=H.getCfg();const link=H.joinLink(location.href.replace(/board\.html.*$/,'me.html'),cfg.url,cfg.cls);
+  $('#tab').innerHTML=`<div class="grid g2">
+  <div class="panel"><h2>👥 학생 명단</h2><p class="muted" style="font-size:15px">한 줄에 한 명씩 "번호 이름"으로 적어요. (엑셀에서 복사해도 돼요)</p><textarea id="rost" style="min-height:220px" placeholder="1 김하늘&#10;2 이바다">${E(Object.entries(b.roster).map(([n,nm])=>n+' '+nm).join('\n'))}</textarea><button class="btn" id="rsave" style="margin-top:8px">명단 저장</button></div>
+  <div class="panel"><h2>📢 학생 화면 알림</h2><textarea id="noti" placeholder="예: 이번 주 목표는 방탈출 3개!">${E(b.notice||'')}</textarea><button class="btn" id="nsave" style="margin-top:8px">알림 저장</button>
+    <h2 style="margin-top:16px">🖥️ 카드 크기</h2><input type="range" min="20" max="40" id="sz" value="${b.size}"></div>
+  <div class="panel"><h2>🔗 학급 자동 연결 (선택)</h2><p class="muted" style="font-size:15px">연결하면 학생 기록이 이 화면에 자동으로 모이고, 칭찬 포인트·퀘스트·미션이 학생 화면에 바로 반영돼요. 연결하지 않아도 <b>결과 코드</b>와 <b>쿠폰</b>으로 쓸 수 있어요.</p>
+    <label>학급 코드 (반마다 다르게, 예: 6-3)</label><input id="cls" value="${E(cfg.cls)}"><label>연결 주소 (Apps Script 웹 앱 URL)</label><input id="url" value="${E(cfg.url)}" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="row" style="margin-top:8px"><button class="btn" id="csave">저장</button><button class="btn ghost" id="ctest">연결 테스트</button></div><p id="cres"></p>
+    <label>📲 학생 연결 링크 (학생 태블릿에서 한 번만 열면 연결돼요)</label><input id="jl" readonly value="${E(link)}"><button class="btn ghost sm" id="jcopy" style="margin-top:6px">링크 복사</button></div>
+  <div class="panel"><h2>🧰 Apps Script 설치 방법</h2><ol style="line-height:1.7;font-size:16px"><li>구글 드라이브에서 <b>새 스프레드시트</b>를 만들어요.</li><li>메뉴 <b>확장 프로그램 → Apps Script</b>를 열어요.</li><li>아래 [코드 복사]를 눌러 원래 코드를 지우고 붙여 넣어요.</li><li>코드 맨 위 <b>TEACHER_PIN</b>을 이 화면 비밀번호와 똑같이 바꾸고 저장해요.</li><li><b>배포 → 새 배포 → 웹 앱</b> / 실행: <b>나</b> / 액세스: <b>모든 사용자</b> → 배포 (권한 허용)</li><li>나온 <b>웹 앱 URL</b>을 왼쪽 연결 주소에 붙여 넣고 [연결 테스트]!</li></ol><button class="btn" id="gcopy">📋 코드 복사</button></div>
+  <div class="panel"><h2>🔒 비밀번호 · 데이터</h2><div class="row"><input id="np" type="password" placeholder="새 비밀번호" style="flex:1"><button class="btn ghost" id="pch">바꾸기</button></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost sm" id="exp">💾 백업 내려받기</button><button class="btn ghost sm" id="clr">🧹 결과 코드 기록 지우기</button><button class="btn ghost sm" id="out">🚪 잠그기</button></div></div></div>`;
+  $('#rsave').onclick=()=>{const b2=BD();b2.roster={};$('#rost').value.split('\n').forEach(l=>{const m=l.trim().match(/^(\d{1,2})[\s.,\t번]+(.+)$/);if(m)b2.roster[+m[1]]=m[2].trim()});saveBD(b2);toast(`👥 ${Object.keys(b2.roster).length}명 저장`);set()};
+  $('#nsave').onclick=()=>{const b2=BD();b2.notice=$('#noti').value.trim();saveBD(b2);pushCfg();toast('알림 저장!')};
+  $('#sz').oninput=e=>{const b2=BD();b2.size=+e.target.value;saveBD(b2)};
+  $('#csave').onclick=()=>{H.setCfg({cls:$('#cls').value.trim(),url:$('#url').value.trim()});toast('저장했어요');set()};
+  const updLink=()=>{const c=H.getCfg();$('#jl').value=H.joinLink(location.href.replace(/board\.html.*$/,'me.html'),c.url,c.cls)};
+  $('#ctest').onclick=async()=>{H.setCfg({cls:$('#cls').value.trim(),url:$('#url').value.trim()});updLink();$('#cres').textContent='확인 중…';const r=await H.post({a:'test',pin:PIN()});$('#cres').textContent=r.ok?'✅ '+(r.msg||'연결 성공!'):'⚠️ '+(r.msg||r.err||'연결 실패. 주소와 배포 설정(모든 사용자)을 확인해 주세요.');if(r.ok){pushCfg();refresh(true)}};
+  $('#jcopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText($('#jl').value);toast('링크를 복사했어요')};
+  $('#gcopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(GAS_CODE);toast('📋 Apps Script 코드를 복사했어요')};
+  $('#pch').onclick=()=>{const v=$('#np').value.trim();if(v.length<4){toast('4자리 이상');return}const b2=BD();b2.pin=pinHash(v);saveBD(b2);try{sessionStorage.setItem('hub-board-pin',v)}catch(e){}toast('비밀번호를 바꿨어요. Apps Script의 TEACHER_PIN도 같게 바꿔 주세요!')};
+  $('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({board:BD(),sync:SYNC},null,1)],{type:'application/json'}));a.download='우리반-게임교실-백업.json';a.click()};
+  $('#clr').onclick=()=>{const b2=BD();b2.manual={};saveBD(b2);toast('지웠어요')};
+  $('#out').onclick=()=>{try{sessionStorage.removeItem('hub-board-ok')}catch(e){}render()}}
+render();if(unlocked())start();
+
+</script>
+</body>
+</html>

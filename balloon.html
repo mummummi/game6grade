@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>정답 풍선 팡팡 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--main:#ff8fb1;--ink:#f4f1ff;--bg1:#171a33;--bg2:#0e1022;--card:#22264a;--line:#363c6e;--good:#5eea9a;--bad:#ff5a6e}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -20%,color-mix(in srgb,var(--main) 35%,var(--bg1)),var(--bg2) 70%);min-height:100vh;font-size:18px;-webkit-tap-highlight-color:transparent;overflow-x:hidden;user-select:none;-webkit-user-select:none}
+h1,h2,h3,.jua,button,.hud{font-family:'Jua','Gowun Dodum',sans-serif;font-weight:400}
+button{font:inherit;color:inherit;cursor:pointer;border:0}
+.hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;background:#0e1022cc;backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.hud a{text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 11px}
+.hud .t{font-size:19px;white-space:nowrap}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px 11px;font-size:17px;white-space:nowrap;font-family:Jua}
+.lvpill{background:var(--main);color:#14122a;border-radius:999px;padding:3px 10px;font-size:14px}
+.sp{flex:1}
+.ib{background:var(--card);border:2px solid var(--line);border-radius:50%;width:36px;height:36px;padding:0;font-size:17px}
+.ib.off{opacity:.45}
+#app{max-width:1100px;margin:0 auto;padding:10px}
+.btn{background:var(--main);color:#14122a;border-radius:16px;padding:12px 22px;font-size:21px;box-shadow:0 5px 0 color-mix(in srgb,var(--main) 55%,#000);transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--main) 55%,#000)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 5px 0 #0007;border:2px solid var(--line)}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px}
+.center{text-align:center}.muted{opacity:.7}
+.intro{max-width:720px;margin:20px auto;text-align:center}
+.intro .big{font-size:90px;line-height:1.1;filter:drop-shadow(0 6px 16px #0008)}
+.intro h1{font-size:40px;margin:6px 0;color:var(--main)}
+.intro p{line-height:1.7}
+.rules{text-align:left;background:#0003;border-radius:16px;padding:12px 18px;margin:14px 0;line-height:1.8}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.qbox{background:#0b0d1dcc;border:3px solid var(--line);border-radius:18px;padding:12px 16px;text-align:center;font-family:Jua;font-size:26px;line-height:1.35;margin:8px auto;max-width:900px}
+.qbox small{display:block;font-size:15px;opacity:.75;font-family:'Gowun Dodum'}
+.hearts{letter-spacing:2px}
+.modal{position:fixed;inset:0;z-index:90;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .panel{max-width:480px;width:100%;text-align:center}
+.stars{font-size:46px;letter-spacing:6px}
+#err{display:none;position:fixed;inset:0;z-index:99;background:#000c;align-items:center;justify-content:center;text-align:center}
+.fx{position:fixed;z-index:80;pointer-events:none;font-family:Jua;transform:translate(-50%,-50%);white-space:nowrap}
+.float{animation:floatUp 1s ease-out forwards;font-size:28px;text-shadow:0 2px 0 #000,0 0 8px #000}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-180%) scale(1)}}
+.shake{animation:shake .35s}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.popin{animation:popin .35s cubic-bezier(.2,1.6,.4,1)}@keyframes popin{from{transform:scale(.6);opacity:0}}
+.conf{position:fixed;top:-20px;z-index:95;width:10px;height:14px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+.stage{position:relative;height:min(60vh,520px);border-radius:22px;overflow:hidden;border:3px solid var(--line);background:linear-gradient(#7fc8ff33,#0e102200 70%),radial-gradient(circle at 80% 15%,#fff3 0 40px,transparent 41px);touch-action:manipulation}
+.bal{position:absolute;left:0;top:0;width:var(--w);height:calc(var(--w)*1.15);border-radius:50% 50% 48% 48%;background:radial-gradient(circle at 32% 28%,#fff8 0 12%,transparent 13%),var(--c);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:Jua;color:#1a1530;font-size:var(--fs);line-height:1.15;box-shadow:inset -8px -10px 0 #0002,0 6px 14px #0006;cursor:pointer;will-change:transform;word-break:keep-all}
+.bal::after{content:'';position:absolute;bottom:-34px;left:50%;width:2px;height:34px;background:#fff8}
+.bal::before{content:'';position:absolute;bottom:-7px;left:calc(50% - 6px);border:6px solid transparent;border-top:8px solid var(--c)}
+.bal.boom{animation:boom .3s forwards;pointer-events:none}
+@keyframes boom{to{transform:var(--tf) scale(1.6);opacity:0}}
+.bal.wrongb{animation:wrongb .45s forwards;pointer-events:none}
+@keyframes wrongb{50%{filter:grayscale(1) brightness(.6)}to{transform:var(--tf) scale(.3);opacity:0}}
+.prog{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.prog i{width:22px;height:22px;border-radius:50%;background:#ffffff22;border:2px solid #ffffff44}
+.prog i.on{background:var(--good);border-color:var(--good);box-shadow:0 0 10px var(--good)}
+.banner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Jua;font-size:44px;text-shadow:0 3px 0 #000;background:#0006;z-index:5;text-align:center;padding:10px}
+
+</style>
+</head>
+<body>
+<div class="hud"><a href="index.html">🏠</a><span class="t">🎈 정답 풍선 팡팡</span><span class="lvpill" id="lvPill"></span><span class="sp"></span><span id="hudX"></span><button class="ib" id="tts" title="문제 읽어 주기">🗣️</button><button class="ib" id="mute" title="소리">🔊</button></div>
+<div id="app"></div>
+<div id="err"><div class="panel"><h2>앗, 문제가 생겼어요 😢</h2><p>게임이 업데이트되었거나 저장 정보가 꼬였을 수 있어요.</p><button class="btn" id="errReset">처음부터 다시 하기</button></div></div>
+<script>
+const GRADE=6,GAME='quiz-balloon',KEY='quiz-balloon-v1',TITLE='정답 풍선 팡팡',EMOJI='🎈';
+const DATA=[{"q":"백분율이 50%보다 큰 것을 모두 터뜨려라!","yes":["3/5","0.7","4/5","0.55","2/3","75%","0.9","7/10"],"no":["2/5","0.3","1/4","45%","0.5","1/3","0.25","3/10"]},{"q":"각기둥을 모두 터뜨려라!","yes":["삼각기둥","사각기둥","오각기둥","육각기둥","직육면체","정육면체","칠각기둥","팔각기둥"],"no":["삼각뿔","사각뿔","오각뿔","원기둥","원뿔","구","육각뿔","칠각뿔"]},{"q":"이산화 탄소에 대한 것을 모두 터뜨려라!","yes":["석회수를 뿌옇게 함","소화기에 쓰임","탄산음료의 거품","드라이아이스","광합성의 재료","내쉬는 숨에 많아짐","불을 끄는 성질","탄산수 만들기"],"no":["물질이 타는 것을 도움","금속을 녹슬게 함","광합성으로 만들어짐","산소 호흡 장치","생물의 호흡에 필요","로켓 연료를 태움","과산화 수소수로 발생","공기의 약 21%"]},{"q":"아시아 나라를 모두 터뜨려라!","yes":["중국","일본","베트남","인도","몽골","태국","사우디아라비아","인도네시아"],"no":["프랑스","브라질","이집트","캐나다","오스트레일리아","독일","케냐","칠레"]},{"q":"전기가 잘 통하는 물체(도체)를 모두 터뜨려라!","yes":["철 못","구리선","알루미늄 포일","철 클립","연필심(흑연)","금반지","소금물","10원 동전"],"no":["고무장갑","플라스틱 자","유리 막대","나무젓가락","종이","비닐봉지","도자기 컵","마른 천"]},{"q":"몫이 1보다 큰 나눗셈을 모두 터뜨려라!","yes":["2.4÷2","5.6÷4","3÷2","7.2÷6","9.6÷3","4.5÷1.5","1.8÷0.9","6.3÷0.7"],"no":["1.2÷3","2.4÷4","0.9÷3","3.6÷6","2÷5","0.8÷0.8","1.5÷5","4.2÷7"]},{"q":"국회가 하는 일을 모두 터뜨려라!","yes":["법을 만듦","법을 고침","예산안을 심의·확정함","국정 감사를 함","대법원장 임명 동의","국무총리 임명 동의","헌법 개정안 의결","탄핵 소추 의결"],"no":["재판을 함","판결을 내림","법에 따라 정책을 집행함","국군을 지휘함","외국에 대사를 보냄","공무원이 행정을 함","범죄를 수사함","세금을 걷는 행정"]}];
+</script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const LVN={easy:'🟢 쉬움',normal:'🟡 보통',hard:'🔴 어려움'};
+const QS=new URLSearchParams(location.search);
+let LV=QS.get('lv');if(!LVN[LV]){try{LV=localStorage.getItem('class-level')}catch(e){}}if(!LVN[LV])LV='normal';
+const FAST=QS.get('fast')==='1';
+const SKEY=LV==='normal'?KEY:KEY+'-'+LV;
+const SAVE_V=1;
+const L=(e,n,h)=>LV==='easy'?e:LV==='hard'?h:n;
+/* 저학년일수록 느긋하게 */
+const GS={1:1.35,2:1.2,3:1.1,4:1,5:.95,6:.9}[GRADE]||1;
+const T=ms=>FAST?Math.min(ms,60):ms;
+$('#lvPill').textContent=LVN[LV];
+window.addEventListener('error',e=>{console.error(e.message);$('#err').style.display='flex'});
+$('#errReset').onclick=()=>{try{localStorage.removeItem(SKEY)}catch(e){}location.href=location.pathname+'?lv='+LV};
+function fresh(){return{v:SAVE_V,end:0,wins:0,best:0,plays:0}}
+function loadSave(){try{if(QS.get('reset')==='1')localStorage.removeItem(SKEY);const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v===SAVE_V)return Object.assign(fresh(),s)}catch(e){}return fresh()}
+const S=loadSave();
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
+function markDone(){try{const id=GAME+'@'+LV;if(localStorage.getItem('class-done-skip-'+id)===String(S.end))return;const d=JSON.parse(localStorage.getItem('class-done')||'{}')||{};if(!d[id]){d[id]={how:'auto',at:new Date().toISOString()};localStorage.setItem('class-done',JSON.stringify(d))}}catch(e){}}
+function h(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c])}
+/* 소리 */
+let MUTE=false;try{MUTE=localStorage.getItem('arc-mute')==='1'}catch(e){}
+$('#mute').textContent=MUTE?'🔇':'🔊';$('#mute').onclick=()=>{MUTE=!MUTE;$('#mute').textContent=MUTE?'🔇':'🔊';try{localStorage.setItem('arc-mute',MUTE?'1':'0')}catch(e){}};
+let AC=null;function tone(f,d,type,vol,delay){if(MUTE||FAST)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime+(delay||0);const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(vol||.15,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+d)}catch(e){}}
+const SND={good:()=>{tone(660,.12,'triangle');tone(990,.18,'triangle',.15,.08)},bad:()=>tone(160,.3,'sawtooth',.12),pop:()=>tone(880,.08,'square',.08),win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.25,'triangle',.15,i*.12)),lose:()=>[392,330,262].forEach((f,i)=>tone(f,.3,'sine',.15,i*.18)),tick:()=>tone(1200,.04,'square',.05)};
+/* 문제 읽어 주기 (1·2학년은 기본으로 켜짐) */
+let TTS=GRADE<=2;try{const v=localStorage.getItem('quiz-tts');if(v!=null)TTS=v==='1'}catch(e){}
+const HAS_TTS='speechSynthesis' in window;
+function ttsBtn(){$('#tts').classList.toggle('off',!TTS);$('#tts').title=TTS?'문제 읽어 주기 켜짐':'문제 읽어 주기 꺼짐'}
+if(!HAS_TTS)$('#tts').style.display='none';
+$('#tts').onclick=()=>{TTS=!TTS;try{localStorage.setItem('quiz-tts',TTS?'1':'0')}catch(e){}ttsBtn();if(!TTS)try{speechSynthesis.cancel()}catch(e){}};ttsBtn();
+function speak(t,force){if(!HAS_TTS||FAST||(!TTS&&!force))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/[^\p{L}\p{N}\s.,?!%°×÷+\-=:/()·]/gu,' ').replace(/×/g,' 곱하기 ').replace(/÷/g,' 나누기 '));u.lang='ko-KR';u.rate=GRADE<=2?.9:1;speechSynthesis.speak(u)}catch(e){}}
+/* 효과 */
+function floatTxt(x,y,txt,color){const e=h('div','fx float',txt);e.style.left=x+'px';e.style.top=y+'px';if(color)e.style.color=color;document.body.appendChild(e);setTimeout(()=>e.remove(),1000)}
+function confetti(){if(FAST)return;const cs=['#ffd166','#ff8a5c','#5eea9a','#7fc8ff','#c792ea','#ff5a6e'];for(let i=0;i<70;i++){const c=h('div','conf');c.style.left=Math.random()*100+'vw';c.style.background=cs[i%cs.length];c.style.animationDuration=(1.6+Math.random()*1.6)+'s';c.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),3600)}}
+function heartsTxt(n,max){return '❤️'.repeat(Math.max(0,n))+'🤍'.repeat(Math.max(0,max-n))}
+function hud(html){$('#hudX').innerHTML=html}
+/* 시작 화면 */
+function intro(desc,rules,onStart,extra){hud('');const a=$('#app');a.innerHTML='';const box=h('div','intro panel popin',`<div class="big">${EMOJI}</div><h1>${TITLE}</h1><p>${desc}</p><div class="rules">${rules.map(r=>'• '+r).join('<br>')}</div>${S.wins?`<p class="muted">🏆 지금까지 ${S.wins}번 성공 · 최고 ${S.best}점</p>`:''}<div class="row" id="startRow"></div>`);a.appendChild(box);
+  const row=box.querySelector('#startRow');(extra||[[ '▶ 시작하기',onStart]]).forEach(([t,f],i)=>{const b=h('button','btn'+(i?' ghost':''),t);b.onclick=()=>{try{AC=AC||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}f()};row.appendChild(b)});if(FAST)setTimeout(()=>row.querySelector('button').click(),10)}
+/* 결과 화면 */
+function finish(win,score,stars,msg){if(win){S.end=Date.now();S.wins++;markDone();confetti();SND.win()}else SND.lose();S.plays++;if(score>S.best)S.best=score;save();try{speechSynthesis.cancel()}catch(e){}
+  const md=h('div','modal',`<div class="panel popin"><div style="font-size:70px">${win?'🏆':'💦'}</div><h2 style="font-size:32px;margin:6px 0;color:${win?'var(--good)':'var(--bad)'}">${win?'성공!':'아쉬워요!'}</h2>${win?`<div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<p style="font-size:20px">${msg||''}<br>점수 <b>${score}</b>점 · 최고 ${S.best}점</p>${win?'<p class="muted">완료 기록이 저장되었어요! 🎉</p>':''}<div class="row"><button class="btn" id="again">🔁 다시 하기</button><a class="btn ghost" href="index.html" style="text-decoration:none">🏠 게임 교실</a></div></div>`);
+  document.body.appendChild(md);md.querySelector('#again').onclick=()=>{md.remove();start()}}
+</script>
+<script>
+
+const ROUNDS=L(3,4,5),NEED=L(4,5,6),MAXH=L(5,4,3);
+const FF=FAST?.06:1;
+const SPAWN=L(1150,950,780)*GS*FF,RISE=L(7.5,6,4.8)*GS*1000*FF,RTIME=Math.round(L(45,36,28)*GS);
+const COLORS=['#ff8a8a','#ffd166','#8fe3a8','#7fc8ff','#c9a7ff','#ffb27f','#ff9ed2','#9ef0e6'];
+let G=null;
+function stop(){if(!G)return;G.over=true;cancelAnimationFrame(G.raf);clearInterval(G.tm)}
+function start(){stop();intro('‘○○을 모두 터뜨려라!’ 떠오르는 풍선 중에서 <b>정답 풍선만</b> 골라 팡팡 터뜨려요.',[`라운드 ${ROUNDS}개 · 라운드마다 정답 풍선 ${NEED}개를 터뜨리면 통과`,`오답 풍선을 터뜨리면 하트가 하나 줄어요 (하트 ${MAXH}개)`,`제한 시간 ${RTIME}초 안에 다 못 모으면 하트가 줄고 그 라운드를 다시 해요`,'정답 풍선이 날아가 버려도 괜찮아요. 다음 풍선을 노려요!'],play)}
+function play(){G={rounds:shuffle(DATA).slice(0,ROUNDS),ri:0,hearts:MAXH,score:0};round()}
+function upHud(){hud(`<span class="chip">🎈 ${G.ri+1}/${ROUNDS}</span> <span class="chip">⏱ ${G.left}</span> <span class="chip hearts">${heartsTxt(G.hearts,MAXH)}</span> <span class="chip">⭐ ${G.score}</span>`)}
+function round(){const r=G.rounds[G.ri];Object.assign(G,{got:0,left:RTIME,bs:[],over:false,yesQ:shuffle(r.yes),noQ:shuffle(r.no),yi:0,ni:0,since:0,last:0,paused:true});
+  const a=$('#app');a.innerHTML='';a.appendChild(h('div','qbox popin',`${esc(r.q)}<div class="prog">${'<i></i>'.repeat(NEED)}</div>`));
+  const st=h('div','stage');a.appendChild(st);G.st=st;st.appendChild(h('div','banner',`라운드 ${G.ri+1}<br><span style="font-size:24px">${esc(r.q)}</span>`));
+  upHud();speak(r.q);
+  setTimeout(()=>{if(G.over)return;const b=st.querySelector('.banner');if(b)b.remove();G.paused=false;G.raf=requestAnimationFrame(loop);
+    G.tm=setInterval(()=>{if(G.over)return;G.left--;if(G.left<=5&&G.left>0)SND.tick();upHud();if(G.left<=0)timeUp()},T(1000))},T(1500))}
+function spawn(){const r=G.rounds[G.ri];let yes=Math.random()<.5;if(G.since>=2)yes=true;G.since=yes?0:G.since+1;
+  const lab=yes?G.yesQ[G.yi++%G.yesQ.length]:G.noQ[G.ni++%G.noQ.length];
+  const W=G.st.clientWidth,wid=Math.max(96,Math.min(140,W/5.2));const el=h('div','bal',esc(lab));
+  el.style.setProperty('--w',wid+'px');el.style.setProperty('--c',COLORS[Math.floor(Math.random()*COLORS.length)]);el.style.setProperty('--fs',(lab.length>9?15:lab.length>5?18:22)+'px');
+  const b={el,yes,lab,born:performance.now(),x:Math.random()*(W-wid-20)+10,ph:Math.random()*6,wid,dead:false};
+  el.addEventListener('pointerdown',e=>{e.preventDefault();tap(b,e)});G.st.appendChild(el);G.bs.push(b)}
+function loop(t){if(G.over)return;if(!G.paused){if(t-G.last>SPAWN){G.last=t;spawn()}
+  const H=G.st.clientHeight;G.bs.forEach(b=>{if(b.dead)return;const p=(t-b.born)/RISE;const y=H-p*(H+b.wid*1.6);const x=b.x+Math.sin(t/700+b.ph)*12;const tf=`translate(${x}px,${y}px)`;b.el.style.transform=tf;b.el.style.setProperty('--tf',tf);if(p>1){b.dead=true;b.el.remove()}});
+  G.bs=G.bs.filter(b=>!b.dead||b.el.isConnected)}G.raf=requestAnimationFrame(loop)}
+function tap(b,e){if(b.dead||G.over||G.paused)return;b.dead=true;
+  if(b.yes){G.got++;G.score+=10;b.el.classList.add('boom');SND.pop();SND.good();floatTxt(e.clientX,e.clientY,'+10','#5eea9a');
+    document.querySelectorAll('.prog i').forEach((x,i)=>x.classList.toggle('on',i<G.got));upHud();if(G.got>=NEED)clearRound()}
+  else{G.hearts--;b.el.classList.add('wrongb');SND.bad();G.st.classList.remove('shake');void G.st.offsetWidth;G.st.classList.add('shake');floatTxt(e.clientX,e.clientY,'💔 정답이 아니에요','#ff5a6e');upHud();if(G.hearts<=0)lose()}
+  setTimeout(()=>b.el.remove(),500)}
+function clearRound(){G.paused=true;clearInterval(G.tm);G.score+=G.left*2;upHud();G.st.appendChild(h('div','banner popin',`🎉 라운드 통과!<br><span style="font-size:22px">남은 시간 보너스 +${G.left*2}</span>`));
+  setTimeout(()=>{stop();G.ri++;if(G.ri>=ROUNDS){const st=G.hearts===MAXH?3:G.hearts>=Math.ceil(MAXH/2)?2:1;finish(true,G.score,st,`라운드 ${ROUNDS}개를 모두 통과했어요!`)}else round()},T(1600))}
+function timeUp(){G.paused=true;clearInterval(G.tm);G.hearts--;upHud();SND.bad();
+  if(G.hearts<=0){lose();return}
+  G.st.appendChild(h('div','banner popin','⏰ 시간 초과!<br><span style="font-size:22px">하트가 하나 줄었어요. 이 라운드를 다시 해요</span>'));setTimeout(()=>{stop();round()},T(1800))}
+function lose(){stop();finish(false,G.score,0,'하트를 모두 잃었어요. 다시 도전해 봐요!')}
+start();
+
+</script>
+</body>
+</html>
