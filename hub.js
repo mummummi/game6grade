@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const CAT={esc:{n:'방탈출',e:'🔐',xp:[60,100,150]},arc:{n:'계산 아케이드',e:'🎯',xp:[40,70,100]},sim:{n:'시뮬레이션',e:'🏪',xp:[40,70,100]},kid:{n:'처음 놀이터',e:'🌱',xp:[30,50,70]},new:{n:'새 장르',e:'🎲',xp:[40,70,100]},quiz:{n:'퀴즈 놀이터',e:'🎪',xp:[40,70,100]}};
+const CAT={esc:{n:'방탈출',e:'🔐',xp:[60,100,150]},arc:{n:'계산 아케이드',e:'🎯',xp:[40,70,100]},sim:{n:'시뮬레이션',e:'🏪',xp:[40,70,100]},kid:{n:'처음 놀이터',e:'🌱',xp:[30,50,70]},new:{n:'새 장르',e:'🎲',xp:[40,70,100]}};
 const LVI={easy:0,normal:1,hard:2};
 const AVATARS=['🐶','🐱','🐰','🐻','🐼','🦊','🐯','🦁','🐸','🐵','🐧','🐨','🦄','🐲','🐹','🦉'];
 const ACCS=[{e:'',n:'없음',lv:1},{e:'🎀',n:'리본',lv:2},{e:'🧢',n:'모자',lv:3},{e:'🌸',n:'꽃',lv:4},{e:'🎩',n:'마술 모자',lv:5},{e:'🎓',n:'학사모',lv:7},{e:'⭐',n:'별',lv:8},{e:'👑',n:'왕관',lv:10},{e:'🔥',n:'불꽃',lv:12},{e:'🌈',n:'무지개',lv:15}];
@@ -20,7 +20,6 @@ const BADGES=[
  {id:'arc3',e:'🧮',n:'계산 왕',d:'계산 아케이드 3종을 모두 완료',t:s=>s.byCat.arc>=3},
  {id:'sim2',e:'🧑‍💼',n:'꼬마 사장님',d:'시뮬레이션 2개 완료',t:s=>s.byCat.sim>=2},
  {id:'new3',e:'🎲',n:'장르 탐험가',d:'이야기·보드게임·코딩 로봇을 모두 완료',t:s=>s.byCat.new>=3},
- {id:'quiz5',e:'🎪',n:'퀴즈 챔피언',d:'퀴즈 놀이터 5종을 모두 완료',t:s=>(s.byCat.quiz||0)>=5},
  {id:'allround',e:'🌟',n:'올라운더',d:'방탈출·아케이드·시뮬레이션·새 장르를 하나씩',t:s=>s.byCat.esc&&s.byCat.arc&&s.byCat.sim&&s.byCat.new},
  {id:'collector',e:'📚',n:'수집가',d:'게임 도감을 절반 이상 채웠어요',t:s=>s.collect>=s.total/2},
  {id:'lv5',e:'🏅',n:'레벨 5 달성',d:'레벨 5가 되었어요',t:s=>s.level>=5},
@@ -37,7 +36,7 @@ function missions(){return LS.get('hub-missions',{})}
 function points(){const p=LS.get('hub-points',{coupons:[],spent:[],sync:0});p.coupons=p.coupons||[];p.spent=p.spent||[];p.sync=p.sync||0;return p}
 function pointBal(p){p=p||points();const got=p.coupons.reduce((a,c)=>a+c.amt,0)+p.sync;const sp=p.spent.reduce((a,s)=>a+s.cost,0);return{earned:got,spent:sp,bal:got-sp}}
 const thr=L=>50*(L-1)*L;
-function stats(){const D=done();let xp=0,ndone=0,nhard=0,triple=0;const byCat={esc:0,arc:0,sim:0,kid:0,new:0,quiz:0};const list=[];
+function stats(){const D=done();let xp=0,ndone=0,nhard=0,triple=0;const byCat={esc:0,arc:0,sim:0,kid:0,new:0};const list=[];
   Object.entries(D).forEach(([id,lvs])=>{const g=GMAP[id];const c=CAT[g.cat]||CAT.new;byCat[g.cat]=(byCat[g.cat]||0)+1;const ks=Object.keys(lvs);ks.forEach(l=>{xp+=c.xp[LVI[l]??1];ndone++;if(l==='hard')nhard++;list.push({id,lv:l,at:lvs[l]})});if(ks.length>=3)triple++});
   const M=missions();const nm=Object.values(M).filter(m=>m&&m.done).length;xp+=nm*20;
   const pb=pointBal();xp+=Math.floor(pb.earned/2);
@@ -60,7 +59,8 @@ function redeem(code){const p=profile();if(!p)return{ok:false,msg:'먼저 내 �
   const [n,a,s,c]=m;if(chk((cfg.cls||'class')+`${n}.${a}.${s}`)!==c)return{ok:false,msg:'쿠폰 번호가 올바르지 않아요. 다시 확인해 주세요.'};if(+n!==+p.num)return{ok:false,msg:`이 쿠폰은 ${n}번 친구의 쿠폰이에요.`};
   const P=points();if(P.coupons.some(x=>x.code===code))return{ok:false,msg:'이미 사용한 쿠폰이에요.'};P.coupons.push({code,amt:+a,at:new Date().toISOString()});LS.set('hub-points',P);return{ok:true,amt:+a}}
 /* ── 학급 연결 (구글 Apps Script, 선택) ── */
-function getCfg(){const base=window.HUB_CONFIG||{};const own=LS.get('hub-cfg',{});return{url:own.url||base.url||'',cls:own.cls||base.cls||''}}
+function classList(){const c=(window.HUB_CONFIG||{}).classes;return Array.isArray(c)?c.map(x=>String(x).trim()).filter(Boolean):[]}
+function getCfg(){const base=window.HUB_CONFIG||{};const own=LS.get('hub-cfg',{});const pc=(LS.get('hub-profile',null)||{}).cls;const cl=classList();return{url:own.url||base.url||'',cls:own.cls||pc||base.cls||(cl.length===1?cl[0]:'')}}
 function setCfg(c){LS.set('hub-cfg',Object.assign(LS.get('hub-cfg',{}),c))}
 function joinFromURL(){try{const q=new URLSearchParams(location.search).get('join');if(!q)return false;const j=JSON.parse(decodeURIComponent(escape(atob(q.replace(/-/g,'+').replace(/_/g,'/')))));if(j&&(j.u||j.c)){setCfg({url:j.u||'',cls:j.c||''});return true}}catch(e){}return false}
 function joinLink(base,url,cls){const s=btoa(unescape(encodeURIComponent(JSON.stringify({u:url,c:cls})))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');return base+'?join='+s}
@@ -89,10 +89,11 @@ const CSS=`.hub-av{position:relative;display:inline-flex;align-items:center;just
 function injectCSS(){if(document.getElementById('hubcss'))return;const s=document.createElement('style');s.id='hubcss';s.textContent=CSS;document.head.appendChild(s)}
 function homeCard(el){injectCSS();const p=profile();const s=stats();
   if(!p){el.innerHTML=`<div class="hub-card"><span class="hub-av" style="--s:72px;--c:#9ccc65"><span class="hub-av-e">❔</span></span><div class="info"><b class="nm">나만의 캐릭터를 만들어 보세요!</b><div class="tt">게임을 깰 때마다 경험치가 쌓이고, 레벨업·배지·칭호를 얻어요.</div></div><div class="btns"><a href="me.html">✨ 캐릭터 만들기</a><a href="class.html">🏫 우리 반</a></div></div>`;return}
+  if(classList().length>1&&!getCfg().cls){el.innerHTML=`<div class="hub-card">${avatar(p,s.level,78)}<div class="info"><b class="nm">${esc(p.name)}</b><div class="tt">🏫 우리 반을 아직 고르지 않았어요!</div></div><div class="btns"><a href="me.html">🏫 반 고르기</a></div></div>`;return}
   el.innerHTML=`<div class="hub-card">${avatar(p,s.level,78)}<div class="info"><b class="nm">${esc(p.name)}</b> <span class="tt">${esc(p.title||s.title)}</span><div style="margin:6px 0 4px;font-size:14px">⭐ ${s.xp.toLocaleString()} XP · 다음 레벨까지 ${(s.nxt-s.xp).toLocaleString()} XP · 🏅 배지 ${s.badges.length} · 💖 ${s.bal}점</div><div class="hub-bar"><i style="width:${Math.round(s.prog*100)}%"></i></div></div><div class="btns"><a href="me.html">🧑‍🚀 내 캐릭터</a><a href="class.html">🏫 우리 반</a></div></div>`;
   const last=LS.get('hub-seen',{level:1,badges:[]});const nb=s.badges.filter(b=>!last.badges.includes(b));
   if(s.level>last.level||nb.length){const box=document.createElement('div');box.className='hub-lvup';box.innerHTML=`<div class="bx">${avatar(p,s.level,110)}<h2>${s.level>last.level?`🎉 레벨 업! Lv.${s.level}`:'🏅 새 배지!'}</h2>${s.level>last.level?`<div>${s.title}</div>`:''}${nb.length?`<div style="margin-top:10px;font-size:20px">${nb.map(id=>{const b=BADGES.find(x=>x.id===id);return b.e+' '+b.n}).join('<br>')}</div>`:''}<p style="opacity:.7">화면을 누르면 닫혀요</p></div>`;box.onclick=()=>box.remove();document.body.appendChild(box)}
   LS.set('hub-seen',{level:s.level,badges:s.badges});push()}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c])}
-window.HUB={LS,CAT,AVATARS,ACCS,TITLES,BADGES,GAMES,GMAP,today,profile,saveProfile,done,stats,avatar,tier,missions,points,pointBal,resultCode,decodeResult,couponCode,redeem,getCfg,setCfg,joinFromURL,joinLink,summary,push,pull,post,classCfg,DEF_MISSIONS,DEF_SHOP,DEF_QUEST,homeCard,injectCSS,esc,thr,chk};
+window.HUB={classList,LS,CAT,AVATARS,ACCS,TITLES,BADGES,GAMES,GMAP,today,profile,saveProfile,done,stats,avatar,tier,missions,points,pointBal,resultCode,decodeResult,couponCode,redeem,getCfg,setCfg,joinFromURL,joinLink,summary,push,pull,post,classCfg,DEF_MISSIONS,DEF_SHOP,DEF_QUEST,homeCard,injectCSS,esc,thr,chk};
 })();
