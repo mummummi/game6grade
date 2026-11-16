@@ -347,6 +347,9 @@ const THEME={
 
 </script>
 <script>
+/* 🧸 분위기 소품 (문제와 상관없는 기물 · 눌러 보면 설명만 나와요) */
+const DECOR=[[["w", "🦠", "유산균 친구들", 1035, 250, 115, "장 속에서 소화를 돕는 착한 균들이 손을 흔들어요."], ["f", "🍎", "사과 조각", 90, 800, 125, "아직 소화되는 중인 사과 조각이에요."], ["w", "💧", "소화액 방울", 555, 250, 115, "음식을 잘게 부수는 액체예요. 닿지 않게 조심!"]], [["w", "🔴", "적혈구", 90, 250, 115, "산소를 나르는 동그란 적혈구가 지나가요."], ["f", "⚪", "백혈구 경비대", 90, 735, 125, "세균을 막는 백혈구가 순찰 중이에요."], ["w", "🌬️", "공기 방울", 1050, 250, 115, "폐로 들어온 공기가 몽글몽글해요."]], [["w", "💭", "기억 구슬", 660, 250, 115, "어제 먹은 급식이 떠오르는 기억 구슬이에요."], ["f", "🎵", "노래 기억", 690, 735, 125, "좋아하는 노래가 흥얼흥얼 들려요."], ["w", "✨", "반짝 신경 불빛", 1500, 250, 115, "신호가 지나갈 때마다 반짝여요."]]];
+DECOR.forEach((list,ri)=>{const r=THEME.rooms[ri];if(!r)return;list.forEach((d,k)=>r.objects.push({id:'deco'+k,deco:1,title:d[1]+' '+d[2],art:(d[0]==='f'?E(d[3],d[4]+d[5]*0.42,d[5]*0.42,d[5]*0.09,'#0000002e'):'')+EM(d[3],d[4],d[1],d[5],'filter="url(#sh)"'),html:'<div class="box">'+d[6]+'</div>'}))});
 THEME.rooms.forEach((r,ri)=>r.objects.forEach(o=>{if(!o._rid){o.id='r'+ri+'_'+o.id;o._rid=1}}));/* 방마다 물건 id를 따로 → 다른 방의 같은 이름 문/물건이 '이미 푼 것'으로 처리되는 문제 방지 */
 try{const U=S.used||{};if(Object.keys(U).some(k=>!/^[pu]_r\d+_/.test(k))){THEME.rooms.forEach((r,ri)=>r.objects.forEach(o=>{const base=o.id.replace(/^r\d+_/,'');['p_','u_'].forEach(pf=>{if(U[pf+base]&&(ri<S.room||(base!=='door'&&ri<=S.room)))U[pf+o.id]=1})}));Object.keys(U).forEach(k=>{if(!/^[pu]_r\d+_/.test(k))delete U[k]});S.used=U;save()}}catch(e){}/* 예전 저장 기록 옮기기 */
 TH=THEME;if(GRADE<=2)document.body.classList.add('kids');S.max=S.max||0;render();
