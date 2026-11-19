@@ -65,6 +65,7 @@ button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10
 .opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
 .opt{background:var(--panel2);color:var(--ink);border:2px solid var(--line);min-width:110px;padding:12px 16px;font-size:18px}
 .opt.big{font-size:34px;min-width:80px}
+.mopt.on,.mr.on{border-color:var(--gold)!important;background:#ffd54f33!important}.mlist{display:flex;flex-direction:column;gap:8px;margin:10px auto;max-width:620px}.mrow{display:flex;align-items:center;gap:10px;background:var(--panel2);border:2px solid var(--line);border-radius:14px;padding:8px 12px}.ml{flex:1;font-size:18px}.ma{opacity:.6}.mr{min-width:150px;background:#ffffff14;color:var(--ink);border:2px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:18px}
 .ordercards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}
 .ordercards button{background:var(--panel2);color:var(--ink);border:2px solid var(--line);padding:10px 14px;font-size:17px;min-width:90px;position:relative}
 .ordercards button.on{border-color:var(--gold);opacity:.55}
@@ -202,15 +203,17 @@ const norm=v=>String(v).replace(/\s|,/g,'').toLowerCase();
 function lockHTML(k){
   if(k.kind==='dial')return `<div class="dials">${Array.from({length:k.ans.length},(_,i)=>`<div class="dial"><button data-u="${i}">▲</button><div class="d" id="dg${i}">0</div><button data-dn="${i}">▼</button></div>`).join('')}</div><div class="center"><button class="btn" id="lkOk">열기</button></div>`;
   if(k.kind==='text')return `<form class="lockform" id="lf"><input id="li" maxlength="${k.max||14}" placeholder="${k.ph||''}" autocomplete="off"><button class="btn">열기</button></form>`;
-  if(k.kind==='dir')return `<div class="seqshow" id="sq"></div><div class="pad">${[['U','⬆️'],['D','⬇️'],['L','⬅️'],['R','➡️']].map(([v,e])=>`<button data-v="${v}">${e}</button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
-  if(k.kind==='color')return `<div class="seqshow" id="sq"></div><div class="pad">${k.opts.map(([v,c])=>`<button class="c" data-v="${v}" style="background:${c}" title="${v}"></button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
-  if(k.kind==='keys')return `<div class="seqshow" id="sq"></div><div class="keys">${(k.opts||['도','레','미','파','솔','라','시']).map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div><div class="center"><button class="ghost" data-x="1">⌫ 지우기</button> <button class="btn" id="lkOk">확인</button></div>`;
-  if(k.kind==='choice')return `<div class="opts">${k.opts.map(o=>`<button class="opt${k.big?' big':''}" data-v="${o}">${o}</button>`).join('')}</div>`;
-  if(k.kind==='order')return `<div class="ordercards">${k.opts.map(o=>`<button data-v="${o}">${o}</button>`).join('')}</div><div class="center"><button class="ghost" data-x="1">다시 고르기</button></div>`;
+  if(k.kind==='dir')return `<div class="seqshow" id="sq"></div><div class="pad">${[['U','⬆️'],['D','⬇️'],['L','⬅️'],['R','➡️']].map(([v,e])=>`<button data-v="${String(v).replace(/"/g,'&quot;')}">${e}</button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='color')return `<div class="seqshow" id="sq"></div><div class="pad">${k.opts.map(([v,c])=>`<button class="c" data-v="${String(v).replace(/"/g,'&quot;')}" style="background:${c}" title="${v}"></button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='keys')return `<div class="seqshow" id="sq"></div><div class="keys">${(k.opts||['도','레','미','파','솔','라','시']).map(v=>`<button data-v="${String(v).replace(/"/g,'&quot;')}">${v}</button>`).join('')}</div><div class="center"><button class="ghost" data-x="1">⌫ 지우기</button> <button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='choice')return `<div class="opts">${k.opts.map(o=>`<button class="opt${k.big?' big':''}" data-v="${String(o).replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div>`;
+  if(k.kind==='order')return `<div class="ordercards">${k.opts.map(o=>`<button data-v="${String(o).replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div><div class="center"><button class="ghost" data-x="1">다시 고르기</button></div>`;
+  if(k.kind==='multi')return `<div class="opts">${k.opts.map(o=>`<button class="opt mopt${k.big?' big':''}" data-m="${String(o).replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div><div class="center muted" style="margin-top:6px">맞는 것을 <b>모두</b> 눌러 고른 뒤 확인을 눌러요</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='match'||k.kind==='sort'){const ch=k.kind==='match'?k.right:k.bins;return `<div class="mlist">${k.left.map((l,i)=>`<div class="mrow"><span class="ml">${l}</span><span class="ma">${k.kind==='match'?'↔':'→'}</span><button class="mr" data-i="${i}">❔</button></div>`).join('')}</div><div class="center muted">${k.kind==='match'?'오른쪽 칸을 눌러 짝을 바꿔요':'칸을 눌러 어디에 들어갈지 바꿔요'} (${ch.join(' · ')})</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`}
 }
 function bindLock(k,ok){
   const box=$('mbody'),msg=$('lm');let seq=[];
-  const judge=v=>{const good=k.kind==='choice'?v===k.ans:Array.isArray(k.ans)?norm(v)===norm(k.ans.join('')):[k.ans,...(k.alts||[])].some(a=>norm(v)===norm(a));
+  const judge=v=>{const good=v===true?true:v===false?false:k.kind==='choice'?v===k.ans:Array.isArray(k.ans)?norm(v)===norm(k.ans.join('')):[k.ans,...(k.alts||[])].some(a=>norm(v)===norm(a));
     if(good){msg.className='msg good';msg.textContent='✅ 철컥! 열렸다!';tone(660);setTimeout(()=>tone(990),120);box.querySelectorAll('button,input').forEach(x=>x.disabled=true);setTimeout(ok,FAST?0:900)}
     else{S.wrong++;save();msg.className='msg bad';msg.textContent=k.bad||'❌ 열리지 않는다…';tone(150,.3);const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');if(k.kind!=='text'){seq=[];show()}}};
   const show=()=>{const sq=box.querySelector('#sq');if(sq)sq.innerHTML=seq.map(v=>k.kind==='color'?`<span style="background:${k.opts.find(o=>o[0]===v)[1]}"></span>`:k.kind==='dir'?`<span>${{U:'⬆️',D:'⬇️',L:'⬅️',R:'➡️'}[v]}</span>`:`<span>${v}</span>`).join('');
@@ -219,7 +222,9 @@ function bindLock(k,ok){
   if(k.kind==='text'){$('lf').onsubmit=e=>{e.preventDefault();const v=$('li').value;if(v.trim())judge(v)}}
   if(['dir','color','keys'].includes(k.kind)){box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(seq.length>=(k.ans.length+3))return;seq.push(b.dataset.v);if(k.kind==='keys')tone(NOTE[b.dataset.v]||440,.4);else tone(600,.05);show()});box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{seq.pop();show()});$('lkOk').onclick=()=>judge(seq.join(''))}
   if(k.kind==='choice')box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>judge(b.dataset.v));
-  if(k.kind==='order'){box.querySelectorAll('.ordercards [data-v]').forEach(b=>b.onclick=()=>{if(seq.includes(b.dataset.v))return;seq.push(b.dataset.v);tone(600,.05);show();if(seq.length===k.opts.length)judge(seq.join(''))});box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{seq=[];show()})}
+  if(k.kind==='multi'){const on=new Set();const upd=()=>box.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',on.has(b.dataset.m)));box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const v=b.dataset.m;on.has(v)?on.delete(v):on.add(v);tone(600,.04);upd()});box._set=a=>{a.forEach(v=>on.add(String(v)));upd()};$('lkOk').onclick=()=>{const A=k.ans.map(String);const g=on.size===A.length&&A.every(v=>on.has(v));if(!g){on.clear();upd()}judge(g)}}
+  if(k.kind==='match'||k.kind==='sort'){const ch=k.kind==='match'?k.right:k.bins;const st=k.left.map(()=>-1);const upd=()=>box.querySelectorAll('.mr').forEach(b=>{const i=+b.dataset.i;b.textContent=st[i]<0?'❔':ch[st[i]];b.classList.toggle('on',st[i]>=0)});box.querySelectorAll('.mr').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;st[i]=(st[i]+1)%ch.length;tone(520+st[i]*60,.04);upd()});box._set=a=>{a.forEach((v,i)=>st[i]=ch.indexOf(v));upd()};$('lkOk').onclick=()=>{if(st.some(x=>x<0)){msg.className='msg bad';msg.textContent='❔ 아직 정하지 않은 칸이 있어요.';return}judge(st.every((x,i)=>ch[x]===k.ans[i]))}}
+  if(k.kind==='order'){box.querySelectorAll('.ordercards [data-v]').forEach(b=>b.onclick=()=>{if(seq.includes(b.dataset.v))return;seq.push(b.dataset.v);tone(600,.05);show();if(seq.length===(Array.isArray(k.ans)?k.ans.length:k.opts.length))judge(seq.join('\u0001')===(Array.isArray(k.ans)?k.ans:[]).join('\u0001')||(!Array.isArray(k.ans)&&norm(seq.join(''))===norm(k.ans)))});box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{seq=[];show()})}
 }
 /* ═══════ 물건 조사 ═══════ */
 const FAST=QS.get('fast')==='1';
@@ -300,7 +305,7 @@ window.__auto=async function(){const out=[];const sl=ms=>new Promise(r=>setTimeo
     for(const o of r.objects){if(!avail(o)||solved(o)&&!o.door)continue;if(o.need&&!has(o.need)&&!S.used['u_'+o.id])continue;if(o.door&&!o.lock&&!(o.needs||[]).every(flag))continue;
       const room=S.room;if(o.need&&!S.used['u_'+o.id])SEL=o.need;activate(o);await sl(5);
       if(o.lock&&!solved(o)){const k=val(o.lock);const v=Array.isArray(k.ans)?k.ans:k.ans;
-        if(k.kind==='dial'){$('mbody')._set(v);$('lkOk').click()}else if(k.kind==='text'){$('li').value=v;$('lf').requestSubmit()}
+        if(['dial','multi','match','sort'].includes(k.kind)){$('mbody')._set(v);$('lkOk').click()}else if(k.kind==='text'){$('li').value=v;$('lf').requestSubmit()}
         else if(k.kind==='choice'){[...document.querySelectorAll('#mbody .opt')].find(b=>b.dataset.v===k.ans).click()}
         else{const arr=Array.isArray(v)?v:String(v).split('');for(const x of arr)[...document.querySelectorAll('#mbody [data-v]')].find(b=>b.dataset.v===x).click();$('lkOk')&&$('lkOk').click()}
         await sl(30)}
@@ -351,6 +356,34 @@ const THEME={
   ]};
 
 </script>
+<script>/* 🧩 퍼즐 재설계 */
+(function(){const P=(function(){
+/* 6학년 · 어린이 은행 — 가계·기업·정부, 원그래프와 비율, 원의 둘레와 넓이 (이자는 기존) */
+const EA=L([['💼 회사에서 일하고 월급을 받아요','가계'],['🏭 물건을 만들어 팔아 이윤을 얻어요','기업'],['🛒 필요한 물건을 사서 써요','가계'],['📢 광고를 해 물건을 알려요','기업']],[['💼 회사에서 일하고 월급을 받아요','가계'],['🏭 물건을 만들어 팔아 이윤을 얻어요','기업'],['🛒 필요한 물건을 사서 써요','가계'],['📢 광고를 해 물건을 알려요','기업'],['🏫 세금으로 학교와 도로를 만들어요','정부'],['⚖️ 공정한 거래를 위한 규칙을 만들어요','정부']],[['💼 회사에서 일하고 월급을 받아요','가계'],['🏭 물건을 만들어 팔아 이윤을 얻어요','기업'],['🛒 필요한 물건을 사서 써요','가계'],['📢 광고를 해 물건을 알려요','기업'],['🏫 세금으로 학교와 도로를 만들어요','정부'],['⚖️ 공정한 거래를 위한 규칙을 만들어요','정부'],['🔬 새 기술을 개발해 상품을 만들어요','기업'],['🧾 일을 하고 받은 소득으로 저축해요','가계']]);
+const PC=L([['중심각 90°','25%'],['중심각 180°','50%'],['중심각 36°','10%']],[['중심각 90°','25%'],['중심각 180°','50%'],['중심각 36°','10%'],['중심각 72°','20%']],[['중심각 90°','25%'],['중심각 54°','15%'],['중심각 36°','10%'],['중심각 126°','35%'],['중심각 18°','5%']]);
+const CC=L([['지름 10cm인 원의 둘레','31.4cm'],['반지름 10cm인 원의 둘레','62.8cm'],['반지름 10cm인 원의 넓이','314cm²']],[['지름 10cm인 원의 둘레','31.4cm'],['반지름 10cm인 원의 둘레','62.8cm'],['반지름 10cm인 원의 넓이','314cm²'],['지름 60cm인 원의 넓이','2826cm²']],[['지름 10cm인 원의 둘레','31.4cm'],['반지름 10cm인 원의 둘레','62.8cm'],['반지름 10cm인 원의 넓이','314cm²'],['지름 60cm인 원의 넓이','2826cm²'],['반지름 5cm인 원의 넓이','78.5cm²'],['둘레가 94.2cm인 원의 지름','30cm']]);
+return {
+ rooms:[
+ {o:{
+  quiz:{title:'🏦 경제 퀴즈판',html:'<div class="box">퀴즈판: "경제 활동 카드를 <b>가계·기업·정부</b>로 나누어 꽂으시오. 통장 카드는 퀴즈를 맞힌 고객에게!"</div>',lock:()=>({kind:'sort',left:EA.map(e=>e[0]),bins:[...new Set(EA.map(e=>e[1]))],ans:EA.map(e=>e[1]),q:'누가 하는 경제 활동일까요?'}),give:'card',done:'퀴즈판 아래에서 💳 통장 카드가 나왔어요!'},
+ },hints:()=>L(['이윤을 얻으려는 것은 기업','이자 = 원금 × 이자율'],['세금으로 공공 시설을 만드는 건 정부','4% = 0.04'],['소득으로 저축하는 건 가계'])},
+ {o:{
+  chart:{title:'📊 원그래프 보고서',html:'<div class="box">원그래프 보고서의 비율 칸이 지워졌어요. 원그래프 전체 중심각은 <b>360°</b>예요. 중심각마다 알맞은 <b>백분율</b>을 붙여 주세요.</div>',lock:()=>({kind:'match',left:PC.map(p=>p[0]),right:[...new Set(PC.map(p=>p[1]))].sort((a,b)=>parseInt(a)-parseInt(b)),ans:PC.map(p=>p[1]),q:'전체의 몇 %?'}),give:'report',done:'📊 보고서 완성!'},
+ },hints:()=>L(['90 ÷ 360 = 1/4 = 25%','36°는 360°의 1/10'],['72 ÷ 360 = 0.2'],['3.6°가 1%예요: 54 ÷ 3.6 = 15'])},
+ {o:{
+  vault:{lock:()=>({kind:'match',left:CC.map(c=>c[0]),right:[...new Set(CC.map(c=>c[1]))].sort((a,b)=>parseFloat(a)-parseFloat(b)),ans:CC.map(c=>c[1]),q:'얼마일까요?'}),html:'<div class="box">🗝️ 열쇠를 돌리자 금고 화면이 켜졌어요. 마지막 암호 — 원 계산표를 완성하시오. (원주율 3.14)<br><span class="muted">원주 = 지름 × 원주율 · 원의 넓이 = 반지름 × 반지름 × 원주율</span></div>'},
+ },hints:()=>L(['지름 10cm → 둘레 10 × 3.14','반지름 10cm → 지름 20cm'],['지름 60cm → 반지름 30cm → 30 × 30 × 3.14'],['94.2 ÷ 3.14 = 30'])},
+ ]};
+
+})();
+const KEYS=['lock','give','set','need','when','needs','done','locked','pre','after','consume','useMsg','html','hideWhen'];
+['story','endText','title'].forEach(k=>{if(P[k])THEME[k]=P[k]});if(P.items)Object.assign(THEME.items,P.items);
+(P.rooms||[]).forEach((pr,ri)=>{const r=THEME.rooms[ri];if(!r||!pr)return;if(pr.hints)r.hints=pr.hints;if(pr.tip)r.tip=pr.tip;if(pr.name)r.name=pr.name;
+ Object.entries(pr.o||{}).forEach(([id,pt])=>{let o=r.objects.find(x=>x.id===id);if(!o){o={id};r.objects.push(o)}
+  if(pt._clear!==false&&!o.door)KEYS.forEach(k=>delete o[k]);if(o.door)['lock','need','when','needs','pre','locked','html'].forEach(k=>{if(k in pt)delete o[k]});
+  Object.assign(o,pt);delete o._clear;if(/^deco/.test(id))delete o.deco})});
+})();
+/* 🧩 끝 */</script>
 <script>
 const DART=d=>{const [k,e,t,x,y,S]=d;
 if(k==='f')return E(x,y+S*0.4,S*0.42,S*0.09,'#0000002e')+EM(x,y,e,S*0.85,'filter="url(#sh)"');
@@ -359,9 +392,9 @@ if(k==='p'){const w=S*0.95,h=S*0.95;return C(x,y-h/2-10,4,'#555')+P(`M${x} ${y-h
 const sw=S*1.1;return EM(x,y-S*0.12,e,S*0.68,'filter="url(#sh)"')+R(x-sw/2,y+S*0.24,sw,13,'#8d5a34','rx="3" filter="url(#sh)"')+R(x-sw/2+12,y+S*0.24+13,9,20,'#5e3a1f','rx="2"')+R(x+sw/2-21,y+S*0.24+13,9,20,'#5e3a1f','rx="2"')};
 /* 🧸 분위기 소품 (문제와 상관없는 기물 · 눌러 보면 설명만 나와요) */
 const DECOR=[[["p", "📈", "환율 전광판", 90, 250, 150, "오늘의 환율이 표시돼 있어요. 숫자가 계속 바뀌어요."], ["f", "🖊️", "기념 볼펜", 90, 735, 125, "은행 로고가 새겨진 볼펜이에요."], ["f", "🪴", "로비 화분", 495, 735, 125, "돈나무라고 불리는 화분이래요. 돈은 안 열려요!"]], [["p", "🖼️", "은행 창립 사진", 945, 250, 150, "50년 전 은행이 처음 생긴 날 사진이에요."], ["f", "☕", "커피 머신", 90, 735, 125, "직원들이 쓰는 커피 머신이에요."], ["f", "🗂️", "파일 상자", 1140, 735, 125, "작년 회의 자료예요. 이번 문제와는 관계없어요."]], [["s", "📹", "감시 카메라", 90, 250, 150, "빨간 불이 깜빡여요. 지켜보고 있다!"], ["f", "💼", "빈 서류 가방", 1050, 735, 125, "금고실에 두고 간 빈 가방이에요."], ["s", "🚨", "경보 장치", 1170, 250, 150, "지금은 꺼져 있어요. 휴, 다행이에요."]]];
-DECOR.forEach((list,ri)=>{const r=THEME.rooms[ri];if(!r)return;list.forEach((d,k)=>r.objects.push({id:'deco'+k,deco:1,title:d[1]+' '+d[2],art:DART(d),html:'<div class="box">'+d[6]+'</div>'}))});
+DECOR.forEach((list,ri)=>{const r=THEME.rooms[ri];if(!r)return;list.forEach((d,k)=>{const ex=r.objects.find(o=>o.id==='deco'+k);if(ex){if(!ex.art)ex.art=DART(d);if(!ex.title)ex.title=d[1]+' '+d[2];return}r.objects.push({id:'deco'+k,deco:1,title:d[1]+' '+d[2],art:DART(d),html:'<div class="box">'+d[6]+'</div>'})})});
 /* 🖼️ AI 배경 그림 */
-const ARTMAP={"rooms": [{"quiz": [60, 110, 310, 270, {"svg": "T(215,225,'경제 퀴즈','#fff',36,'bold')+T(215,300,'가계 · 기업','#fff',34,'bold')"}], "teller": [520, 320, 590, 450], "door": [1340, 160, 230, 660], "deco0": [850, 90, 280, 210], "deco1": [980, 420, 70, 130], "deco2": [1090, 430, 220, 360]}, {"chart": [60, 110, 310, 270, {"svg": "T(215,200,'고객 분석','#fff',34,'bold')+T(215,265,'띠그래프','#ffeb3b',30,'bold')+T(215,325,'원그래프','#80deea',30,'bold')"}], "desk": [520, 520, 590, 250], "door": [1340, 160, 230, 660], "deco0": [770, 230, 220, 140], "deco1": [600, 350, 120, 130], "deco2": [980, 420, 150, 130]}, {"vault": [580, 210, 460, 450], "coins": [20, 560, 340, 320], "deco0": [350, 110, 140, 110], "deco1": [1030, 670, 190, 190], "deco2": [1380, 50, 90, 130]}], "id": "g6-bank"};
+const ARTMAP={"rooms": [{"quiz": [60, 110, 310, 270], "teller": [520, 320, 590, 450], "door": [1340, 160, 230, 660], "deco0": [850, 90, 280, 210], "deco1": [980, 420, 70, 130], "deco2": [1090, 430, 220, 360]}, {"chart": [60, 110, 310, 270], "desk": [520, 520, 590, 250], "door": [1340, 160, 230, 660], "deco0": [770, 230, 220, 140], "deco1": [600, 350, 120, 130], "deco2": [980, 420, 150, 130]}, {"vault": [580, 210, 460, 450], "coins": [20, 560, 340, 320], "deco0": [350, 110, 140, 110], "deco1": [1030, 670, 190, 190], "deco2": [1380, 50, 90, 130]}], "id": "g6-bank"};
 const AMbox=a=>{const ns='http://www.w3.org/2000/svg';const sv=document.createElementNS(ns,'svg');sv.setAttribute('width','1600');sv.setAttribute('height','900');sv.style.cssText='position:absolute;left:-9999px;top:0';sv.innerHTML=DEFS+a;document.body.appendChild(sv);let b={x:0,y:0,width:1,height:1};try{const g=document.createElementNS(ns,'g');while(sv.childNodes.length>1)g.appendChild(sv.childNodes[1]);sv.appendChild(g);const r=g.getBBox();b={x:r.x,y:r.y,width:r.width||1,height:r.height||1}}catch(e){}sv.remove();return b};
 ARTMAP.rooms.forEach((hot,ri)=>{const r=THEME.rooms[ri];if(!r||!hot)return;const src='art/'+ARTMAP.id+'_'+(ri+1)+'.webp';
  r.bg=()=>`<image href="${src}" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
