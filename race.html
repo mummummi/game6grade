@@ -92,7 +92,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0}
 .pd.p1 .blk{height:110px;line-height:110px}.pd.p2 .blk{height:80px;line-height:80px;opacity:.85}.pd.p3 .blk{height:56px;line-height:56px;opacity:.7}
 
 </style>
-</head>
+<style>/*WQCSS*/.wq{display:inline-block;font-size:.6em;line-height:1.4;max-width:34em;word-break:keep-all;text-align:center}.mon .wq,.bub .wq{font-size:.8em;max-width:11em}</style></head>
 <body class="g6">
 <div class="hud"><a href="index.html">🏠</a><span class="t">🏎️ 계산 레이싱 그랑프리</span><span class="lvpill" id="lvPill"></span><span class="sp"></span><span id="hudX"></span><button class="ib" id="mute" title="소리">🔊</button></div>
 <div id="app"></div>
@@ -143,6 +143,154 @@ const qhtml=s=>s.replace(/\[(\d+)\/(\d+)\]/g,'<span class="fr"><i>$1</i><i>$2</i
 const qfull=q=>qhtml(q)+(/□|[가-힣]/.test(q)?'':' = ?');
 const dec=x=>Math.round(x*100)/100;
 const D10=(x)=>String(dec(x));
+/*WORDQ*/
+/* 문장제·개념 문제 은행 — GEN()과 섞어서 출제. s:1 은 짧은 문제(디펜스 말풍선용) */
+const __NM=['지호','지우','수아','시우','유나','서하','하루','주아','리아','도하'];
+const __nm=()=>pick(__NM);
+const WQ=(q,a,short)=>({q:`<span class="wq">${q}</span>`,a,exact:false,word:1,s:short?1:0});
+function WORDBANK(g,lv){
+  const n=__nm(),L=[];const add=(f,s)=>L.push([f,s]);
+  if(g===1){
+    add(()=>{const a=R(2,6),b=R(1,9-a);return WQ(`🍎 사과 ${a}개에 ${b}개를 더 받았어요. 모두 몇 개?`,N(a+b),1)},1);
+    add(()=>{const a=R(5,9),b=R(1,a-1);return WQ(`🎈 풍선 ${a}개 중 ${b}개가 날아갔어요. 남은 풍선은?`,N(a-b),1)},1);
+    add(()=>{const a=R(1,9);return WQ(`10은 ${a}와(과) 몇으로 가를 수 있을까요?`,N(10-a),1)},1);
+    add(()=>{const a=R(11,19);return WQ(`${a}은(는) 10개씩 묶음 1개와 낱개 몇 개?`,N(a-10),1)},1);
+    add(()=>{const a=R(20,90);return WQ(`${a}보다 1 큰 수는?`,N(a+1),1)},1);
+    add(()=>{const h=R(1,12);return WQ(`🕐 짧은바늘이 ${h}, 긴바늘이 12를 가리키면 몇 시?`,N(h),1)},1);
+    add(()=>{const a=R(3,8),b=R(2,7);return WQ(`${n}는 빨간 구슬 ${a}개, 파란 구슬 ${b}개가 있어요. 구슬은 모두 몇 개?`,N(a+b))});
+    add(()=>{const a=R(6,9),b=R(2,5);return WQ(`🐟 어항에 금붕어 ${a}마리, 거북이 ${b}마리가 있어요. 금붕어가 몇 마리 더 많아요?`,N(a-b))});
+    if(lv!=='easy'){
+      add(()=>{const a=R(6,9),b=R(11-a,9);return WQ(`🚌 버스에 ${a}명이 타 있고 ${b}명이 더 탔어요. 모두 몇 명?`,N(a+b))});
+      add(()=>{const a=R(11,18),b=R(a-9,9);return WQ(`🍪 쿠키 ${a}개 중 ${b}개를 먹었어요. 남은 쿠키는?`,N(a-b))});
+      add(()=>{const a=R(3,7);return WQ(`세발자전거 ${a}대의 바퀴는 모두 몇 개?`,N(a*3))});
+    }
+    if(lv==='hard'){
+      add(()=>{const t=R(2,6),o=R(1,8),p=R(1,3);return WQ(`${n}는 딱지를 ${t*10+o}장 가지고 있었는데 ${p*10}장을 더 땄어요. 이제 몇 장?`,N(t*10+o+p*10))});
+      add(()=>{const a=R(2,4),b=R(2,4),c=R(1,3);return WQ(`버스 정류장에서 ${a}명이 타고, 다음에 ${b}명이 타고, ${c}명이 내렸어요. 처음에 빈 버스였다면 지금 몇 명?`,N(a+b-c))});
+    }
+  }
+  if(g===2){
+    add(()=>{const a=R(2,9),b=R(2,5);return WQ(`🍓 한 접시에 딸기 ${a}개씩, ${b}접시. 딸기는 모두?`,N(a*b),1)},1);
+    add(()=>{const m=R(1,4),c=R(10,90);return WQ(`${m}m ${c}cm = □cm`,N(m*100+c),1)},1);
+    add(()=>{const h=R(1,3);return WQ(`${h}시간 = □분`,N(h*60),1)},1);
+    add(()=>{const a=R(2,8);return WQ(`100원짜리 동전 ${a}개는 □원`,N(a*100),1)},1);
+    add(()=>{const a=R(101,899);return WQ(`${a}에서 백의 자리 숫자는?`,N(Math.floor(a/100)),1)},1);
+    add(()=>{const a=R(26,58),b=R(17,35);return WQ(`🎫 ${n}네 반은 칭찬 스티커를 어제 ${a}장, 오늘 ${b}장 모았어요. 모두 몇 장?`,N(a+b))});
+    add(()=>{const a=R(52,95),b=R(18,a-20);return WQ(`📚 도서관에 동화책이 ${a}권 있었는데 ${b}권을 빌려 갔어요. 남은 책은?`,N(a-b))});
+    add(()=>{const a=R(3,9);return WQ(`🐙 문어 다리는 8개예요. 문어 ${a}마리의 다리는 모두?`,N(a*8))});
+    add(()=>{const a=R(20,45),b=R(15,40);return WQ(`📏 길이가 ${a}cm인 끈과 ${b}cm인 끈을 겹치지 않게 이었어요. 모두 몇 cm?`,N(a+b))});
+    if(lv!=='easy'){
+      add(()=>{const a=R(3,9),b=R(3,9);return WQ(`🪑 의자가 한 줄에 ${a}개씩 ${b}줄 있어요. 의자는 모두?`,N(a*b))});
+      add(()=>{const s=R(1,5),m=R(10,50);return WQ(`⏰ ${s}시에 시작해서 ${m}분 뒤에 끝났어요. 끝난 시각은 ${s}시 몇 분?`,N(m))});
+      add(()=>{const k=R(2,5);return WQ(`삼각형 ${k}개의 꼭짓점은 모두 몇 개?`,N(k*3))});
+      add(()=>{const a=R(3,6),b=R(2,5);return WQ(`사각형 ${a}개와 삼각형 ${b}개의 변은 모두 몇 개?`,N(a*4+b*3))});
+    }
+    if(lv==='hard'){
+      add(()=>{const a=R(4,9),b=R(3,9),c=R(2,9);return WQ(`🍬 사탕을 ${a}개씩 ${b}명에게 주었더니 ${c}개가 남았어요. 처음 사탕은 몇 개?`,N(a*b+c))});
+      add(()=>{const p=R(3,8)*100,q=R(1,4)*100;return WQ(`💰 ${n}는 ${p+q+500}원을 가지고 ${p}원짜리 연필과 ${q}원짜리 지우개를 샀어요. 남은 돈은?`,N(500))});
+      add(()=>{const a=R(125,450),b=R(110,380);return WQ(`🏃 ${n}는 어제 ${a}m, 오늘 ${b}m를 달렸어요. 모두 몇 m?`,N(a+b))});
+    }
+  }
+  if(g===3){
+    add(()=>{const k=R(2,9),c=R(1,9);return WQ(`${k}cm ${c}mm = □mm`,N(k*10+c),1)},1);
+    add(()=>{const k=R(1,5),m=R(100,900);return WQ(`${k}km ${m}m = □m`,N(k*1000+m),1)},1);
+    add(()=>{const m=R(1,5),s=R(5,55);return WQ(`${m}분 ${s}초 = □초`,N(m*60+s),1)},1);
+    add(()=>{const l=R(1,4),ml=R(100,900);return WQ(`${l}L ${ml}mL = □mL`,N(l*1000+ml),1)},1);
+    add(()=>{const r=R(3,15);return WQ(`반지름 ${r}cm인 원의 지름은?`,N(r*2),1)},1);
+    add(()=>{const d=pick([2,3,4,5,6]),k=R(2,6);return WQ(`${d*k}의 [1/${d}]은(는)?`,N(k),1)},1);
+    add(()=>{const b=R(3,9),q=R(3,9);return WQ(`🍩 도넛 ${b*q}개를 ${b}상자에 똑같이 나누어 담으면 한 상자에 몇 개?`,N(q))});
+    add(()=>{const b=R(4,9),q=R(3,9),r=R(1,b-1);return WQ(`🍫 초콜릿 ${b*q+r}개를 ${b}명이 똑같이 나누면 한 명에 몇 개씩 갖고 몇 개가 남을까요? (남는 개수)`,N(r))});
+    add(()=>{const a=R(245,598),b=R(168,399);return WQ(`🚂 기차에 어른 ${a}명, 어린이 ${b}명이 탔어요. 모두 몇 명?`,N(a+b))});
+    add(()=>{const a=R(12,48),b=R(3,9);return WQ(`📦 한 상자에 공책이 ${a}권씩 ${b}상자. 공책은 모두?`,N(a*b))});
+    if(lv!=='easy'){
+      add(()=>{const kg=R(1,4),g1=R(100,800),g2=R(100,900-0);return WQ(`🎒 가방 ${kg}kg ${g1}g에 ${g2}g짜리 책을 넣었어요. 모두 몇 g?`,N(kg*1000+g1+g2))});
+      add(()=>{const h1=R(1,4),m1=R(10,40),m2=R(15,50);if((m1+m2)%60===0)m2+=5;const t=h1*60+m1+m2;return WQ(`🕒 ${h1}시 ${m1}분에 출발해 ${m2}분 걸려 도착했어요. 도착 시각의 '분'은? (${Math.floor(t/60)}시 □분)`,N(t%60))});
+      add(()=>{const d=pick([3,4,5,6]),k=R(3,8),n2=R(2,d-1);return WQ(`🍕 피자 조각 ${d*k}개의 [${n2}/${d}]만큼 먹었어요. 먹은 조각은?`,N(k*n2))});
+      add(()=>{const r=R(4,12);return WQ(`⭕ 크기가 같은 원 3개를 겹치지 않게 일렬로 맞닿게 놓았어요. 원의 반지름이 ${r}cm이면 전체 길이는?`,N(r*6))});
+    }
+    if(lv==='hard'){
+      add(()=>{const a=R(23,48),b=R(12,29);return WQ(`🌱 한 줄에 모종 ${a}개씩 ${b}줄을 심었어요. 모종은 모두?`,N(a*b))});
+      add(()=>{const p=R(3,8),q=R(12,24);return WQ(`🧃 주스 ${p*q}병을 ${p}명이 똑같이 나누었어요. 한 명은 몇 병?`,N(q))});
+      add(()=>{const a=R(2,5)*1000,b=R(300,900),c=R(200,b-50);return WQ(`🚰 물통에 ${a/1000}L가 있었어요. ${b}mL를 더 붓고 ${c}mL를 마셨어요. 남은 물은 몇 mL?`,N(a+b-c))});
+    }
+  }
+  if(g===4){
+    add(()=>{const a=R(2,9),b=R(1,9);return WQ(`${a}만 ${b}천 = □`,N(a*10000+b*1000),1)},1);
+    add(()=>{const a=R(30,80),b=R(30,140-a);return WQ(`삼각형의 두 각이 ${a}°, ${b}°이면 나머지 한 각은?`,N(180-a-b),1)},1);
+    add(()=>{const a=R(60,120),b=R(60,120),c=R(50,100);return WQ(`사각형의 세 각이 ${a}°, ${b}°, ${c}°이면 나머지 한 각은?`,N(360-a-b-c),1)},1);
+    add(()=>{const k=pick([5,6,7,8,9,10]);return WQ(`정${['','','','삼','사','오','육','칠','팔','구','십'][k]}각형의 변은 몇 개?`,N(k),1)},1);
+    add(()=>{const a=R(11,99);return WQ(`0.01이 ${a}개인 수는?`,N(a/100),1)},1);
+    add(()=>{const p=R(120,480),k=R(12,35);return WQ(`🍞 빵 한 개에 ${p}원. ${k}개를 사면 얼마?`,N(p*k))});
+    add(()=>{const b=R(12,28),q=R(12,40);return WQ(`🚌 학생 ${b*q}명이 버스 한 대에 ${b}명씩 타면 버스는 몇 대 필요?`,N(q))});
+    add(()=>{const b=R(12,25),q=R(10,30),r=R(1,b-1);return WQ(`📦 사과 ${b*q+r}개를 한 상자에 ${b}개씩 담으면 몇 상자가 꽉 차나요?`,N(q))});
+    add(()=>{const d=R(5,12),a=R(1,d-3),b=R(1,d-1-a);return WQ(`🥛 우유를 오전에 [${a}/${d}]L, 오후에 [${b}/${d}]L 마셨어요. 모두 몇 L?`,FR(a+b,d))});
+    add(()=>{const a=R(11,49)/10,b=R(11,39)/10;return WQ(`🧵 리본 ${D10(a)}m와 ${D10(b)}m를 이었어요. 모두 몇 m?`,N(a+b))});
+    if(lv!=='easy'){
+      add(()=>{const a=R(2,9),b=R(2,9);return WQ(`${a}억 ${b}천만은 1000만이 몇 개?`,N(a*10+b))});
+      add(()=>{const k=R(5,9);return WQ(`🔷 한 변이 ${k}cm인 정육각형의 둘레는?`,N(k*6))});
+      add(()=>{const r=R(150,450),k=R(13,29),c=R(1000,3000);return WQ(`✏️ ${r}원짜리 연필 ${k}자루를 사고 ${r*k+c}원을 냈어요. 거스름돈은?`,N(c))});
+      add(()=>{const d=R(6,12),a=R(d+1,2*d-1),b=R(1,a-d);return WQ(`🍰 케이크 [${a}/${d}]판 중 [${b}/${d}]판을 먹었어요. 남은 것은 몇 판? (가분수/대분수 값)`,FR(a-b,d))});
+    }
+    if(lv==='hard'){
+      add(()=>{const a=R(3,9);return WQ(`시계의 긴바늘이 ${a*5}분 동안 움직인 각도는?`,N(a*30))});
+      add(()=>{const a=R(201,899)/100,b=R(101,a*100-50)/100;return WQ(`🐢 거북이가 ${D10(a)}km를 가야 해요. ${D10(b)}km를 갔다면 남은 거리는?`,N(a-b))});
+      add(()=>{const n2=R(4,9);return WQ(`${['','','','','사','오','육','칠','팔','구'][n2]}각형의 한 꼭짓점에서 그을 수 있는 대각선은 몇 개?`,N(n2-3))});
+      add(()=>{const p=R(24,48),q=R(105,250);return WQ(`🏫 한 학년에 ${p}명씩 6개 학년, 한 사람당 색종이 ${q}장. 색종이는 모두?`,N(p*6*q))});
+    }
+  }
+  if(g===5){
+    add(()=>{const a=R(3,9),b=R(3,9);return WQ(`가로 ${a}cm, 세로 ${b}cm인 직사각형의 넓이는?`,N(a*b),1)},1);
+    add(()=>{const b=R(4,12)*2,h=R(3,10);return WQ(`밑변 ${b}cm, 높이 ${h}cm인 삼각형의 넓이는?`,N(b*h/2),1)},1);
+    add(()=>{const xs=[R(60,99),R(60,99),R(60,99)];const s=xs.reduce((a,b)=>a+b);const t=s%3;xs[2]-=t;return WQ(`${xs.join(', ')}의 평균은?`,N((s-t)/3),1)},1);
+    add(()=>{const v=R(1001,9999);return WQ(`${v}을(를) 반올림하여 백의 자리까지`,N(Math.round(v/100)*100),1)},1);
+    add(()=>{return pick([()=>WQ(`직육면체의 면은 몇 개?`,N(6),1),()=>WQ(`직육면체의 모서리는 몇 개?`,N(12),1),()=>WQ(`직육면체의 꼭짓점은 몇 개?`,N(8),1)])()},1);
+    add(()=>{const a=R(2,6),b=R(2,6)+a;return WQ(`🚌 ${n}네 반 버스는 ${a}분마다, 옆 반 버스는 ${b}분마다 와요. 두 버스가 동시에 출발했다면 다시 동시에 오는 건 최소 몇 분 뒤?`,N(__lcm(a,b)))});
+    add(()=>{const k=R(2,9),[m,q]=[R(2,5),R(6,9)];return WQ(`🍬 사탕 ${k*m}개와 젤리 ${k*q}개를 최대한 많은 친구에게 남김없이 똑같이 나누어 주려고 해요. 최대 몇 명?`,N(gcd(k*m,k*q)))});
+    add(()=>{const p=R(12,30)*100;return WQ(`🛒 ${p}원짜리 물건을 가격의 [1/4]만큼 깎아 준대요. 깎아 주는 금액은?`,N(p/4))});
+    add(()=>{const b=R(4,12),h=R(3,10);return WQ(`🟫 밑변 ${b}cm, 높이 ${h}cm인 평행사변형 텃밭의 넓이는?`,N(b*h))});
+    add(()=>{const a=R(3,9),b=R(2,8);return WQ(`🔲 둘레가 ${2*(a+b)}cm인 직사각형의 가로가 ${a}cm이면 세로는?`,N(b))});
+    if(lv!=='easy'){
+      add(()=>{const xs=[R(20,50),R(20,50),R(20,50),R(20,50)];const s=xs.reduce((a,b)=>a+b);xs[3]+=(4-s%4)%4;const S2=xs.reduce((a,b)=>a+b);return WQ(`📖 ${n}가 4일 동안 읽은 쪽수: ${xs.join(', ')}쪽. 하루 평균 몇 쪽?`,N(S2/4))});
+      add(()=>{const a=R(2,9)/10,k=R(3,9);return WQ(`🧴 한 병에 ${D10(a)}L씩 ${k}병의 들이는?`,N(a*k))});
+      add(()=>{const b=R(2,6),d=R(2,6),a=R(1,b-1),c=R(1,d-1);return WQ(`🎨 페인트를 [${a}/${b}]통 쓰고 [${c}/${d}]통을 더 썼어요. 모두 몇 통?`,FR(a*d+c*b,b*d))});
+      add(()=>{const a=R(5,12),b=R(4,10),h=R(4,10);return WQ(`윗변 ${a}cm, 아랫변 ${b}cm, 높이 ${h*2}cm인 사다리꼴의 넓이는?`,N((a+b)*h))});
+    }
+    if(lv==='hard'){
+      add(()=>{const v=R(201,499);return WQ(`🚐 ${v}명이 한 대에 45명씩 타는 버스를 탄다면 버스는 최소 몇 대?`,N(Math.ceil(v/45)))});
+      add(()=>{const v=R(1210,4990);return WQ(`🪙 ${v}원을 1000원짜리 지폐로만 바꾸면 최대 몇 장?`,N(Math.floor(v/1000)))});
+      add(()=>{const xs=[R(70,95),R(70,95),R(70,95)];const s=xs.reduce((a,b)=>a+b);const avg=Math.ceil(s/3)+R(1,3);return WQ(`📝 세 번 시험 점수가 ${xs.join(', ')}점이에요. 네 번째 시험까지 평균 ${avg}점이 되려면 몇 점?`,N(avg*4-s))});
+      add(()=>{const a=R(3,8),b=R(3,8),c=R(3,8);return WQ(`📦 가로 ${a}cm, 세로 ${b}cm, 높이 ${c}cm인 직육면체의 모든 모서리 길이의 합은?`,N(4*(a+b+c)))});
+    }
+  }
+  if(g>=6){
+    add(()=>{const a=R(2,9),b=R(2,9),c=R(2,9);return WQ(`가로 ${a}, 세로 ${b}, 높이 ${c}cm인 직육면체의 부피(cm³)는?`,N(a*b*c),1)},1);
+    add(()=>{const r=R(2,10);return WQ(`반지름 ${r}cm인 원의 넓이는? (원주율 3.14)`,N(r*r*3.14),1)},1);
+    add(()=>{const d=R(2,20);return WQ(`지름 ${d}cm인 원의 원주는? (원주율 3.14)`,N(d*3.14),1)},1);
+    add(()=>{const p=pick([10,20,25,40,50,75]),t=pick([200,400,800,1000]);return WQ(`${t}의 ${p}%는?`,N(t*p/100),1)},1);
+    add(()=>{const a=R(2,6),b=R(2,6),k=R(2,8);return WQ(`${a} : ${b} = ${a*k} : □`,N(b*k),1)},1);
+    add(()=>{const p=R(1,5),q=R(1,5),k=R(3,15);return WQ(`🍫 초콜릿 ${(p+q)*k}개를 형과 동생이 ${p} : ${q}의 비로 나누면 형은 몇 개?`,N(p*k))});
+    add(()=>{const t=R(2,6)*10,p=pick([10,20,30,40]);return WQ(`🎯 ${n}는 슛을 ${t}번 던져 ${t*p/100}번 넣었어요. 성공률은 몇 %?`,N(p))});
+    add(()=>{const a=R(3,9);return WQ(`🧊 한 모서리가 ${a}cm인 정육면체의 겉넓이(cm²)는?`,N(6*a*a))});
+    add(()=>{const k=R(2,6),d=R(2,9),n2=R(1,d-1);return WQ(`🥤 주스 [${n2}/${d}]L를 ${k}명이 똑같이 나누어 마시면 한 명은 몇 L?`,FR(n2,d*k))});
+    add(()=>{const v=R(2,8)*10,h=R(2,5);return WQ(`🚗 자동차가 ${h}시간에 ${v*h}km를 갔어요. 1시간에 몇 km를 간 셈?`,N(v))});
+    if(lv!=='easy'){
+      add(()=>{const p=R(12,40)*1000,r=pick([10,20,25,30]);return WQ(`🛍️ ${p}원짜리 옷을 ${r}% 할인해서 샀어요. 낸 돈은?`,N(p*(100-r)/100))});
+      add(()=>{const a=R(2,9)/10,q=R(2,9);return WQ(`🧪 ${D10(a*q)}L의 물을 ${D10(a)}L씩 컵에 나누어 담으면 몇 컵?`,N(q))});
+      add(()=>{const a=R(2,6),b=a+R(1,4),m=R(2,5);return WQ(`🗺️ 축척 1 : ${m*10000}인 지도에서 ${a+b}cm는 실제 몇 km?`,N((a+b)*m*10000/100000))});
+      add(()=>{const r=R(3,10);return WQ(`🍰 반지름 ${r}cm인 원 모양 케이크를 반으로 잘랐어요. 반원의 둘레는? (원주율 3.14)`,N(r*3.14+2*r))});
+    }
+    if(lv==='hard'){
+      add(()=>{const a=R(2,5),b=R(2,5),c=R(2,5),k=R(2,9);const s=a+b+c;return WQ(`💰 ${s*k*1000}원을 세 사람이 ${a} : ${b} : ${c}의 비로 나누면 가장 많이 받는 사람은 몇 원?`,N(Math.max(a,b,c)*k*1000))});
+      add(()=>{const r=R(2,8);return WQ(`🎡 반지름 ${r}m인 바퀴가 10바퀴 굴렀어요. 간 거리는 몇 m? (원주율 3.14)`,N(r*2*3.14*10))});
+      add(()=>{const w=R(10,30),h=R(5,20),p=pick([20,25,40,50]);return WQ(`🐟 가로 ${w}cm, 세로 ${h}cm, 높이 ${p}cm인 수조의 [1/2]만큼 물을 채웠어요. 물은 몇 mL? (1cm³=1mL)`,N(w*h*p/2))});
+      add(()=>{const b=R(3,8),a=R(b+2,15),t=R(2,6);return WQ(`🖨️ 1분에 ${a}장, ${b}장씩 복사하는 두 복사기를 함께 ${t}분 동안 쓰면 모두 몇 장?`,N((a+b)*t))});
+    }
+  }
+  return L;
+}
+const __lcm=(a,b)=>a/gcd(a,b)*b;
+function WORD(short){const L=WORDBANK(GRADE,LV).filter(x=>!short||x[1]);if(!L.length)return null;return pick(L)[0]()}
+/*WORDQ끝*/
 function GEN(){
   const g=GRADE,lv=LV;const Q=(q,a,ex)=>({q,a,exact:!!ex});
   if(g===1){
@@ -176,6 +324,12 @@ function GEN(){
   if(lv==='normal')return pick([()=>{const b=R(2,9),d=R(2,9),a=R(1,b-1),c=R(1,d-1);return Q(`[${a}/${b}] ÷ [${c}/${d}]`,FR(a*d,b*c))},()=>{const q=R(2,9),b=R(2,9)/10;return Q(`${D10(q*b)} ÷ ${D10(b)}`,N(q))},()=>{const a=R(2,9),b=R(2,9),k=R(2,8);return Q(`${a} : ${b} = ${a*k} : □`,N(b*k))},()=>{const q=R(12,48)/10,b=R(2,8)/10;return Q(`${D10(q*b)} ÷ ${D10(b)}`,N(q))}])();
   return pick([()=>{const p=R(1,7),q=R(2,8),k=R(2,12);if(p===q)return Q(`${p*k*2}을(를) 1 : 1로 나누면 한쪽은?`,N(p*k));return Q(`${(p+q)*k}을(를) ${p} : ${q}로 나누면 큰 쪽은?`,N(Math.max(p,q)*k))},()=>{const r=R(2,10);return Q(`반지름 ${r}cm인 원의 넓이 (원주율 3.14)`,N(3.14*r*r))},()=>{const d=R(3,20);return Q(`지름 ${d}cm인 원의 둘레 (원주율 3.14)`,N(3.14*d))},()=>{const p=pick([5,10,15,20,25,30,35,40,45,60,75]),n=R(2,20)*20;return Q(`${n}의 ${p}%`,N(n*p/100))},()=>{const a=R(2,9),b=R(2,9),c=R(2,9);return Q(`가로 ${a}cm, 세로 ${b}cm, 높이 ${c}cm 직육면체의 부피 (cm³)`,N(a*b*c))}])();
 }
+/*WQH*/const __GEN0=GEN;GEN=function(){if(Math.random()<.4){try{const w=WORD(false);if(w)return w}catch(e){console.warn(e)}}return __GEN0()};
+
+
+
+
+
 function parseAns(s){s=String(s).trim();if(!s)return null;if(/^\d+\/\d+$/.test(s)){const [n,d]=s.split('/').map(Number);if(!d)return null;return{t:'f',n,d,v:n/d}}if(/^\d*\.?\d+$/.test(s))return{t:'n',v:Number(s)};return null}
 function check(input,Qo){const p=parseAns(input);if(!p)return false;if(Qo.exact){if(p.t!=='f')return Qo.a.t==='n'&&Math.abs(p.v-Qo.a.v)<1e-9;return gcd(p.n,p.d)===1&&Math.abs(p.v-aval(Qo.a))<1e-9}return Math.abs(p.v-aval(Qo.a))<1e-6}
 function choices(a){const out=[a];const seen=new Set([rnd(aval(a))]);const add=c=>{if(!c)return;const v=rnd(aval(c));if(v>0&&!seen.has(v)&&out.length<4){seen.add(v);out.push(c)}};

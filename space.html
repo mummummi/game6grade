@@ -413,6 +413,24 @@ const rooms=[
   ],
   hints:roomHints([D.comm.h,D.magic.h+' '+D.manual.h],`통신 ${D.comm.word} · 마방진 ★ ${magicCode().split('').join(', ')} · 매뉴얼 ${D.manual.ans} → 발사 코드 ${launchCode()}`)
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"locker": [5, 160, 235, 700], "wb": [280, 187, 273, 253], "vent": [340, 540, 153, 127], "cipher": [620, 180, 160, 247], "suit": [587, 447, 213, 280], "window": [900, 120, 267, 267], "bed": [840, 407, 433, 340], "door": [1313, 160, 220, 707], "mug": [413, 707, 80, 100], "plant": [560, 780, 107, 120]}}, {"h": {"grow": [20, 393, 380, 300], "coat": [393, 273, 147, 313], "note": [627, 500, 107, 50], "micro": [800, 413, 73, 134], "scope": [953, 313, 175, 413], "fridge": [1131, 373, 176, 380], "door": [1313, 120, 220, 747]}}, {"h": {"pipes": [527, 113, 733, 127], "roster": [67, 300, 147, 280], "valves": [280, 247, 300, 367, {"js": "S.f.panelOpen?'':`<rect x=\"285\" y=\"252\" width=\"290\" height=\"357\" rx=\"14\" fill=\"#6d7378\" stroke=\"#3a3f44\" stroke-width=\"6\"/>${[[300,267],[555,267],[300,594],[555,594]].map(([x,y])=>`<circle cx=\"${x}\" cy=\"${y}\" r=\"9\" fill=\"#b0bec5\" stroke=\"#37474f\" stroke-width=\"3\"/>`).join('')}<text x=\"430\" y=\"440\" font-size=\"30\" text-anchor=\"middle\" font-family=\"Jua,sans-serif\" fill=\"#fff\" stroke=\"#333\" stroke-width=\"4\" paint-order=\"stroke\">🔩 잠긴 덮개</text>`"}], "tank": [760, 247, 427, 500], "ext": [1193, 520, 93, 220], "robot": [480, 740, 200, 113], "tools": [93, 687, 227, 187], "door": [1313, 160, 220, 707]}}, {"h": {"earth": [353, 147, 887, 290], "radio": [47, 487, 293, 207], "manual": [347, 480, 120, 107], "nav": [667, 447, 267, 113], "launch": [1113, 460, 193, 167], "food": [720, 620, 167, 153]}}]};const G='space';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
 
 /* ---------- 시작 / 끝 ---------- */
 function renderIntro(app){
