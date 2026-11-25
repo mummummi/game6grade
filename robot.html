@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>(function(){var P='g6-',S=Storage.prototype,G=S.getItem,T=S.setItem,R=S.removeItem;S.getItem=function(k){return G.call(this,P+k)};S.setItem=function(k,v){return T.call(this,P+k,v)};S.removeItem=function(k){return R.call(this,P+k)}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>폭주 로봇 정지 작전 · 6학년</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#e8f1ff;--bg:#0f1830;--panel:#1b2747;--line:#2f416d;--acc:#ffb703;--ok:#3ddc84;--bad:#ff4d6d;--paper:#fffaf0;--pink:#3a3150}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Gowun Dodum',system-ui,sans-serif;background:radial-gradient(circle at 20% 0%,#24386b,#0f1830 60%);color:var(--ink);min-height:100vh;font-size:18px;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,button,.top,.jua{font-family:'Jua',sans-serif;font-weight:400}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f1830e6;backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.top a{color:var(--ink);text-decoration:none;background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:5px 12px;font-size:16px}
+.top .t{flex:1;font-size:20px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.hide{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:16px;background:var(--acc);color:#2b1b00;font-size:20px;box-shadow:0 5px 0 #b37f00;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b37f00}
+.btn.ghost{background:var(--panel);color:var(--ink);box-shadow:0 5px 0 #0a1124;border:2px solid var(--line)}
+/* home */
+.hero{text-align:center;padding:10px 0 4px}
+.hero .bot{font-size:84px;filter:drop-shadow(0 6px 18px #ff4d6d66);animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.hero h1{font-size:34px;margin:6px 0}
+.hero p{margin:6px auto;max-width:640px;line-height:1.6;color:#c9d6f5}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+.role{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:18px;text-align:center;transition:transform .1s,border-color .1s}
+.role:hover{transform:translateY(-3px);border-color:var(--acc)}
+.role .e{font-size:54px}
+.role h3{margin:6px 0;font-size:24px}
+.role p{margin:0;color:#b8c6ea;font-size:16px;line-height:1.5}
+.how{background:#ffffff0d;border:2px dashed var(--line);border-radius:18px;padding:14px 18px;line-height:1.7;font-size:17px}
+.how b{color:var(--acc)}
+.rec{text-align:center;color:#9fb2e0;margin-top:10px;font-size:16px}
+/* robot */
+.hud{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:12px}
+.hud>div{background:#070d1c;border:2px solid var(--line);border-radius:14px;padding:8px 14px;display:flex;align-items:center;gap:10px}
+.timer{font-family:'Courier New',monospace;font-size:40px;font-weight:bold;color:#ff5c5c;text-shadow:0 0 12px #ff000088;letter-spacing:2px}
+.timer.calm{color:#6cf;text-shadow:0 0 12px #0af8}
+.serial{font-family:'Courier New',monospace;font-size:22px;background:#fff;color:#111;padding:2px 10px;border-radius:6px;letter-spacing:3px;font-weight:bold}
+.strikes span{font-size:28px;opacity:.25}
+.strikes span.on{opacity:1;filter:drop-shadow(0 0 6px #ff0)}
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.mod{position:relative;background:linear-gradient(160deg,#2a3a66,#1b2747);border:3px solid #3b5190;border-radius:18px;padding:14px 14px 16px;min-height:250px;box-shadow:inset 0 0 0 4px #0003}
+.mod h3{margin:0 0 10px;font-size:20px;display:flex;align-items:center;gap:8px}
+.mod .led{position:absolute;top:12px;right:14px;width:20px;height:20px;border-radius:50%;background:#511;box-shadow:inset 0 0 4px #000}
+.mod.done .led{background:var(--ok);box-shadow:0 0 12px var(--ok)}
+.mod.done{border-color:var(--ok)}
+.mod.done::after{content:'정지 완료';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Jua;font-size:30px;color:#fff;background:#0b3d2299;border-radius:15px}
+.mod.shake{animation:sh .35s}
+@keyframes sh{0%,100%{transform:none}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* wires */
+.wires{display:flex;flex-direction:column;gap:9px}
+.wire{display:flex;align-items:center;gap:10px;width:100%;padding:0}
+.wire .n{width:22px;text-align:center;color:#9fb2e0;font-family:Jua}
+.wire .bar{flex:1;height:18px;border-radius:9px;border:2px solid #0006;position:relative}
+.wire .lab{min-width:76px;background:#fff;color:#222;border-radius:8px;padding:3px 8px;font-family:Jua;font-size:18px;text-align:center}
+.wire.cut .bar{background-image:linear-gradient(90deg,transparent 46%,#1b2747 46%,#1b2747 54%,transparent 54%)!important}
+.wire.cut{opacity:.6}
+/* keypad */
+.kp{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:260px;margin:8px auto}
+.kp button{aspect-ratio:1.2;background:#f3ead8;color:#222;border-radius:12px;font-size:44px;box-shadow:0 5px 0 #a99c80;position:relative}
+.kp button.on{background:#b9f6ca;box-shadow:0 2px 0 #6fbf8a;transform:translateY(3px)}
+.kp button.on::after{content:'';position:absolute;top:6px;right:8px;width:12px;height:12px;border-radius:50%;background:var(--ok)}
+/* subject */
+.lamp{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;border:4px solid #0008}
+.cards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cards button{background:#fffaf0;color:#2a2a2a;border-radius:12px;padding:10px 12px;font-size:18px;box-shadow:0 4px 0 #b9ab8e;min-width:96px}
+.cards button.on{background:#ffd166;box-shadow:0 1px 0 #b98d00;transform:translateY(3px)}
+.okb{display:block;margin:12px auto 0;background:var(--ok);color:#03361a;border-radius:12px;padding:8px 22px;font-size:20px;box-shadow:0 4px 0 #1f8a51}
+/* maze */
+.mz{display:grid;gap:4px;margin:4px auto 8px;width:max-content;background:#070d1c;padding:8px;border-radius:10px}
+.mz div{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#5b6d99}
+.pads{display:grid;grid-template-columns:repeat(3,52px);gap:6px;justify-content:center}
+.pads button{height:46px;background:var(--panel);border:2px solid var(--line);border-radius:10px;font-size:22px}
+/* password */
+.pw{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.pw .col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pw .col button{background:var(--panel);border:2px solid var(--line);border-radius:8px;width:56px;height:34px}
+.pw .ch{width:60px;height:60px;background:#c8f7c5;color:#0b3d22;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Jua;font-size:32px;border:3px solid #0b3d22}
+/* manual */
+.man{background:var(--paper);color:var(--pink);border-radius:20px;padding:16px 18px;line-height:1.65}
+.man h2{margin:4px 0 8px;font-size:26px;color:#c2410c}
+.man h3{margin:14px 0 6px;font-size:20px;color:#1d4ed8}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;position:sticky;top:58px;z-index:10;background:var(--paper);padding:6px 0}
+.tabs button{background:#efe4cf;border-radius:999px;padding:6px 14px;font-size:17px;color:var(--pink)}
+.tabs button.on{background:#c2410c;color:#fff}
+.rule{background:#fff;border:2px solid #eadfca;border-radius:12px;padding:8px 12px;margin:6px 0}
+.rule ol{margin:4px 0;padding-left:24px}
+.rule li{margin:3px 0}
+.note{background:#fff3c4;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:16px}
+.cols{display:flex;gap:10px;flex-wrap:wrap}
+.cols .kc{background:#fff;border:2px solid #eadfca;border-radius:12px;padding:6px 8px;text-align:center}
+.cols .kc div{font-size:28px;line-height:1.25}
+.cols .kc small{display:block;font-size:12px;color:#888;margin-top:-4px;margin-bottom:2px}
+.mzs{display:flex;flex-wrap:wrap;gap:12px}
+.words{display:flex;flex-wrap:wrap;gap:6px}
+.words span{background:#fff;border:2px solid #eadfca;border-radius:8px;padding:3px 10px;font-family:Jua;font-size:20px}
+table.tb{border-collapse:collapse;margin:6px 0}
+table.tb td,table.tb th{border:1px solid #d8c9a8;padding:4px 10px}
+/* solo */
+.solo{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;align-items:start}
+@media(max-width:820px){.solo{grid-template-columns:1fr}}
+/* result */
+.res{text-align:center;padding:30px 10px}
+.res .e{font-size:96px}
+.res h2{font-size:36px;margin:8px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 18px;border-radius:999px;font-family:Jua;font-size:20px;z-index:50;pointer-events:none;transition:opacity .3s}
+.flash{position:fixed;inset:0;background:#ff000055;pointer-events:none;z-index:40;animation:fl .4s forwards}
+@keyframes fl{to{opacity:0}}
+@media print{.top,.tabs,.noprint{display:none!important}body{background:#fff}.man{box-shadow:none}.msec{display:block!important;page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html">🏠</a><span class="t">🤖 폭주 로봇 정지 작전</span><span id="topinfo"></span></div>
+
+<!-- HOME -->
+<div class="wrap" id="home">
+ <div class="hero"><div class="bot">🤖</div><h1>폭주 로봇 정지 작전</h1>
+ <p>학교 청소 로봇 <b>"말썽이"</b>가 고장 났어요! 정해진 시간 안에 멈추지 않으면 학교 전체를 <b>분홍색 페인트</b>로 칠해 버린대요. 😱<br>로봇 앞에 있는 친구와 설명서를 가진 친구가 <b>말로만</b> 힘을 합쳐 로봇을 멈춰요.</p></div>
+ <div class="roles">
+  <button class="role" data-go="robot"><div class="e">🤖</div><h3>로봇 담당 (1명)</h3><p>로봇 화면을 보고 무엇이 보이는지 설명해요.<br>설명서는 볼 수 없어요!</p></button>
+  <button class="role" data-go="manual"><div class="e">📖</div><h3>설명서 담당 (나머지)</h3><p>설명서를 읽고 어떻게 해야 하는지 알려 줘요.<br>로봇 화면은 볼 수 없어요!</p></button>
+  <button class="role" data-go="solo"><div class="e">🧑‍🔧</div><h3>혼자 연습하기</h3><p>로봇 화면과 설명서를 한 화면에서 함께 보며 규칙을 익혀요.</p></button>
+ </div>
+ <div class="how">
+  <b>📌 진행 방법</b><br>
+  ① 로봇 담당 1명은 <b>🤖 로봇 담당</b>, 나머지 친구들은 각자 기기에서 <b>📖 설명서 담당</b>을 눌러요.<br>
+  ② 서로의 화면을 <b>보여 주면 안 돼요!</b> 로봇 담당은 "빨간 전선 옆에 12라고 써 있어"처럼 보이는 것을 말하고, 설명서 담당은 규칙을 찾아 "두 번째 전선을 잘라!"처럼 알려 줘요.<br>
+  ③ 설명서 담당이 여러 명이면 모듈을 나눠 맡으면 더 빨라요. (설명서 위쪽 탭)<br>
+  ④ 실수하면 ⚡ 경고가 하나 켜져요. 경고가 <b>3개</b>가 되거나 시간이 다 되면 실패!
+ </div>
+ <div class="rec" id="rec"></div>
+</div>
+
+<!-- ROBOT SETUP -->
+<div class="wrap hide" id="setup">
+ <div class="how" style="text-align:center">
+  <h2 style="margin:4px 0">🤖 로봇 담당</h2>
+  <p>설명서 담당 친구들도 준비됐나요?</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+   <button class="btn" id="startReal">⏱️ 실전 시작</button>
+   <button class="btn ghost" id="startPrac">🐢 시간 제한 없이 연습</button>
+  </div>
+  <p class="muted" style="color:#9fb2e0;font-size:15px;margin-top:12px">시작하면 로봇의 일련번호와 모듈이 매번 새로 바뀌어요. 설명서는 늘 똑같아요.</p>
+ </div>
+</div>
+
+<!-- GAME -->
+<div class="wrap hide" id="game">
+ <div id="gameInner"></div>
+</div>
+
+<!-- MANUAL -->
+<div class="wrap hide" id="manualWrap"><div id="manual"></div></div>
+
+<!-- RESULT -->
+<div class="wrap hide" id="result"></div>
+
+<script>
+const GRADE=6;
+const TIER=GRADE<=2?0:GRADE<=4?1:2;
+/* ---------- 난수 ---------- */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let rnd=Math.random;
+const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=id=>document.getElementById(id);
+/* ---------- 학년별 내용 ---------- */
+const hasBat=w=>[...w].some(ch=>{const c=ch.charCodeAt(0);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0});
+const C={
+1:{wire:{p:'짝수',desc:'둘씩 짝을 지으면 남는 것이 없는 수 (2, 4, 6, 8, 10 …)',gen:()=>{const n=ri(1,20);return{t:String(n),p:n%2===0}}},
+   sub:{A:'받침이 있는 낱말',Ad:'글자 아래쪽에 받침(자음)이 있는 글자가 하나라도 들어 있는 낱말이에요. 예) 곰(ㅁ), 연필(ㄴ, ㄹ)',B:'동물 이름',Bd:'살아 움직이는 동물의 이름이에요. 예) 토끼, 사자',
+    items:['사자','고양이','토끼','곰','강아지','다람쥐','오리','나비','하마','코끼리','거북','사과','우유','바나나','모자','연필','책상','시계','가방','수박','기차','우산','나무','구두'].map(w=>[w,hasBat(w),['사자','고양이','토끼','곰','강아지','다람쥐','오리','나비','하마','코끼리','거북'].includes(w)])}},
+2:{wire:{p:'곱셈구구 4단의 값',desc:'4×1부터 4×9까지의 값: 4, 8, 12, 16, 20, 24, 28, 32, 36',gen:()=>{const n=rnd()<.45?4*ri(1,9):ri(3,40);return{t:String(n),p:n%4===0&&n<=36}}},
+   sub:{A:'흉내 내는 말',Ad:'소리나 모양, 움직임을 흉내 낸 말이에요. 예) 멍멍, 반짝반짝',B:'탈것',Bd:'사람이 타고 다른 곳으로 이동하는 것이에요. 예) 버스, 배',
+    items:[['깡충깡충',1,0],['반짝반짝',1,0],['멍멍',1,0],['졸졸',1,0],['쿵쿵',1,0],['살금살금',1,0],['데굴데굴',1,0],['칙칙폭폭',1,0],['버스',0,1],['기차',0,1],['배',0,1],['자전거',0,1],['비행기',0,1],['지하철',0,1],['의자',0,0],['사과',0,0],['연필',0,0],['구름',0,0],['학교',0,0],['고양이',0,0]]}},
+3:{wire:{p:'곤충',desc:'몸이 머리·가슴·배 세 부분이고 다리가 6개인 동물이에요. (거미는 다리가 8개라 곤충이 아니에요!)',gen:()=>{const ins=['개미','나비','벌','잠자리','메뚜기','무당벌레','매미','파리','사마귀'],no=['거미','지렁이','달팽이','개구리','참새','지네','공벌레','금붕어'];const p=rnd()<.45;return{t:pick(p?ins:no),p}}},
+   sub:{A:'자석에 붙는 물체',Ad:'자석은 철로 된 물체를 끌어당겨요. (구리로 된 10원 동전, 알루미늄 캔은 붙지 않아요)',B:'액체',Bd:'흐르는 성질이 있고, 담는 그릇에 따라 모양이 바뀌는 물질이에요.',
+    items:[['철 클립',1,0],['철 못',1,0],['쇠숟가락',1,0],['옷핀',1,0],['철 열쇠',1,0],['물',0,1],['우유',0,1],['식용유',0,1],['주스',0,1],['간장',0,1],['고무줄',0,0],['유리컵',0,0],['나무젓가락',0,0],['지우개',0,0],['10원 동전',0,0],['플라스틱 자',0,0],['종이컵',0,0],['알루미늄 캔',0,0]]}},
+4:{wire:{p:'둔각',desc:'직각(90°)보다 크고 180°보다 작은 각이에요. 90°는 둔각이 아니에요!',gen:()=>{const p=rnd()<.45;const a=p?5*ri(19,35):(rnd()<.2?90:5*ri(2,17));return{t:a+'°',p:a>90&&a<180}}},
+   sub:{A:'평행사변형',Ad:'마주 보는 두 쌍의 변이 서로 평행한 사각형이에요. 직사각형·정사각형·마름모도 평행사변형이에요!',B:'직각이 있는 도형',Bd:'90°인 각이 하나라도 있는 도형이에요.',
+    items:[['정사각형',1,1],['직사각형',1,1],['마름모',1,0],['평행사변형',1,0],['직각삼각형',0,1],['정삼각형',0,0],['둔각삼각형',0,0],['예각삼각형',0,0],['정오각형',0,0],['정육각형',0,0],['직각이 없는 사다리꼴',0,0],['원',0,0]]}},
+5:{wire:{p:'36의 약수',desc:'36을 나누어떨어지게 하는 수: 1, 2, 3, 4, 6, 9, 12, 18, 36',gen:()=>{const d=[1,2,3,4,6,9,12,18,36];const n=rnd()<.45?pick(d):ri(5,40);return{t:String(n),p:36%n===0}}},
+   sub:{A:'생산자',Ad:'햇빛을 받아 스스로 양분을 만드는 생물이에요. (식물 등)',B:'분해자',Bd:'죽은 생물이나 배출물을 작게 분해해 양분을 얻는 생물이에요. (버섯, 곰팡이, 세균)',
+    items:[['벼',1,0],['소나무',1,0],['민들레',1,0],['검정말',1,0],['해바라기',1,0],['버섯',0,1],['곰팡이',0,1],['세균',0,1],['토끼',0,0],['메뚜기',0,0],['개구리',0,0],['매',0,0],['다람쥐',0,0],['뱀',0,0]]},
+   words:['생산자','소비자','분해자','미생물','현미경','공약수','공배수','습도계','고기압','저기압','생태계','전개도','겨냥도','측우기','거중기','앙부일구'].filter(w=>w.length===3)},
+6:{wire:{p:'1/2보다 큰 비율',desc:'0.5(50%)보다 큰 값이에요. 분수·소수·백분율을 서로 바꾸어 비교해 봐요. 1/2과 같은 값은 크지 않아요!',gen:()=>{const big=['3/5','0.6','75%','7/10','2/3','0.8','55%','5/8'],sm=['1/4','0.4','30%','3/8','0.25','45%','2/5','0.5','50%'];const p=rnd()<.45;return{t:pick(p?big:sm),p}}},
+   sub:{A:'산성 용액',Ad:'푸른색 리트머스 종이를 붉게 바꾸고, BTB 용액을 노랗게 만드는 용액이에요.',B:'염기성 용액',Bd:'붉은색 리트머스 종이를 푸르게 바꾸고, BTB 용액을 파랗게 만드는 용액이에요.',
+    items:[['식초',1,0],['레몬즙',1,0],['탄산수',1,0],['묽은 염산',1,0],['사이다',1,0],['비눗물',0,1],['석회수',0,1],['유리 세정제',0,1],['묽은 수산화 나트륨 용액',0,1],['빨랫비누 물',0,1],['증류수',0,0],['설탕물',0,0],['소금물',0,0]]},
+   words:['비례식','백분율','원주율','원기둥','각기둥','전자석','소화기','발화점','기관지','자전축','태양계','북극성','지구본','전동기','소화관']}
+};
+const G=C[GRADE];
+/* ---------- 공통 설정 ---------- */
+const TIME=[360,300,330][TIER];
+const MODS=[['wire','keypad','subject'],['wire','keypad','subject','maze'],['wire','keypad','subject','maze','pw']][TIER];
+const COLORS=[['빨강','#e53935'],['파랑','#1e88e5'],['노랑','#fdd835'],['초록','#43a047'],['검정','#1a1a1a'],['흰색','#fafafa']];
+const COLS=TIER===0?COLORS.slice(0,4):COLORS;
+const SYM={'★':'별','☂':'우산','♣':'클로버','✿':'꽃','⚓':'닻','☎':'전화기','☀':'해','♥':'하트','❄':'눈송이','✂':'가위','♞':'말','♠':'스페이드','♪':'음표','☃':'눈사람','✈':'비행기','⌛':'모래시계','☯':'태극 무늬','♦':'다이아','⚑':'깃발','☘':'세잎클로버','✉':'편지','☕':'컵'};
+const KCOL=[['★','☂','♣','✿','⚓','☎'],['☀','♥','★','❄','✂','♞'],['♠','⚓','♪','☃','✈','♥'],['⌛','☯','✿','♦','☀','⚑'],['☘','✉','♪','☕','♣','⌛']];
+const sym=s=>s+'︎';
+/* 전선 규칙: 설명서 글과 판정이 같은 표를 씀 */
+const ORD=['첫 번째','두 번째','세 번째','네 번째','다섯 번째','여섯 번째'];
+function wireRules(n){
+ const P=G.wire.p,cnt=(w,c)=>w.filter(x=>x.c===c).length,pc=w=>w.filter(x=>x.p).length,lastOf=(w,c)=>{for(let i=w.length-1;i>=0;i--)if(w[i].c===c)return i};
+ const R={
+ 3:[[`<b>${P}</b>인 전선이 딱 1개이면 → 그 전선`,(w,s)=>pc(w)===1?w.findIndex(x=>x.p):null],
+    ['빨강 전선이 하나도 없으면 → 두 번째 전선',w=>cnt(w,'빨강')===0?1:null],
+    ['그 밖에는 → 마지막 전선',w=>w.length-1]],
+ 4:[[`<b>${P}</b>인 전선이 하나도 없으면 → 첫 번째 전선`,w=>pc(w)===0?0:null],
+    ['파랑 전선이 2개 이상이면 → 마지막 파랑 전선',w=>cnt(w,'파랑')>=2?lastOf(w,'파랑'):null],
+    TIER>=1?['로봇 일련번호의 마지막 숫자가 홀수이면 → 세 번째 전선',(w,s)=>+s[s.length-1]%2===1?2:null]:['노랑 전선이 있으면 → 마지막 노랑 전선',w=>cnt(w,'노랑')>0?lastOf(w,'노랑'):null],
+    ['그 밖에는 → 두 번째 전선',w=>1]],
+ 5:[[`<b>${P}</b>인 전선이 3개 이상이면 → 네 번째 전선`,w=>pc(w)>=3?3:null],
+    ['검정 전선이 하나도 없으면 → 첫 번째 전선',w=>cnt(w,'검정')===0?0:null],
+    ['그 밖에는 → 마지막 전선',w=>w.length-1]],
+ 6:[[`<b>${P}</b>인 전선이 하나도 없으면 → 세 번째 전선`,w=>pc(w)===0?2:null],
+    ['흰색 전선이 딱 1개이면 → 그 흰색 전선',w=>cnt(w,'흰색')===1?w.findIndex(x=>x.c==='흰색'):null],
+    ['로봇 일련번호에 모음 알파벳(A, E, I, O, U)이 있으면 → 다섯 번째 전선',(w,s)=>/[AEIOU]/.test(s)?4:null],
+    ['그 밖에는 → 네 번째 전선',w=>3]]};
+ return R[n]}
+const WN=[[3,4],[3,5],[4,6]][TIER];
+function wireAnswer(w,s){for(const r of wireRules(w.length)){const v=r[1](w,s);if(v!==null&&v!==undefined)return v}}
+/* 미로: 같은 씨앗으로 설명서와 로봇이 같은 미로를 만듦 */
+const MS=TIER===2?6:5;
+const MMARK=MS===5?[[[0,0],[3,2]],[[1,4],[4,1]],[[2,1],[0,3]],[[4,4],[1,2]]]:[[[0,1],[5,2]],[[1,4],[3,0]],[[2,2],[4,5]],[[5,5],[0,3]]];
+function makeMaze(seed){const r=mulberry(seed);const W=Array.from({length:MS},()=>Array.from({length:MS},()=>({U:1,D:1,L:1,R:1})));const seen=new Set(['0,0']);const st=[[0,0]];const D={U:[0,-1,'D'],D:[0,1,'U'],L:[-1,0,'R'],R:[1,0,'L']};
+ while(st.length){const [x,y]=st[st.length-1];const nb=Object.entries(D).filter(([k,[dx,dy]])=>{const nx=x+dx,ny=y+dy;return nx>=0&&ny>=0&&nx<MS&&ny<MS&&!seen.has(nx+','+ny)});if(!nb.length){st.pop();continue}const [k,[dx,dy,o]]=nb[Math.floor(r()*nb.length)];W[y][x][k]=0;W[y+dy][x+dx][o]=0;seen.add((x+dx)+','+(y+dy));st.push([x+dx,y+dy])}return W}
+const MAZES=[101,202,303,404].map((s,i)=>({w:makeMaze(s*GRADE+7),m:MMARK[i]}));
+function mazeSvg(M,opt={}){const c=34,p=6,S=MS*c+p*2;let s=`<svg viewBox="0 0 ${S} ${S}" width="${opt.w||200}" style="background:#fff;border-radius:8px;border:2px solid #eadfca">`;
+ for(let y=0;y<MS;y++)for(let x=0;x<MS;x++){const X=p+x*c,Y=p+y*c,w=M.w[y][x];s+=`<circle cx="${X+c/2}" cy="${Y+c/2}" r="2.5" fill="#bbb"/>`;
+  if(M.m.some(([mx,my])=>mx===x&&my===y))s+=`<circle cx="${X+c/2}" cy="${Y+c/2}" r="11" fill="none" stroke="#16a34a" stroke-width="4"/>`;
+  const L=(a,b,d,e)=>s+=`<line x1="${a}" y1="${b}" x2="${d}" y2="${e}" stroke="#3a3150" stroke-width="4" stroke-linecap="round"/>`;
+  if(w.U)L(X,Y,X+c,Y);if(w.L)L(X,Y,X,Y+c);if(y===MS-1&&w.D)L(X,Y+c,X+c,Y+c);if(x===MS-1&&w.R)L(X+c,Y,X+c,Y+c)}
+ return s+'</svg>'}
+/* ---------- 설명서 ---------- */
+function manualHTML(){
+ const sec=[];
+ sec.push(['기본',`<h2>📖 폭주 로봇 정지 설명서 (${GRADE}학년용)</h2>
+ <div class="note">⚠️ 설명서 담당은 로봇 화면을 볼 수 없어요. 로봇 담당 친구에게 질문해서 필요한 정보를 알아내요!</div>
+${TIER?' <h3>🔢 로봇 일련번호</h3><p>로봇 화면 위쪽 흰 칸에 적힌 글자와 숫자예요. 규칙에 "일련번호"가 나오면 로봇 담당에게 물어보세요.</p>':''}
+ <h3>⚡ 경고</h3><p>잘못 조작하면 경고가 1개 켜져요. 3개가 켜지면 로봇이 폭주해요!</p>
+ <h3>🧩 모듈</h3><p>로봇에는 모듈이 <b>${MODS.length}개</b> 있어요. 모든 모듈의 불이 초록색이 되면 로봇이 멈춰요. 위쪽 탭을 눌러 모듈별 규칙을 보세요. 친구와 나눠 맡아도 좋아요.</p>`]);
+ const wr=n=>`<div class="rule"><b>전선이 ${n}개일 때</b> — 위에서부터 차례로 확인하고, 처음으로 맞는 규칙을 따라요.<ol>${wireRules(n).map(r=>`<li>${r[0]}</li>`).join('')}</ol></div>`;
+ sec.push(['🔌 전선',`<h2>🔌 전선 모듈</h2><p>전선 하나를 골라 <b>딱 하나만</b> 잘라야 해요. 전선마다 색깔과 이름표가 있어요. 전선 순서는 <b>위에서부터</b> 셉니다.</p>
+ <div class="note">📘 <b>${G.wire.p}</b>: ${G.wire.desc}</div>${Array.from({length:WN[1]-WN[0]+1},(_,i)=>wr(WN[0]+i)).join('')}`]);
+ sec.push(['🔣 기호판',`<h2>🔣 기호판 모듈</h2><p>로봇 기호판에 기호 4개가 있어요. 아래 다섯 줄 중 <b>4개 기호가 모두 들어 있는 줄은 딱 하나</b>예요. 그 줄에서 <b>위에서부터 나오는 순서대로</b> 기호를 누르게 알려 주세요.</p>
+ <div class="cols">${KCOL.map((c,i)=>`<div class="kc"><b>${i+1}줄</b>${c.map(s=>`<div>${sym(s)}</div><small>${SYM[s]}</small>`).join('')}</div>`).join('')}</div>
+ <div class="note">💡 기호 이름은 친구마다 다르게 부를 수 있어요. "해 모양", "눈 결정"처럼 생김새로 설명해도 돼요.</div>`]);
+ const S=G.sub;
+ sec.push(['💡 판별 카드',`<h2>💡 판별 카드 모듈</h2><p>로봇에 불빛 하나와 카드 여러 장이 있어요. <b>불빛 색깔</b>에 따라 알맞은 카드를 <b>모두</b> 누른 뒤 ✔ 확인을 눌러요.</p>
+ <div class="rule"><ol style="list-style:none;padding-left:4px"><li>🔴 <b>빨간 불</b> → <b>${S.A}</b>인 카드를 모두</li><li>🔵 <b>파란 불</b> → <b>${S.B}</b>인 카드를 모두</li><li>🟡 <b>노란 불</b> → <b>${S.A}</b>도 아니고 <b>${S.B}</b>도 아닌 카드를 모두</li></ol></div>
+ <div class="note">📘 <b>${S.A}</b>: ${S.Ad}</div><div class="note">📘 <b>${S.B}</b>: ${S.Bd}</div>`]);
+ if(MODS.includes('maze'))sec.push(['🧭 미로',`<h2>🧭 미로 모듈</h2><p>로봇 화면에는 벽이 보이지 않아요! 로봇 화면의 <b>초록 동그라미 2개</b> 위치를 물어보고, 아래에서 같은 위치에 초록 동그라미가 있는 미로를 찾으세요.<br>그다음 로봇 담당의 <b>⬜ 위치</b>에서 <b>🔺 목표</b>까지 벽에 부딪히지 않게 한 칸씩 길을 알려 줘요. 벽에 부딪히면 경고!</p>
+ <div class="mzs">${MAZES.map((m,i)=>`<div><b>미로 ${i+1}</b><br>${mazeSvg(m)}</div>`).join('')}</div>
+ <div class="note">💡 위치는 "왼쪽에서 ○번째, 위에서 ○번째"처럼 말하면 정확해요.</div>`]);
+ if(MODS.includes('pw'))sec.push(['🔤 비밀번호',`<h2>🔤 비밀번호 모듈</h2><p>로봇에 글자 칸 3개가 있고, 칸마다 ▲▼로 글자 4개를 돌려 볼 수 있어요. 아래 낱말 중 <b>로봇 글자로 만들 수 있는 낱말은 딱 하나</b>예요. 그 낱말을 맞추고 확인을 누르게 해요.</p>
+ <div class="words">${G.words.map(w=>`<span>${w}</span>`).join('')}</div>
+ <div class="note">💡 첫째 칸에 나오는 글자 4개를 먼저 물어보면 후보를 빨리 줄일 수 있어요.</div>`]);
+ return `<div class="man"><div class="tabs noprint">${sec.map((s,i)=>`<button data-t="${i}" class="${i?'':'on'}">${s[0]}</button>`).join('')}<button id="printBtn">🖨️ 인쇄</button></div>${sec.map((s,i)=>`<div class="msec ${i?'hide':''}" data-s="${i}">${s[1]}</div>`).join('')}</div>`}
+function bindManual(root){root.querySelectorAll('.tabs button[data-t]').forEach(b=>b.onclick=()=>{root.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));root.querySelectorAll('.msec').forEach(s=>s.classList.toggle('hide',s.dataset.s!==b.dataset.t))});const pb=root.querySelector('#printBtn');if(pb)pb.onclick=()=>window.print()}
+/* ---------- 로봇 ---------- */
+let S=null,TK=null;
+function newRobot(seed){rnd=mulberry(seed);
+ const L='ABCDEFGHJKLMNPQRSTUVWXZ';let serial='';for(let i=0;i<5;i++)serial+=rnd()<.5?L[ri(0,L.length-1)]:String(ri(0,9));serial+=String(ri(0,9));
+ const st={serial,strikes:0,done:{},mods:{}};
+ // 전선
+ const n=ri(WN[0],WN[1]);const w=Array.from({length:n},()=>{const c=pick(COLS);const l=G.wire.gen();return{c:c[0],hex:c[1],t:l.t,p:l.p,cut:false}});
+ st.mods.wire={w,ans:wireAnswer(w,serial)};
+ // 기호판
+ let col,syms;for(let k=0;k<50;k++){col=ri(0,4);syms=shuffle(KCOL[col]).slice(0,4);if(KCOL.filter(c=>syms.every(s=>c.includes(s))).length===1)break}
+ st.mods.keypad={syms:shuffle(syms),order:KCOL[col].filter(s=>syms.includes(s)),got:0};
+ // 판별 카드
+ const k=[4,5,6][TIER];let lamp,cards,tgt;for(let t=0;t<80;t++){lamp=pick(['red','blue','yellow']);cards=shuffle(G.sub.items).slice(0,k);tgt=cards.map(c=>lamp==='red'?!!c[1]:lamp==='blue'?!!c[2]:!c[1]&&!c[2]);const m=tgt.filter(Boolean).length;if(m>=1&&m<k)break}
+ st.mods.subject={lamp,cards,tgt,sel:cards.map(()=>false)};
+ // 미로
+ if(MODS.includes('maze')){const mi=ri(0,3);let s,g;do{s=[ri(0,MS-1),ri(0,MS-1)];g=[ri(0,MS-1),ri(0,MS-1)]}while(Math.abs(s[0]-g[0])+Math.abs(s[1]-g[1])<MS);st.mods.maze={mi,pos:s,goal:g}}
+ // 비밀번호
+ if(MODS.includes('pw')){const W=G.words;let tw,cols;for(let t=0;t<200;t++){tw=pick(W);cols=[0,1,2].map(i=>{const pool=[...new Set(W.map(x=>x[i]))].filter(ch=>ch!==tw[i]);return shuffle([tw[i],...shuffle(pool).slice(0,3)])});const ok=W.filter(x=>[0,1,2].every(i=>cols[i].includes(x[i])));if(ok.length===1)break}
+  st.mods.pw={word:tw,cols,idx:[0,0,0]}}
+ return st}
+const MODNAME={wire:'🔌 전선',keypad:'🔣 기호판',subject:'💡 판별 카드',maze:'🧭 미로',pw:'🔤 비밀번호'};
+function robotHTML(){return `<div class="hud"><div><span style="font-size:15px;color:#9fb2e0">남은 시간</span><span class="timer" id="timer">--:--</span></div>${TIER?`<div><span style="font-size:15px;color:#9fb2e0">일련번호</span><span class="serial">${S.serial}</span></div>`:''}<div class="strikes" id="strikes"><span style="font-size:15px;color:#9fb2e0;opacity:1">경고</span><span>⚡</span><span>⚡</span><span>⚡</span></div></div>
+ <div class="mods">${MODS.map(m=>`<div class="mod" id="m_${m}"><div class="led"></div><h3>${MODNAME[m]}</h3><div class="body"></div></div>`).join('')}</div>`}
+function renderMod(m){const el=document.querySelector('#m_'+m+' .body');const d=S.mods[m];
+ if(m==='wire'){el.innerHTML=`<div class="wires">${d.w.map((w,i)=>`<button class="wire ${w.cut?'cut':''}" data-i="${i}"><span class="n">${i+1}</span><span class="bar" style="background:${w.hex}"></span><span class="lab">${w.t}</span></button>`).join('')}</div><div style="text-align:center;color:#9fb2e0;font-size:14px;margin-top:8px">✂️ 자를 전선을 누르세요</div>`;
+  el.querySelectorAll('.wire').forEach(b=>b.onclick=()=>{if(S.done.wire)return;const i=+b.dataset.i;if(d.w[i].cut)return;d.w[i].cut=true;if(i===d.ans)solve('wire');else strike('wire');renderMod('wire')})}
+ if(m==='keypad'){el.innerHTML=`<div class="kp">${d.syms.map(s=>`<button data-s="${s}" class="${d.order.indexOf(s)<d.got?'on':''}">${sym(s)}</button>`).join('')}</div>`;
+  el.querySelectorAll('.kp button').forEach(b=>b.onclick=()=>{if(S.done.keypad)return;const s=b.dataset.s;if(d.order.indexOf(s)<d.got)return;if(s===d.order[d.got]){d.got++;if(d.got===4)solve('keypad')}else strike('keypad');renderMod('keypad')})}
+ if(m==='subject'){const lc={red:'#ff3b30',blue:'#2f80ff',yellow:'#ffd60a'}[d.lamp];el.innerHTML=`<div class="lamp" style="background:${lc};box-shadow:0 0 24px ${lc}"></div><div class="cards">${d.cards.map((c,i)=>`<button data-i="${i}" class="${d.sel[i]?'on':''}">${c[0]}</button>`).join('')}</div><button class="okb">✔ 확인</button>`;
+  el.querySelectorAll('.cards button').forEach(b=>b.onclick=()=>{if(S.done.subject)return;d.sel[+b.dataset.i]^=1;d.sel[+b.dataset.i]=!!d.sel[+b.dataset.i];renderMod('subject')});
+  el.querySelector('.okb').onclick=()=>{if(S.done.subject)return;if(d.sel.every((v,i)=>v===d.tgt[i]))solve('subject');else{strike('subject');d.sel=d.sel.map(()=>false);renderMod('subject')}}}
+ if(m==='maze'){const M=MAZES[d.mi];let g='';for(let y=0;y<MS;y++)for(let x=0;x<MS;x++){const mk=M.m.some(([a,b])=>a===x&&b===y);const me=d.pos[0]===x&&d.pos[1]===y,go=d.goal[0]===x&&d.goal[1]===y;g+=`<div>${me?'⬜':go?'🔺':mk?'<span style="color:#3ddc84;font-size:24px">◎</span>':'•'}</div>`}
+  el.innerHTML=`<div class="mz" style="grid-template-columns:repeat(${MS},30px)">${g}</div><div class="pads"><span></span><button data-d="U">⬆️</button><span></span><button data-d="L">⬅️</button><button data-d="D">⬇️</button><button data-d="R">➡️</button></div>`;
+  el.querySelectorAll('.pads button').forEach(b=>b.onclick=()=>{if(S.done.maze)return;const k=b.dataset.d,[x,y]=d.pos,w=M.w[y][x];if(w[k]){strike('maze');return}const dd={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]}[k];d.pos=[x+dd[0],y+dd[1]];if(d.pos[0]===d.goal[0]&&d.pos[1]===d.goal[1])solve('maze');renderMod('maze')})}
+ if(m==='pw'){el.innerHTML=`<div class="pw">${d.cols.map((c,i)=>`<div class="col"><button data-i="${i}" data-v="-1">▲</button><div class="ch">${c[d.idx[i]]}</div><button data-i="${i}" data-v="1">▼</button></div>`).join('')}</div><button class="okb">✔ 확인</button>`;
+  el.querySelectorAll('.col button').forEach(b=>b.onclick=()=>{if(S.done.pw)return;const i=+b.dataset.i;d.idx[i]=(d.idx[i]+ +b.dataset.v+4)%4;renderMod('pw')});
+  el.querySelector('.okb').onclick=()=>{if(S.done.pw)return;if(d.idx.map((x,i)=>d.cols[i][x]).join('')===d.word)solve('pw');else strike('pw')}}
+}
+/* 소리 */
+let AC;function beep(f,d,t='square',v=.08){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>{d.style.opacity=0;setTimeout(()=>d.remove(),400)},1300)}
+function solve(m){S.done[m]=true;document.getElementById('m_'+m).classList.add('done');beep(880,.15,'sine',.12);setTimeout(()=>beep(1320,.2,'sine',.12),120);toast(MODNAME[m]+' 정지!');if(MODS.every(x=>S.done[x]))end(true)}
+function strike(m){S.strikes++;beep(140,.4,'sawtooth',.12);const f=document.createElement('div');f.className='flash';document.body.appendChild(f);setTimeout(()=>f.remove(),450);const el=document.getElementById('m_'+m);el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
+ document.querySelectorAll('#strikes span').forEach((s,i)=>{if(i>0)s.classList.toggle('on',i<=S.strikes)});toast('⚡ 경고 '+S.strikes+'개!');if(S.strikes>=3)end(false,'경고 3개')}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function startGame(practice,seed){S=newRobot(seed||Date.now()%2147483647);S.practice=practice;S.t0=Date.now();show(MODE==='solo'?'game':'game');
+ const host=$('gameInner');if(MODE==='solo'){host.innerHTML=`<div class="solo"><div>${robotHTML()}</div><div id="soloMan">${manualHTML()}</div></div>`;bindManual($('soloMan'))}else host.innerHTML=robotHTML();
+ MODS.forEach(renderMod);clearInterval(TK);const tm=$('timer');if(practice)tm.classList.add('calm');
+ const tick=()=>{if(S.over)return;const el=Math.floor((Date.now()-S.t0)/1000);if(practice){tm.textContent=fmt(el)}else{const left=TIME-el;tm.textContent=fmt(left);if(left<=30&&left>0)beep(600,.05,'square',.04);if(left<=0)end(false,'시간 초과')}};tick();TK=setInterval(tick,1000)}
+function end(win,why){if(S.over)return;S.over=true;clearInterval(TK);const el=Math.floor((Date.now()-S.t0)/1000);
+ let rec='';if(win){beep(523,.15,'sine');setTimeout(()=>beep(659,.15,'sine'),150);setTimeout(()=>beep(784,.3,'sine'),300);if(!S.practice){const best=+localStorage.getItem('robot-best')||0;const left=TIME-el;if(left>best){localStorage.setItem('robot-best',left);rec='🏅 새 기록!'}const c=(+localStorage.getItem('robot-wins')||0)+1;localStorage.setItem('robot-wins',c)}}
+ setTimeout(()=>{show('result');$('result').innerHTML=`<div class="res"><div class="e">${win?'🎉':'🎨'}</div><h2>${win?'말썽이 정지 성공!':'앗, 로봇이 폭주했어요!'}</h2>
+ <p style="font-size:20px">${win?(S.practice?`걸린 시간 ${fmt(el)}`:`남은 시간 <b>${fmt(TIME-el)}</b> · 경고 ${S.strikes}개 ${rec}`):`${why==='시간 초과'?'시간이 다 됐어요.':'경고가 3개 켜졌어요.'} 학교가 분홍색이 되어 버렸어요… 🩷<br>정지한 모듈: ${MODS.filter(m=>S.done[m]).map(m=>MODNAME[m]).join(', ')||'없음'}`}</p>
+ <p style="color:#9fb2e0">${win?'설명서 담당과 로봇 담당을 바꿔서 다시 도전해 보세요!':'어떤 말이 헷갈렸는지 이야기해 보고 다시 도전!'}</p>
+ <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn" id="again">🔁 다시 도전</button><button class="btn ghost" id="toHome">🏠 처음으로</button></div></div>`;
+ $('again').onclick=()=>MODE==='solo'?startGame(true):show('setup');$('toHome').onclick=()=>show('home')},win?900:600)}
+/* ---------- 화면 ---------- */
+let MODE='';
+function show(id){['home','setup','game','manualWrap','result'].forEach(x=>$(x).classList.toggle('hide',x!==id));window.scrollTo(0,0);
+ $('topinfo').textContent=id==='manualWrap'?'📖 설명서':id==='game'||id==='setup'?(MODE==='solo'?'🧑‍🔧 혼자 연습':'🤖 로봇 담당'):'';if(id==='home')homeRec()}
+function homeRec(){const b=+localStorage.getItem('robot-best')||0,w=+localStorage.getItem('robot-wins')||0;$('rec').textContent=w?`🏅 이 기기의 성공 ${w}번 · 최고 기록: 남은 시간 ${fmt(b)}`:''}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{MODE=b.dataset.go;if(MODE==='robot')show('setup');else if(MODE==='manual'){$('manual').innerHTML=manualHTML();bindManual($('manual'));show('manualWrap')}else startGame(true)});
+$('startReal').onclick=()=>startGame(false);$('startPrac').onclick=()=>startGame(true);
+show('home');
+/* 자동 점검용 */
+window.__robot={get S(){return S},MODS,MAZES,MS,wireRules,G,newRobot,startGame,solveAll(){const sol=[];const d=S.mods;
+ sol.push(()=>document.querySelectorAll('#m_wire .wire')[d.wire.ans].click());
+ d.keypad.order.forEach(s=>sol.push(()=>document.querySelector(`#m_keypad [data-s="${s}"]`).click()));
+ d.subject.tgt.forEach((t,i)=>{if(t)sol.push(()=>document.querySelectorAll('#m_subject .cards button')[i].click())});sol.push(()=>document.querySelector('#m_subject .okb').click());
+ if(d.maze){const M=MAZES[d.maze.mi];const q=[[...d.maze.pos,'']];const seen=new Set([d.maze.pos+'']);let path='';while(q.length){const [x,y,p]=q.shift();if(x===d.maze.goal[0]&&y===d.maze.goal[1]){path=p;break}for(const [k,dx,dy] of [['U',0,-1],['D',0,1],['L',-1,0],['R',1,0]]){if(M.w[y][x][k])continue;const n=[x+dx,y+dy];if(seen.has(n+''))continue;seen.add(n+'');q.push([...n,p+k])}}[...path].forEach(k=>sol.push(()=>document.querySelector(`#m_maze [data-d="${k}"]`).click()))}
+ if(d.pw){d.pw.word.split('').forEach((ch,i)=>{const t=d.pw.cols[i].indexOf(ch);for(let j=0;j<t;j++)sol.push(()=>document.querySelectorAll(`#m_pw .col button[data-i="${i}"][data-v="1"]`)[0].click())});sol.push(()=>document.querySelector('#m_pw .okb').click())}
+ sol.forEach(f=>f());return S.strikes}};
+</script>
+</body>
+</html>
