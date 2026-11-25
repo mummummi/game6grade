@@ -66,6 +66,10 @@ button{font-family:inherit;font-size:18px;border:0;border-radius:12px;padding:10
 .opt{background:var(--panel2);color:var(--ink);border:2px solid var(--line);min-width:110px;padding:12px 16px;font-size:18px}
 .opt.big{font-size:34px;min-width:80px}
 .mopt.on,.mr.on{border-color:var(--gold)!important;background:#ffd54f33!important}.mlist{display:flex;flex-direction:column;gap:8px;margin:10px auto;max-width:620px}.mrow{display:flex;align-items:center;gap:10px;background:var(--panel2);border:2px solid var(--line);border-radius:14px;padding:8px 12px}.ml{flex:1;font-size:18px}.ma{opacity:.6}.mr{min-width:150px;background:#ffffff14;color:var(--ink);border:2px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:18px}
+.item .lk{font-style:normal;font-size:12px;margin-left:3px;opacity:.8}.slots{display:flex;gap:10px;justify-content:center;margin:12px 0}.slot{width:64px;height:64px;border-radius:14px;border:3px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:34px}.slot.on{border-style:solid;border-color:var(--gold);background:#ffd54f22}
+.slide,.gridlk{display:grid;gap:6px;justify-content:center;margin:12px auto}.slide button{height:72px;border-radius:12px;border:3px solid var(--line);background:var(--panel2);color:var(--ink);font-size:30px}.slide button.blank{visibility:hidden}
+.gridlk button{height:58px;border-radius:10px;border:3px solid var(--line);background:#ffffff10;color:var(--ink);font-size:18px}.gridlk button.on{background:#ffd54f;color:#3a2a00;border-color:#ffb300}
+.rotlk{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}.rotlk button{width:86px;height:96px;border-radius:14px;border:3px solid var(--line);background:var(--panel2);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}.rotlk button span{font-size:42px;display:inline-block;transition:transform .15s}.rotlk small{font-size:13px;opacity:.75}
 .ordercards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}
 .ordercards button{background:var(--panel2);color:var(--ink);border:2px solid var(--line);padding:10px 14px;font-size:17px;min-width:90px;position:relative}
 .ordercards button.on{border-color:var(--gold);opacity:.55}
@@ -189,6 +193,8 @@ let SEL=null;
 const has=id=>S.inv.includes(id);
 const flag=f=>!!S.flags[f];
 function give(id){if(!has(id)){S.inv.push(id);toast(`${TH.items[id].e} <b>${TH.items[id].n}</b>을(를) 얻었다!`.replace('을(를)',josa(TH.items[id].n)));tone(880);setTimeout(()=>tone(1320),120)}save();renderInv()}
+/*ENGINE3*/function tryCombo(a,b){const c=(TH.combos||[]).find(x=>(x[0]===a&&x[1]===b)||(x[0]===b&&x[1]===a));if(!c)return false;consume(a);consume(b);SEL=null;tone(520);setTimeout(()=>tone(780),110);give(c[2]);if(c[3])setTimeout(()=>toast(val(c[3])),1300);render();return true}
+function lookItem(id){const it=TH.items[id];if(it&&it.look){openModal(it.e+' '+it.n,val(it.look));return true}return false}
 function consume(id){S.inv=S.inv.filter(x=>x!==id);if(SEL===id)SEL=null;save();renderInv()}
 function josa(w){const c=w.charCodeAt(w.length-1)-0xAC00;return(c>=0&&c<11172&&c%28)?'을':'를'}
 function toast(t){const e=$('toast');e.innerHTML=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2400)}
@@ -210,6 +216,9 @@ function lockHTML(k){
   if(k.kind==='order')return `<div class="ordercards">${k.opts.map(o=>`<button data-v="${String(o).replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div><div class="center"><button class="ghost" data-x="1">다시 고르기</button></div>`;
   if(k.kind==='multi')return `<div class="opts">${k.opts.map(o=>`<button class="opt mopt${k.big?' big':''}" data-m="${String(o).replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div><div class="center muted" style="margin-top:6px">맞는 것을 <b>모두</b> 눌러 고른 뒤 확인을 눌러요</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`;
   if(k.kind==='match'||k.kind==='sort'){const ch=k.kind==='match'?k.right:k.bins;return `<div class="mlist">${k.left.map((l,i)=>`<div class="mrow"><span class="ml">${l}</span><span class="ma">${k.kind==='match'?'↔':'→'}</span><button class="mr" data-i="${i}">❔</button></div>`).join('')}</div><div class="center muted">${k.kind==='match'?'오른쪽 칸을 눌러 짝을 바꿔요':'칸을 눌러 어디에 들어갈지 바꿔요'} (${ch.join(' · ')})</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`}
+  if(k.kind==='slide')return `<div class="slide" id="sl" style="grid-template-columns:repeat(${k.n},${k.sz||72}px)"></div><div class="center muted">빈칸 옆 조각을 눌러 움직여요</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='grid')return `<div class="gridlk" id="gl" style="grid-template-columns:repeat(${k.cols},${k.sz||58}px)"></div><div class="center muted">${k.mode==='cross'?'누르면 그 칸과 위·아래·왼쪽·오른쪽 칸이 함께 바뀌어요':'칸을 눌러 켜고 꺼요'}</div><div class="center"><button class="ghost" id="glr">↺ 처음으로</button> <button class="btn" id="lkOk">확인</button></div>`;
+  if(k.kind==='rotate')return `<div class="rotlk" id="rl"></div><div class="center muted">조각을 누를 때마다 시계 방향으로 90° 돌아가요</div><div class="center"><button class="btn" id="lkOk">확인</button></div>`;
 }
 function bindLock(k,ok){
   const box=$('mbody'),msg=$('lm');let seq=[];
@@ -224,6 +233,10 @@ function bindLock(k,ok){
   if(k.kind==='choice')box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>judge(b.dataset.v));
   if(k.kind==='multi'){const on=new Set();const upd=()=>box.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',on.has(b.dataset.m)));box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const v=b.dataset.m;on.has(v)?on.delete(v):on.add(v);tone(600,.04);upd()});box._set=a=>{a.forEach(v=>on.add(String(v)));upd()};$('lkOk').onclick=()=>{const A=k.ans.map(String);const g=on.size===A.length&&A.every(v=>on.has(v));if(!g){on.clear();upd()}judge(g)}}
   if(k.kind==='match'||k.kind==='sort'){const ch=k.kind==='match'?k.right:k.bins;const st=k.left.map(()=>-1);const upd=()=>box.querySelectorAll('.mr').forEach(b=>{const i=+b.dataset.i;b.textContent=st[i]<0?'❔':ch[st[i]];b.classList.toggle('on',st[i]>=0)});box.querySelectorAll('.mr').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;st[i]=(st[i]+1)%ch.length;tone(520+st[i]*60,.04);upd()});box._set=a=>{a.forEach((v,i)=>st[i]=ch.indexOf(v));upd()};$('lkOk').onclick=()=>{if(st.some(x=>x<0)){msg.className='msg bad';msg.textContent='❔ 아직 정하지 않은 칸이 있어요.';return}judge(st.every((x,i)=>ch[x]===k.ans[i]))}}
+  if(k.kind==='slide'){const n=k.n,N=n*n,sol=k.tiles.slice();let a=sol.slice();let bl=N-1;let rs=k.seed||7;const rn=()=>{rs=(rs*16807)%2147483647;return rs/2147483647};let prev=-1;for(let t=0;t<(k.moves||60);t++){const nb=[bl-n,bl+n,bl%n?bl-1:-1,bl%n<n-1?bl+1:-1].filter(x=>x>=0&&x<N&&x!==prev);const j=nb[Math.floor(rn()*nb.length)];[a[bl],a[j]]=[a[j],a[bl]];prev=bl;bl=j}
+    const draw=()=>{$('sl').innerHTML=a.map((t,i)=>`<button data-i="${i}" class="${t===''?'blank':''}">${t}</button>`).join('');$('sl').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,e=a.indexOf('');if([e-n,e+n].includes(i)||(Math.floor(i/n)===Math.floor(e/n)&&Math.abs(i-e)===1)){[a[i],a[e]]=[a[e],a[i]];tone(500,.04);draw();if(a.every((t,j)=>t===sol[j]))judge(true)}})};draw();box._set=()=>{a=sol.slice();draw()};$('lkOk').onclick=()=>judge(a.every((t,j)=>t===sol[j]))}
+  if(k.kind==='grid'){const R=k.rows,C=k.cols;let g=(k.init||'0'.repeat(R*C)).split('').map(Number);const draw=()=>{$('gl').innerHTML=g.map((v,i)=>`<button data-i="${i}" class="${v?'on':''}" style="${v&&k.color?'background:'+k.color:''}">${k.cells?k.cells[i]:''}</button>`).join('');$('gl').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;const fl=j=>{if(j>=0&&j<R*C)g[j]^=1};fl(i);if(k.mode==='cross'){if(i>=C)fl(i-C);if(i<R*C-C)fl(i+C);if(i%C)fl(i-1);if(i%C<C-1)fl(i+1)}tone(560+g[i]*200,.04);draw()})};draw();$('glr').onclick=()=>{g=(k.init||'0'.repeat(R*C)).split('').map(Number);draw()};box._set=v=>{g=String(v).split('').map(Number);draw()};$('lkOk').onclick=()=>judge(g.join('')===String(k.ans))}
+  if(k.kind==='rotate'){let r=(k.init||k.tiles.map(()=>1)).slice();const draw=()=>{$('rl').innerHTML=k.tiles.map((t,i)=>`<button data-i="${i}"><span style="transform:rotate(${r[i]*90}deg)">${t}</span>${k.labels?`<small>${k.labels[i]}</small>`:''}</button>`).join('');$('rl').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;r[i]=(r[i]+1)%4;tone(600,.04);draw()})};draw();box._set=v=>{r=v.slice();draw()};$('lkOk').onclick=()=>judge(r.every((x,i)=>(x-k.ans[i])%(k.sym&&k.sym[i]?2:4)===0))}
   if(k.kind==='order'){box.querySelectorAll('.ordercards [data-v]').forEach(b=>b.onclick=()=>{if(seq.includes(b.dataset.v))return;seq.push(b.dataset.v);tone(600,.05);show();if(seq.length===(Array.isArray(k.ans)?k.ans.length:k.opts.length))judge(seq.join('\u0001')===(Array.isArray(k.ans)?k.ans:[]).join('\u0001')||(!Array.isArray(k.ans)&&norm(seq.join(''))===norm(k.ans)))});box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{seq=[];show()})}
 }
 /* ═══════ 물건 조사 ═══════ */
@@ -235,6 +248,18 @@ function finishObj(o){if(o.consume&&o.need)consume(o.need);if(o.give)give(o.give
   if(o.door){return nextRoom()}
   closeModal();if(o.done)toast(val(o.done))}
 function activate(o){
+  const RM=rooms()[S.room];
+  if(RM.dark&&!flag(RM.dark)&&!o.glow&&!o.door){toast(val(RM.darkMsg)||'🌑 너무 어두워서 아무것도 보이지 않아요!');tone(200,.2);return}
+  if(o.need&&(o.toggle||o.press)&&!S.used['u_'+o.id]){if(SEL!==o.need){openModal(val(o.title),`<div class="box">${val(o.locked)||'🔒 무언가가 필요해 보인다.'}</div>`);return}S.used['u_'+o.id]=1;SEL=null;if(o.consume)consume(o.need);save();if(o.useMsg)toast(val(o.useMsg))}
+  if(o.toggle){if(o.once&&flag(o.toggle)){if(o.after)openModal(val(o.title),val(o.after));else toast(val(o.on)||'이미 켜져 있어요.');return}S.flags[o.toggle]=S.flags[o.toggle]?0:1;save();tone(S.flags[o.toggle]?880:330,.15);render();const m=val(S.flags[o.toggle]?o.on:o.off);if(o.html&&S.flags[o.toggle])openModal(val(o.title),val(o.html));else toast(m||'딸깍!');return}
+  if(o.press){const g=o.press[0],v=o.press[1],sd=TH.seqs[g];S.seq=S.seq||{};const q=(S.seq[g]=S.seq[g]||[]);if(flag(sd.set)){if(o.after)openModal(val(o.title),val(o.after));else toast(val(o.say)||'🔔');return}q.push(v);while(q.length>sd.ans.length)q.shift();tone(o.tone||NOTE[v]||(520+q.length*60),.35);save();
+    if(q.join('|')===sd.ans.join('|')){S.flags[sd.set]=1;q.length=0;save();if(sd.give)give(sd.give);setTimeout(()=>{toast(val(sd.done)||'✨ 철컥! 무언가 움직였다!');tone(990)},350);render()}else toast((val(o.say)||'🔔')+' <span style="opacity:.75">'+q.map(x=>sd.show?sd.show(x):x).join(' · ')+'</span>');return}
+  if(o.slots&&!S.used['u_'+o.id]){if(o.when&&!o.when.every(flag)){openModal(val(o.title),`<div class="box">${val(o.pre)||'🔒 아직 열 수 없다. 방 안의 단서를 더 찾아보자.'}</div>`);return}const pl=S.used['sl_'+o.id]=S.used['sl_'+o.id]||[];
+    if(SEL&&o.slots.includes(SEL)&&!pl.includes(SEL)){pl.push(SEL);consume(SEL);SEL=null;tone(700);save();
+      if(pl.length===o.slots.length){S.used['u_'+o.id]=1;save();if(o.useMsg)toast(val(o.useMsg));if(o.lock||o.door)return activate(o);return finishObj(o)}
+      toast(`👍 끼웠다! ${o.slots.length-pl.length}개 더 필요해요.`);render();return}
+    if(SEL&&!o.slots.includes(SEL))toast('🤔 여기에는 맞지 않아요.');
+    openModal(val(o.title),(o.door?'':(val(o.html)||''))+`<div class="slots">${o.slots.map(id=>`<span class="slot${pl.includes(id)?' on':''}">${pl.includes(id)?TH.items[id].e:'❔'}</span>`).join('')}</div><p class="muted center">${val(o.locked)||'알맞은 물건을 소지품에서 골라 끼워 보세요.'}</p>`);return}
   if(o.door&&o.when&&!o.when.every(flag)&&!solved(o)){openModal(val(o.title),`<div class="box">${val(o.pre)||'🔒 아직 열 수 없다. 방 안의 단서를 더 찾아보자.'}</div>`);return}
   if(o.door&&solved(o))return nextRoom();
   if(o.need&&!solved(o)&&!S.used['u_'+o.id]){if(SEL!==o.need){openModal(val(o.title),`<div class="box">${val(o.locked)||'🔒 무언가가 필요해 보인다.'}</div>${has(o.need)?`<p class="muted center">💼 소지품에서 <b>${TH.items[o.need].e} ${TH.items[o.need].n}</b>을(를) 먼저 눌러 고른 다음 다시 조사해 보세요.</p>`.replace('을(를)',josa(TH.items[o.need].n)):''}`);return}
@@ -256,7 +281,7 @@ function render(){
   const r=rooms()[S.room];
   const objs=r.objects.filter(o=>avail(o)||(o.door&&o.when&&!(o.hideWhen&&[].concat(o.hideWhen).every(flag))));
   app.innerHTML=`<div class="roombar"><h2>${r.icon||'🚪'} 방 ${S.room+1} / ${rooms().length} · ${r.name}</h2><div style="display:flex;gap:6px;flex-wrap:wrap">${S.room>0?`<button class="ghost" id="prevBtn">◀ 이전 방</button>`:''}${S.room<S.max?`<button class="ghost" id="nextBtn">다음 방 ▶</button>`:''}<button class="ghost" id="hintBtn">💡 힌트</button></div></div>
-  <div class="scene">${svgWrap(r.bg()+objs.map(o=>hot(o.id,val(o.art))).join(''))}</div><div class="inv" id="inv"></div>
+  <div class="scene">${(()=>{const dk=r.dark&&!flag(r.dark);const A=objs.filter(o=>!(dk&&o.glow)),B=dk?objs.filter(o=>o.glow):[];return svgWrap(r.bg()+A.map(o=>hot(o.id,val(o.art))).join('')+(dk?(()=>{const AM=(typeof ARTMAP!=='undefined'&&ARTMAP.rooms[S.room])||{};const hs=B.map(o=>AM[o.id.replace(/^r\d+_/,'')]).filter(Boolean);return '<defs><radialGradient id="dkg"><stop offset="55%" stop-color="#000"/><stop offset="100%" stop-color="#fff"/></radialGradient><mask id="dkm"><rect width="1600" height="900" fill="#fff"/>'+hs.map(h=>`<ellipse cx="${h[0]+h[2]/2}" cy="${h[1]+h[3]/2}" rx="${h[2]*.75}" ry="${h[3]*.75}" fill="url(#dkg)"/>`).join('')+'</mask></defs><rect width="1600" height="900" fill="#04060c" opacity=".9" mask="url(#dkm)" pointer-events="none"/>'+hs.map(h=>`<rect x="${h[0]}" y="${h[1]}" width="${h[2]}" height="${h[3]}" rx="20" fill="none" stroke="#ffe082" stroke-width="5" stroke-dasharray="14 10" pointer-events="none"><animate attributeName="stroke-opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></rect>`).join('')})()+'<text x="800" y="860" text-anchor="middle" font-size="34" fill="#c5cbe6" stroke="#000" stroke-width="4" paint-order="stroke" pointer-events="none">'+(val(r.darkText)||'🌑 깜깜해서 아무것도 보이지 않아요…')+'</text>':'')+B.map(o=>hot(o.id,val(o.art))).join(''))})()}</div><div class="inv" id="inv"></div>
   <p class="muted center">${r.tip||'방 안을 꼼꼼히 살펴보고 수상한 곳을 눌러 조사하세요. 얻은 물건은 소지품에서 눌러 고른 뒤, 쓸 곳을 누르면 돼요.'}</p>`;
   app.querySelectorAll('.hot').forEach(el=>{try{const b=el.getBBox();const h=document.createElementNS('http://www.w3.org/2000/svg','rect');h.setAttribute('x',b.x-8);h.setAttribute('y',b.y-8);h.setAttribute('width',b.width+16);h.setAttribute('height',b.height+16);h.setAttribute('fill','transparent');el.insertBefore(h,el.firstChild)}catch(e){}
     const o=r.objects.find(x=>x.id===el.dataset.id);if(o&&solved(o)&&!o.door)el.classList.add('done');if(SEL&&o&&o.need===SEL&&!solved(o))el.classList.add('selhint');
@@ -267,7 +292,7 @@ function render(){
   renderInv();
 }
 function renderInv(){const el=$('inv');if(!el)return;el.innerHTML='<span class="lbl">💼 소지품</span>'+(S.inv.length?S.inv.map(id=>`<span class="item${SEL===id?' sel':''}" data-i="${id}"><b>${TH.items[id].e}</b>${TH.items[id].n}</span>`).join(''):'<span class="muted">아직 없어요</span>');
-  el.querySelectorAll('.item').forEach(b=>b.onclick=()=>{SEL=SEL===b.dataset.i?null:b.dataset.i;if(SEL){const it=TH.items[SEL];toast(`${it.e} ${it.n} 선택! 쓸 곳을 눌러 보세요.${it.d?' '+it.d:''}`)}render()})}
+  el.querySelectorAll('.item').forEach(b=>b.onclick=()=>{const id=b.dataset.i;if(SEL&&SEL!==id&&tryCombo(SEL,id))return;if(SEL===id){SEL=null;if(lookItem(id))return;render();return}if(SEL&&SEL!==id&&(TH.combos||[]).length)toast('🤔 두 물건은 합쳐지지 않아요.');SEL=id;const it=TH.items[SEL];setTimeout(()=>toast(`${it.e} ${it.n} 선택! 쓸 곳을 누르거나, 다른 소지품을 눌러 합쳐 봐요.${it.look?' (한 번 더 누르면 자세히 보기)':''}${it.d?' '+it.d:''}`),SEL?0:0);render()});el.querySelectorAll('.item').forEach(b=>{const it=TH.items[b.dataset.i];if(it&&it.look)b.insertAdjacentHTML('beforeend','<i class="lk">🔍</i>')})}
 function goRoom(i){S.room=i;SEL=null;save();render();window.scrollTo(0,0)}
 function nextRoom(){$('ov').classList.add('hide');S.max=Math.max(S.max||0,S.room+1);tone(523);setTimeout(()=>tone(784),150);
   if(S.room+1>=rooms().length){S.end=Date.now();S.room=rooms().length;save();markDone();render();return}
@@ -301,16 +326,27 @@ $('resetBtn').onclick=()=>openModal('처음부터 다시 할까요?','<p class="
 $('lvPill').textContent=GRADE+'학년 · '+LVN[LV];
 /* 자동 풀이 (검사용) */
 window.__auto=async function(){const out=[];const sl=ms=>new Promise(r=>setTimeout(r,ms));
-  for(let guard=0;guard<400&&S.room<rooms().length;guard++){const r=rooms()[S.room];let moved=false;
-    for(const o of r.objects){if(!avail(o)||solved(o)&&!o.door)continue;if(o.need&&!has(o.need)&&!S.used['u_'+o.id])continue;if(o.door&&!o.lock&&!(o.needs||[]).every(flag))continue;
+  const closeIf=()=>{if(!$('ov').classList.contains('hide'))closeModal()};
+  const step=async()=>{const r=rooms()[S.room];const dk=r.dark&&!flag(r.dark);
+    for(const c of (TH.combos||[]))if(has(c[0])&&has(c[1])){tryCombo(c[0],c[1]);closeIf();out.push('combo:'+c[2]);return true}
+    for(const g in (TH.seqs||{})){const sd=TH.seqs[g];if(flag(sd.set))continue;const ps=r.objects.filter(o=>o.press&&o.press[0]===g&&avail(o)&&!(dk&&!o.glow));if(!sd.ans.every(v=>ps.some(o=>o.press[1]===v)))continue;if(ps.some(o=>o.need&&!S.used['u_'+o.id]&&!has(o.need)))continue;for(const v of sd.ans){const o=ps.find(x=>x.press[1]===v);if(o.need&&!S.used['u_'+o.id])SEL=o.need;activate(o);closeIf()}out.push('seq:'+g);return true}
+    for(const o of r.objects){if(!avail(o))continue;if(dk&&!o.glow&&!o.door)continue;if(o.press)continue;
+      if(o.toggle){if(flag(o.toggle))continue;if(o.need&&!has(o.need)&&!S.used['u_'+o.id])continue;if(o.need&&!S.used['u_'+o.id])SEL=o.need;activate(o);closeIf();out.push(o.id);return true}
+      if(o.slots&&!S.used['u_'+o.id]){if(o.door&&o.when&&!o.when.every(flag))continue;const pl=S.used['sl_'+o.id]||[];const it=o.slots.find(x=>has(x)&&!pl.includes(x));if(!it)continue;SEL=it;const room=S.room;activate(o);await sl(5);if(o.lock&&S.used['u_'+o.id]&&!solved(o)){await solveLock(o)}if(S.room===room)closeIf();out.push(o.id+'<'+it);return true}
+      if(solved(o))continue;if(o.door&&o.when&&!o.when.every(flag))continue;if(o.need&&!has(o.need)&&!S.used['u_'+o.id])continue;if(o.door&&!o.lock&&!(o.needs||[]).every(flag))continue;
       const room=S.room;if(o.need&&!S.used['u_'+o.id])SEL=o.need;activate(o);await sl(5);
-      if(o.lock&&!solved(o)){const k=val(o.lock);const v=Array.isArray(k.ans)?k.ans:k.ans;
-        if(['dial','multi','match','sort'].includes(k.kind)){$('mbody')._set(v);$('lkOk').click()}else if(k.kind==='text'){$('li').value=v;$('lf').requestSubmit()}
-        else if(k.kind==='choice'){[...document.querySelectorAll('#mbody .opt')].find(b=>b.dataset.v===k.ans).click()}
-        else{const arr=Array.isArray(v)?v:String(v).split('');for(const x of arr)[...document.querySelectorAll('#mbody [data-v]')].find(b=>b.dataset.v===x).click();$('lkOk')&&$('lkOk').click()}
-        await sl(30)}
-      if(!$('ov').classList.contains('hide')&&S.room===room)closeModal();out.push(o.id);moved=true;break}
-    if(!moved){return{stuck:S.room,inv:S.inv,flags:S.flags,done:out}}}
+      if(o.lock&&!solved(o))await solveLock(o);
+      if(S.room===room)closeIf();out.push(o.id);return true}
+    return false};
+  const solveLock=async o=>{const k=val(o.lock);const v=k.ans;if(!$('lkOk')&&!document.querySelector('#mbody [data-v],#mbody .opt,#li'))return;
+    if(['dial','multi','match','sort','slide','grid','rotate'].includes(k.kind)){$('mbody')._set(v);$('lkOk').click()}else if(k.kind==='text'){$('li').value=v;$('lf').requestSubmit()}
+    else if(k.kind==='choice'){[...document.querySelectorAll('#mbody .opt')].find(b=>b.dataset.v===k.ans).click()}
+    else{const arr=Array.isArray(v)?v:String(v).split('');for(const x of arr)[...document.querySelectorAll('#mbody [data-v]')].find(b=>b.dataset.v===x).click();$('lkOk')&&$('lkOk').click()}
+    await sl(30)};
+  for(let guard=0;guard<600&&S.room<rooms().length;guard++){if(await step())continue;
+    const cur=S.room;let ok=false;for(let i=0;i<=Math.min(S.max||0,rooms().length-1);i++){if(i===cur)continue;goRoom(i);if(await step()){ok=true;break}}
+    if(!ok){goRoom(cur);return{stuck:cur,inv:S.inv,flags:S.flags,done:out}}
+    if(S.room<rooms().length&&S.room!==cur&&S.room<(S.max||0))goRoom(S.max)}
   return{ok:S.room>=rooms().length,done:out}};
 </script>
 <script>
@@ -364,7 +400,7 @@ const CI=L([['전구 하나를 빼면 나머지 전구도 꺼져요','직렬'],[
 const FX=L([['🏜️ 모래로 불을 덮어요','산소 공급을 막아요'],['💧 물을 뿌려요','온도를 낮춰요'],['🔥 가스레인지 밸브를 잠가요','탈 물질을 없애요']],[['🏜️ 모래로 불을 덮어요','산소 공급을 막아요'],['💧 물을 뿌려요','온도를 낮춰요'],['🔥 가스레인지 밸브를 잠가요','탈 물질을 없애요'],['🕯️ 촛불을 입으로 불어 꺼요','탈 물질을 없애요']],[['🏜️ 모래로 불을 덮어요','산소 공급을 막아요'],['💧 물을 뿌려요','온도를 낮춰요'],['🔥 가스레인지 밸브를 잠가요','탈 물질을 없애요'],['🕯️ 촛불을 입으로 불어 꺼요','탈 물질을 없애요'],['🧯 소화기 분말로 덮어요','산소 공급을 막아요'],['🌲 산불이 번지지 않게 나무를 베어 내요','탈 물질을 없애요']]);
 const GS=L([['산소','다른 물질이 타는 것을 도와요'],['이산화 탄소','석회수를 뿌옇게 흐려요'],['헬륨','풍선을 하늘로 띄워요']],[['산소','다른 물질이 타는 것을 도와요'],['이산화 탄소','석회수를 뿌옇게 흐려요'],['헬륨','풍선을 하늘로 띄워요'],['질소','과자 봉지를 채워 내용물을 보호해요']],[['산소','다른 물질이 타는 것을 도와요'],['이산화 탄소','석회수를 뿌옇게 흐려요'],['헬륨','풍선을 하늘로 띄워요'],['질소','과자 봉지를 채워 내용물을 보호해요'],['네온','광고판에서 빛을 내요'],['수소','연료 전지 자동차의 연료로 써요']]);
 const SC=L([['1 : 20 설계도, 실제 1.6m 로봇 팔','8cm'],['1 : 10 설계도, 실제 50cm 바퀴','5cm'],['1 : 100 설계도, 실제 3m 작업대','3cm']],[['1 : 20 설계도, 실제 1.6m 로봇 팔','8cm'],['1 : 10 설계도, 실제 50cm 바퀴','5cm'],['1 : 100 설계도, 실제 3m 작업대','3cm'],['1 : 50 설계도, 실제 2.5m 날개','5cm']],[['1 : 20 설계도, 실제 1.6m 로봇 팔','8cm'],['1 : 10 설계도, 실제 50cm 바퀴','5cm'],['1 : 100 설계도, 실제 3m 작업대','3cm'],['1 : 50 설계도, 실제 2.5m 날개','5cm'],['1 : 20 설계도에서 7cm인 몸통의 실제 길이','1.4m'],['1 : 40 설계도에서 6cm인 다리의 실제 길이','2.4m']]);
-return {
+const __V2={
  rooms:[
  {o:{
   board:{title:'💡 회로 실험판',html:'<div class="box">회로 실험판 카드를 <b>직렬연결</b>과 <b>병렬연결</b>로 나누면 건전지 상자가 열려요.</div>',lock:()=>({kind:'sort',left:CI.map(c=>c[0]),bins:['직렬','병렬'],ans:CI.map(c=>c[1]),q:'직렬일까요, 병렬일까요?'}),give:'bat',done:'상자가 열리며 🔋 건전지가 나왔어요!'},
@@ -377,11 +413,30 @@ return {
   plan:{title:'📐 설계도',html:'<div class="box">설계도의 길이 칸이 비었어요. <b>축척</b>을 보고 알맞은 길이를 붙여요. (1 : 20은 실제 길이가 설계도의 20배)</div>',lock:()=>({kind:'match',left:SC.map(s=>s[0]),right:[...new Set(SC.map(s=>s[1]))].sort(),ans:SC.map(s=>s[1]),q:'길이는?'}),give:'gear',done:'설계 완료! 설계도 뒤에서 ⚙️ 톱니바퀴가 나왔어요.'},
  },hints:()=>L(['1.6m = 160cm, 160 ÷ 20 = 8'],['2.5m = 250cm, 250 ÷ 50 = 5'],['7cm × 20 = 140cm = 1.4m'])},
  ]};
+const __V3=(function(){
+const H=i=>__V2.rooms[i].hints();
+const FQ=L([['5','5'],['3','3'],['7','7']],[['4.8 ÷ 0.6 − 3','5'],['연소의 3가지 조건의 수','3'],['1:20 설계도에서 0.35m를 cm로 바꾸면 35, 그 일의 자리 + 2','7']],[['전구 두 개 직렬, 하나 빼면 켜지는 전구 수 0 + 5','5'],['연소 조건(탈 물질·산소·발화점) 수','3'],['21 ÷ 3','7']]);
+const FRG=(i)=>`<div class="paper" style="border:2px dashed #ffd54f">🧩 <b>숫자 조각 ${'①②③④'[i]}</b>: ${FQ[i][0]}</div>`;
+const FANS=()=>FQ.map(q=>q[1]).join('');
+return {
+ items:{dead:{e:'🪫',n:'다 쓴 건전지',look:'<div class="box">완전히 다 쓴 건전지예요. 이건 쓸모가 없을 것 같아요…</div>'},goggles:{e:'🥽',n:'보안경'},motor:{e:'⚙️',n:'건전지 모터'}},
+ combos:[['gear','bat','motor','⚙️🔋 톱니바퀴에 건전지를 연결해 모터를 만들었어요!']],
+ rooms:[
+ {o:{deco1:{title:'🔋 다 쓴 건전지',html:'<div class="box">다 쓴 건전지예요. 일단 챙겼어요.</div>',give:'dead'},deco0:{title:'📜 에디슨 명언 액자',html:()=>'<div class="paper">"천재는 1%의 영감과 99%의 노력으로 이루어진다." — 에디슨</div>'+FRG(0)}},hints:()=>['다 쓴 건전지는 쓸모가 없어요. 진짜 건전지는 회로 실험판에서 얻어요.','숫자 조각 ①은 에디슨 명언 액자에 있어요.',...H(0)]},
+ {o:{deco1:{title:'🥽 보안경',html:'<div class="box">보안경을 챙겼어요.</div>',give:'goggles'},gas:{need:null,slots:['glove','goggles'],locked:'기체 발생 장치: "보호 장갑과 보안경을 모두 착용하세요!"'},deco2:{title:'🧯 소화기',html:()=>'<div class="box">소화기 점검표에 숫자가 있어요.</div>'+FRG(1)}},hints:()=>['기체 실험에는 보호 장갑과 보안경이 모두 필요해요.','숫자 조각 ②는 소화기 점검표에 있어요.',...H(1)]},
+ {o:{deco1:{title:'🤖 미완성 로봇',need:'motor',consume:true,locked:'로봇 가슴에 모터를 넣는 빈칸이 있어요.',html:()=>'<div class="box">모터를 넣자 로봇이 삐빅! 눈을 깜빡이며 화면에 숫자를 띄워요.</div>'+FRG(2),set:'robot'},deco2:{title:'🗑️ 구겨진 설계도',html:'<div class="box">구겨진 설계도를 펴니 잠금 해제 암호 칸이 있어요. "<b>숫자 조각 ①②③</b>"</div>',lock:()=>({kind:'dial',ans:FANS(),q:'숫자 조각 ①②③'}),set:'meta',done:'설계도 속 암호가 풀렸어요!'},lock:{need:null,when:['robot','meta'],pre:'🔒 자동 잠금 장치: "완성된 로봇과 설계도 암호가 필요합니다."'}},hints:()=>['톱니바퀴 + 건전지 → 모터! 미완성 로봇에 넣어요.','숫자 조각: ① 에디슨 액자, ② 소화기, ③ 로봇 화면.',...H(2)]},
+ ]};
 
 })();
-const KEYS=['lock','give','set','need','when','needs','done','locked','pre','after','consume','useMsg','html','hideWhen'];
-['story','endText','title'].forEach(k=>{if(P[k])THEME[k]=P[k]});if(P.items)Object.assign(THEME.items,P.items);
-(P.rooms||[]).forEach((pr,ri)=>{const r=THEME.rooms[ri];if(!r||!pr)return;if(pr.hints)r.hints=pr.hints;if(pr.tip)r.tip=pr.tip;if(pr.name)r.name=pr.name;
+const __M=(a,b)=>{const r=Object.assign({},a);['story','endText','title','combos','seqs'].forEach(k=>{if(b[k]!==undefined)r[k]=b[k]});r.items=Object.assign({},a.items||{},b.items||{});
+ const NR=Math.max((a.rooms||[]).length,(b.rooms||[]).length);r.rooms=Array.from({length:NR},(_,i)=>{const ra=(a.rooms||[])[i]||{};const rb=(b.rooms||[])[i];if(!rb)return ra;const o=Object.assign({},ra.o||{});
+  Object.entries(rb.o||{}).forEach(([id,p])=>{if(p===null){delete o[id];return}const base=p._new?{}:Object.assign({},o[id]||{});if(!o[id]&&!p._new&&!/^deco/.test(id))base._clear=false;Object.entries(p).forEach(([k,v])=>{if(k==='_new')return;base[k]=v});o[id]=base});
+  const x=Object.assign({},ra,rb);x.o=o;return x});return r};
+return __M(__V2,__V3);
+})();
+const KEYS=['lock','give','set','need','when','needs','done','locked','pre','after','consume','useMsg','html','hideWhen','toggle','press','slots','glow','once','on','off','say','tone'];
+['story','endText','title','combos','seqs'].forEach(k=>{if(P[k])THEME[k]=P[k]});if(P.items)Object.assign(THEME.items,P.items);
+(P.rooms||[]).forEach((pr,ri)=>{const r=THEME.rooms[ri];if(!r||!pr)return;if(pr.hints)r.hints=pr.hints;if(pr.tip)r.tip=pr.tip;if(pr.name)r.name=pr.name;['dark','darkMsg','darkText'].forEach(k=>{if(k in pr)r[k]=pr[k]});if(pr.drop)r.objects=r.objects.filter(o=>!pr.drop.includes(o.id));
  Object.entries(pr.o||{}).forEach(([id,pt])=>{let o=r.objects.find(x=>x.id===id);if(!o){o={id};r.objects.push(o)}
   if(pt._clear!==false&&!o.door)KEYS.forEach(k=>delete o[k]);if(o.door)['lock','need','when','needs','pre','locked','html'].forEach(k=>{if(k in pt)delete o[k]});
   Object.assign(o,pt);delete o._clear;if(/^deco/.test(id))delete o.deco})});
