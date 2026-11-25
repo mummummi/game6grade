@@ -413,6 +413,24 @@ const rooms=[
   ],
   hints:DD.hints[3]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"shelf": [0, 113, 320, 754], "cipher": [380, 107, 267, 253], "clocks": [700, 113, 307, 253], "openbook": [320, 400, 280, 387], "wandbox": [727, 447, 233, 120], "cubes": [647, 515, 80, 65], "globe": [1393, 633, 200, 247], "door": [1347, 120, 207, 500]}}, {"h": {"recipe": [380, 100, 267, 260], "mix": [340, 393, 300, 180], "coins": [687, 147, 333, 187], "skullp": [1067, 113, 220, 207], "cauldron": [693, 487, 287, 287], "jugs": [987, 393, 360, 347], "door": [1353, 120, 200, 693], "frog": [233, 700, 160, 160]}}, {"h": {"stars": [40, 227, 240, 360], "scope": [660, 313, 320, 440], "memo": [1040, 307, 147, 200], "owl": [1213, 347, 107, 387], "door": [1353, 127, 193, 600], "floor": [880, 740, 640, 153]}}, {"h": {"matrix": [27, 153, 227, 400], "sym": [1340, 147, 227, 380], "match": [560, 533, 513, 220], "ball": [1180, 453, 147, 280], "seal": [480, 747, 633, 147, {"js": "[['🔥',653,827],['💧',793,773],['🌿',947,827]].map(([e,x,y],i)=>S.f['placed'+i]?`<text x=\"${x}\" y=\"${y+14}\" font-size=\"40\" text-anchor=\"middle\">${e}</text>`:'').join('')"}], "cat": [260, 693, 120, 180]}}]};const G='wizard';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
 
 /* ---------- 시작 / 끝 ---------- */
 function renderIntro(app){
