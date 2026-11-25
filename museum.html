@@ -402,6 +402,25 @@ const rooms=[
   ],
   hints:DD.hints[3]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"poster": [60, 85, 320, 390], "pyr": [53, 480, 420, 336], "desk": [529, 460, 395, 195], "pc": [769, 384, 111, 93], "kiosk": [987, 300, 157, 340], "gate": [1235, 55, 295, 520], "bench": [837, 757, 556, 130], "plant": [1400, 507, 200, 393]}}, {"h": {"wall": [60, 80, 420, 400], "legend": [400, 460, 140, 145], "statues": [700, 360, 290, 280], "sarc": [990, 270, 155, 380], "door": [1200, 185, 335, 435], "altar": [200, 680, 605, 180], "jar": [893, 740, 120, 140]}, "dark": "!S.f.lit"}, {"h": {"sign": [60, 80, 300, 260], "mammoth": [53, 387, 420, 433], "skeleton": [490, 250, 430, 450], "diorama": [907, 247, 317, 227], "eggcase": [947, 493, 206, 157], "fern": [1160, 340, 253, 313], "door": [1424, 180, 126, 620]}}, {"h": {"frames": [60, 87, 710, 393, {"js": "(S.f.mixDone||[]).map((d,i)=>d?`<rect x=\"${[100,451,667][i]}\" y=\"${[127,180,220][i]}\" width=\"${[250,149,86][i]}\" height=\"${[313,227,160][i]}\" fill=\"${DD.colors[i][1]}\" opacity=\".85\"/>`:'').join('')"}], "labels": [944, 300, 133, 100], "case": [793, 460, 370, 180], "mirror": [1203, 290, 101, 170], "bust": [360, 447, 184, 273], "bench": [837, 757, 556, 130], "exit": [1393, 133, 207, 667]}}]};const G='museum';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
+
 function pcScreen(){return box('<b>직원 시스템</b>')+paper('📢 오늘의 공지<br>'+DD.kiosk.notice+'<br>· 이집트관 정전! 손전등은 기념품 진열장에 있음 (블록 탑 퍼즐로 잠김)')}
 
 /* 이집트관: 어두울 때는 손전등이 있어야 조사 가능 */
