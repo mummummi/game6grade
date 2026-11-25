@@ -86,7 +86,7 @@ table.t{border-collapse:collapse;margin:8px auto;background:#0e1018}table.t td,t
 body.kids{font-size:20px}body.kids .box,body.kids .paper{font-size:20px}
 @media (max-width:600px){h1{font-size:30px}.keys button{width:38px;height:120px}.dial .d{width:48px;height:60px;font-size:32px}}
 </style>
-</head>
+<style>/*DIALTYPE*/.dialtype{margin:10px 0 2px}.dialtype input{width:min(260px,80%);font-size:22px;text-align:center;letter-spacing:6px;padding:8px 10px;border-radius:12px;border:2px dashed rgba(127,127,127,.5);background:rgba(255,255,255,.92);color:#222}.dialtype input::placeholder{letter-spacing:0;font-size:15px;color:#888}</style></head>
 <body class="g6">
 <div class="wrap">
 <header><div class="brand"><a href="index.html">🏠 게임 교실</a>✈️ 세계 일주 공항</div>
@@ -207,7 +207,7 @@ $('mx').onclick=closeModal;$('ov').onclick=e=>{if(e.target.id==='ov')closeModal(
 /* ═══════ 자물쇠 ═══════ */
 const norm=v=>String(v).replace(/\s|,/g,'').toLowerCase();
 function lockHTML(k){
-  if(k.kind==='dial')return `<div class="dials">${Array.from({length:k.ans.length},(_,i)=>`<div class="dial"><button data-u="${i}">▲</button><div class="d" id="dg${i}">0</div><button data-dn="${i}">▼</button></div>`).join('')}</div><div class="center"><button class="btn" id="lkOk">열기</button></div>`;
+  if(k.kind==='dial')return `<div class="dials">${Array.from({length:k.ans.length},(_,i)=>`<div class="dial"><button data-u="${i}">▲</button><div class="d" id="dg${i}">0</div><button data-dn="${i}">▼</button></div>`).join('')}</div><div class="center dialtype"><input id="dIn" inputmode="numeric" pattern="[0-9]*" maxlength="${k.ans.length}" placeholder="⌨️ 숫자 ${k.ans.length}자리 직접 입력" autocomplete="off"></div><div class="center"><button class="btn" id="lkOk">열기</button></div>`;
   if(k.kind==='text')return `<form class="lockform" id="lf"><input id="li" maxlength="${k.max||14}" placeholder="${k.ph||''}" autocomplete="off"><button class="btn">열기</button></form>`;
   if(k.kind==='dir')return `<div class="seqshow" id="sq"></div><div class="pad">${[['U','⬆️'],['D','⬇️'],['L','⬅️'],['R','➡️']].map(([v,e])=>`<button data-v="${String(v).replace(/"/g,'&quot;')}">${e}</button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
   if(k.kind==='color')return `<div class="seqshow" id="sq"></div><div class="pad">${k.opts.map(([v,c])=>`<button class="c" data-v="${String(v).replace(/"/g,'&quot;')}" style="background:${c}" title="${v}"></button>`).join('')}<button data-x="1">⌫</button></div><div class="center" style="margin-top:10px"><button class="btn" id="lkOk">확인</button></div>`;
@@ -227,7 +227,7 @@ function bindLock(k,ok){
     else{S.wrong++;save();msg.className='msg bad';msg.textContent=k.bad||'❌ 열리지 않는다…';tone(150,.3);const c=$('mcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');if(k.kind!=='text'){seq=[];show()}}};
   const show=()=>{const sq=box.querySelector('#sq');if(sq)sq.innerHTML=seq.map(v=>k.kind==='color'?`<span style="background:${k.opts.find(o=>o[0]===v)[1]}"></span>`:k.kind==='dir'?`<span>${{U:'⬆️',D:'⬇️',L:'⬅️',R:'➡️'}[v]}</span>`:`<span>${v}</span>`).join('');
     if(k.kind==='order')box.querySelectorAll('.ordercards button').forEach(b=>{const i=seq.indexOf(b.dataset.v);b.classList.toggle('on',i>=0);b.querySelector('i')?.remove();if(i>=0)b.insertAdjacentHTML('beforeend',`<i>${i+1}</i>`)})};
-  if(k.kind==='dial'){const d=Array(k.ans.length).fill(0);box.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const i=+b.dataset.u;d[i]=(d[i]+1)%10;$('dg'+i).textContent=d[i];tone(500,.05)});box.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;d[i]=(d[i]+9)%10;$('dg'+i).textContent=d[i];tone(500,.05)});$('lkOk').onclick=()=>judge(d.join(''));box._set=v=>{String(v).split('').forEach((c,i)=>{d[i]=+c;$('dg'+i).textContent=c})}}
+  if(k.kind==='dial'){const d=Array(k.ans.length).fill(0);box.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const i=+b.dataset.u;d[i]=(d[i]+1)%10;$('dg'+i).textContent=d[i];tone(500,.05)});box.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;d[i]=(d[i]+9)%10;$('dg'+i).textContent=d[i];tone(500,.05)});$('lkOk').onclick=()=>judge(d.join(''));box._set=v=>{String(v).split('').forEach((c,i)=>{d[i]=+c;$('dg'+i).textContent=c})};{const di=$('dIn');if(di){di.oninput=()=>{const v=di.value.replace(/\D/g,'').slice(0,d.length);di.value=v;v.split('').forEach((c,i)=>{d[i]=+c;$('dg'+i).textContent=c});tone(520,.03)};di.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();judge(d.join(''))}}}}}
   if(k.kind==='text'){$('lf').onsubmit=e=>{e.preventDefault();const v=$('li').value;if(v.trim())judge(v)}}
   if(['dir','color','keys'].includes(k.kind)){box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(seq.length>=(k.ans.length+3))return;seq.push(b.dataset.v);if(k.kind==='keys')tone(NOTE[b.dataset.v]||440,.4);else tone(600,.05);show()});box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{seq.pop();show()});$('lkOk').onclick=()=>judge(seq.join(''))}
   if(k.kind==='choice')box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>judge(b.dataset.v));
