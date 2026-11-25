@@ -62,7 +62,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0}
 .banner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Jua;font-size:44px;text-shadow:0 3px 0 #000;background:#0006;z-index:5;text-align:center;padding:10px}
 
 </style>
-</head>
+<style>/*WNCSS*/.wrongnote{text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 14px;margin:8px auto;max-width:520px;max-height:240px;overflow:auto;font-size:15px}.wrongnote .wn{padding:6px 0;border-top:1px dashed rgba(255,255,255,.15)}.wrongnote .wn span{display:block}.wrongnote .wn b{display:block;color:#ffd166;font-size:14px;margin-top:2px}</style></head>
 <body>
 <div class="hud"><a href="index.html">🏠</a><span class="t">🎈 정답 풍선 팡팡</span><span class="lvpill" id="lvPill"></span><span class="sp"></span><span id="hudX"></span><button class="ib" id="tts" title="문제 읽어 주기">🗣️</button><button class="ib" id="mute" title="소리">🔊</button></div>
 <div id="app"></div>
@@ -113,11 +113,11 @@ function confetti(){if(FAST)return;const cs=['#ffd166','#ff8a5c','#5eea9a','#7fc
 function heartsTxt(n,max){return '❤️'.repeat(Math.max(0,n))+'🤍'.repeat(Math.max(0,max-n))}
 function hud(html){$('#hudX').innerHTML=html}
 /* 시작 화면 */
-function intro(desc,rules,onStart,extra){hud('');const a=$('#app');a.innerHTML='';const box=h('div','intro panel popin',`<div class="big">${EMOJI}</div><h1>${TITLE}</h1><p>${desc}</p><div class="rules">${rules.map(r=>'• '+r).join('<br>')}</div>${S.wins?`<p class="muted">🏆 지금까지 ${S.wins}번 성공 · 최고 ${S.best}점</p>`:''}<div class="row" id="startRow"></div>`);a.appendChild(box);
+function intro(desc,rules,onStart,extra){window.__WR=[];hud('');const a=$('#app');a.innerHTML='';const box=h('div','intro panel popin',`<div class="big">${EMOJI}</div><h1>${TITLE}</h1><p>${desc}</p><div class="rules">${rules.map(r=>'• '+r).join('<br>')}</div>${S.wins?`<p class="muted">🏆 지금까지 ${S.wins}번 성공 · 최고 ${S.best}점</p>`:''}<div class="row" id="startRow"></div>`);a.appendChild(box);
   const row=box.querySelector('#startRow');(extra||[[ '▶ 시작하기',onStart]]).forEach(([t,f],i)=>{const b=h('button','btn'+(i?' ghost':''),t);b.onclick=()=>{try{AC=AC||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}f()};row.appendChild(b)});if(FAST)setTimeout(()=>row.querySelector('button').click(),10)}
 /* 결과 화면 */
 function finish(win,score,stars,msg){if(win){S.end=Date.now();S.wins++;markDone();confetti();SND.win()}else SND.lose();S.plays++;if(score>S.best)S.best=score;save();try{speechSynthesis.cancel()}catch(e){}
-  const md=h('div','modal',`<div class="panel popin"><div style="font-size:70px">${win?'🏆':'💦'}</div><h2 style="font-size:32px;margin:6px 0;color:${win?'var(--good)':'var(--bad)'}">${win?'성공!':'아쉬워요!'}</h2>${win?`<div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<p style="font-size:20px">${msg||''}<br>점수 <b>${score}</b>점 · 최고 ${S.best}점</p>${win?'<p class="muted">완료 기록이 저장되었어요! 🎉</p>':''}<div class="row"><button class="btn" id="again">🔁 다시 하기</button><a class="btn ghost" href="index.html" style="text-decoration:none">🏠 게임 교실</a></div></div>`);
+  const md=h('div','modal',`<div class="panel popin"><div style="font-size:70px">${win?'🏆':'💦'}</div><h2 style="font-size:32px;margin:6px 0;color:${win?'var(--good)':'var(--bad)'}">${win?'성공!':'아쉬워요!'}</h2>${win?`<div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<p style="font-size:20px">${msg||''}<br>점수 <b>${score}</b>점 · 최고 ${S.best}점</p>${(window.__WR||[]).length?`<div class="wrongnote"><b>📒 다시 볼 문제</b>${[...new Map(window.__WR.map(w=>[w[0],w])).values()].slice(0,8).map(w=>`<div class="wn"><span>${esc(w[0])}</span><b>${esc(w[1])}</b></div>`).join('')}</div>`:''}${win?'<p class="muted">완료 기록이 저장되었어요! 🎉</p>':''}<div class="row"><button class="btn" id="again">🔁 다시 하기</button><a class="btn ghost" href="index.html" style="text-decoration:none">🏠 게임 교실</a></div></div>`);
   document.body.appendChild(md);md.querySelector('#again').onclick=()=>{md.remove();start()}}
 </script>
 <script>
@@ -149,7 +149,7 @@ function loop(t){if(G.over)return;if(!G.paused){if(t-G.last>SPAWN){G.last=t;spaw
 function tap(b,e){if(b.dead||G.over||G.paused)return;b.dead=true;
   if(b.yes){G.got++;G.score+=10;b.el.classList.add('boom');SND.pop();SND.good();floatTxt(e.clientX,e.clientY,'+10','#5eea9a');
     document.querySelectorAll('.prog i').forEach((x,i)=>x.classList.toggle('on',i<G.got));upHud();if(G.got>=NEED)clearRound()}
-  else{G.hearts--;b.el.classList.add('wrongb');SND.bad();G.st.classList.remove('shake');void G.st.offsetWidth;G.st.classList.add('shake');floatTxt(e.clientX,e.clientY,'💔 정답이 아니에요','#ff5a6e');upHud();if(G.hearts<=0)lose()}
+  else{(window.__WR=window.__WR||[]).push([b.el.textContent,'정답 아님 · '+(G.rounds[G.ri].q||'')]);G.hearts--;b.el.classList.add('wrongb');SND.bad();G.st.classList.remove('shake');void G.st.offsetWidth;G.st.classList.add('shake');floatTxt(e.clientX,e.clientY,'💔 정답이 아니에요','#ff5a6e');upHud();if(G.hearts<=0)lose()}
   setTimeout(()=>b.el.remove(),500)}
 function clearRound(){G.paused=true;clearInterval(G.tm);G.score+=G.left*2;upHud();G.st.appendChild(h('div','banner popin',`🎉 라운드 통과!<br><span style="font-size:22px">남은 시간 보너스 +${G.left*2}</span>`));
   setTimeout(()=>{stop();G.ri++;if(G.ri>=ROUNDS){const st=G.hearts===MAXH?3:G.hearts>=Math.ceil(MAXH/2)?2:1;finish(true,G.score,st,`라운드 ${ROUNDS}개를 모두 통과했어요!`)}else round()},T(1600))}
