@@ -415,6 +415,25 @@ const rooms=[
   ],
   hints:DD.hints[3]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"pics": [280, 107, 327, 353], "lanterns": [627, 160, 160, 293], "wardrobe": [793, 167, 320, 540], "drawer": [440, 607, 307, 100], "log": [380, 493, 273, 114], "dice": [660, 525, 80, 45], "chest": [1047, 553, 190, 187], "hat": [1240, 660, 167, 80], "door": [1407, 127, 193, 520]}}, {"h": {"spider": [160, 53, 253, 220], "mast": [907, 0, 106, 540], "parrot": [1397, 253, 123, 213], "deckchest": [67, 647, 340, 227], "ammo": [700, 547, 207, 147], "cannon": [1016, 427, 184, 180], "cat": [1200, 460, 120, 140], "navtable": [1253, 600, 320, 200], "ants": [593, 787, 200, 107], "door": [833, 727, 400, 153]}}, {"h": {"note": [60, 260, 133, 167], "hammock": [267, 293, 493, 273], "crate": [67, 647, 340, 227], "barrels": [413, 600, 280, 167], "safe": [727, 540, 200, 160], "maptable": [953, 573, 330, 173], "hanoi": [1300, 400, 267, 467], "rat": [600, 800, 113, 73], "door": [1093, 47, 273, 280, {"js": "S.f.hanoi?`<g>${[0,1,2,3,4,5,6,7].map(i=>`<rect x=\"1180\" y=\"${340+i*34}\" width=\"110\" height=\"9\" rx=\"4\" fill=\"#c9a26b\" stroke=\"#5d3a1e\" stroke-width=\"2\"/>`).join('')}<rect x=\"1172\" y=\"320\" width=\"10\" height=\"280\" fill=\"#8d5a33\"/><rect x=\"1288\" y=\"320\" width=\"10\" height=\"280\" fill=\"#8d5a33\"/></g><text x=\"1230\" y=\"30\" font-size=\"30\" text-anchor=\"middle\" font-family=\"Jua,sans-serif\" fill=\"#ffcc80\" stroke=\"#3a2a1a\" stroke-width=\"5\" paint-order=\"stroke\">↑ 탈출구</text>`:''"}]}}, {"h": {"mural": [87, 167, 527, 387], "drops": [760, 253, 147, 360], "treasure": [1193, 313, 397, 193], "bat": [1253, 47, 180, 153], "raft": [780, 720, 480, 180], "skull": [233, 713, 100, 93]}}]};const G='pirate';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
+
 
 /* 동굴: 호수를 건너기 전에는 건너편 물건을 조사할 수 없음 */
 rooms[3].objects.forEach(o=>{if(['mural','drops','treasure','bat'].includes(o.id)){const c=o.click;o.click=function(){if(!S.f.crossed){openModal('호수 건너편',box('호수 건너편이라 닿지 않는다. 먼저 호수를 건너야 한다.'));return}c.call(this)}}});
