@@ -361,6 +361,24 @@ const rooms=[
   ],
   hints:DD.hints[2]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"window": [0, 30, 215, 430], "locker": [0, 480, 300, 320], "board": [515, 200, 575, 260], "clock": [1155, 160, 90, 90], "poster": [1115, 295, 175, 120], "door": [1365, 160, 155, 560], "plant": [295, 350, 185, 290], "drawer": [695, 490, 200, 140], "desk": [620, 730, 360, 120], "trash": [1265, 560, 75, 85]}}, {"h": {"cabinet": [0, 125, 300, 640], "ptable": [425, 170, 310, 215], "skel": [1000, 255, 90, 400], "tank": [1230, 390, 115, 90], "door": [1375, 190, 135, 560], "scale": [590, 415, 140, 130], "scope": [855, 395, 100, 160], "beaker": [945, 480, 100, 70], "safe": [1110, 670, 200, 195]}}, {"h": {"photo": [335, 140, 285, 205], "names": [710, 140, 195, 240], "piano": [255, 400, 365, 280], "metro": [535, 345, 70, 65], "score": [745, 410, 130, 250], "drum": [180, 735, 230, 130], "xylo": [1150, 760, 250, 115], "locker": [1320, 220, 140, 560], "locker2": [1460, 220, 140, 560]}}]};const G='timecapsule-1';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
 
 /* ---------- 피아노 ---------- */
 function setupPiano(){

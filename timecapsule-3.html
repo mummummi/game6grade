@@ -333,6 +333,24 @@ const rooms=[
   ],
   hints:DD.hints[2]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"cabinet": [0, 125, 300, 640], "moon": [380, 180, 175, 225], "board": [595, 175, 415, 260], "skel": [1235, 340, 100, 330], "door": [1375, 120, 145, 640], "drawer": [520, 580, 580, 60], "note": [580, 515, 145, 45], "beaker": [730, 485, 100, 60], "cam": [890, 440, 60, 110], "tank": [980, 480, 90, 70]}}, {"h": {"onair": [740, 125, 125, 60], "graph": [345, 140, 195, 265], "map": [905, 135, 390, 255], "spk0": [130, 60, 155, 180], "spk1": [1300, 60, 155, 180], "console": [545, 460, 325, 100], "pc": [860, 400, 160, 120], "mic": [1010, 445, 75, 110], "lost": [165, 660, 260, 175], "door": [1465, 150, 135, 640]}}, {"h": {"window": [0, 30, 215, 430], "library": [0, 470, 500, 190], "plant": [340, 380, 70, 85], "evidence": [1115, 295, 175, 120], "blocks": [1140, 445, 160, 90], "storage": [1365, 160, 155, 560], "drawer": [695, 490, 200, 140], "desk2": [1090, 735, 400, 130]}}]};const G='timecapsule-3';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
 
 function camResult(){return box('<b>타임랩스 영상 (07:10 ~ 07:45)</b>')+`<div style="background:#0b1a12;color:#9fe8b0;border-radius:8px;padding:12px;font-family:monospace;text-align:left">07:15 과학 선생님 입장<br>07:20 실험 준비 시작<br>07:30 <b style="color:#fff">과학 선생님, 계속 과학실에서 실험 준비 중</b><br>07:40 과학 선생님 퇴장</div><p class="center" style="color:var(--green);font-weight:bold">📹 7시 30분에 과학 선생님은 과학실에 있었다! → 상자를 든 사람이 아니다</p>`}
 function pcResult(){return box('<b>🎙️ 협의회 녹음.mp3 (07:30)</b>')+paper(`"그럼 6학년 협의회 시작하겠습니다. 출석 부를게요.<br>과학 선생님? — 네, 조금 늦었습니다. (07:40)<br>교감 선생님? — 네.<br>6학년 담임 선생님? — <b>……</b><br>어? 아까 출근하신 거 봤는데…"`)+`<p class="center" style="color:var(--green);font-weight:bold">🎙️ 7시 30분 협의회에 담임 선생님은 없었다!</p>`}

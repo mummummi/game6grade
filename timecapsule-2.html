@@ -324,6 +324,24 @@ const rooms=[
   ],
   hints:DD.hints[2]
 }];
+/*🎨*//* 🎨 AI 배경 */
+(function(){const SP={"rooms": [{"h": {"keybox": [35, 165, 205, 295], "calendar": [350, 225, 125, 160], "cctv": [570, 135, 440, 280], "log": [585, 530, 195, 50], "radio": [870, 445, 45, 115], "cup": [935, 500, 65, 65], "box": [205, 695, 260, 180], "entry": [1095, 200, 140, 215], "door": [1360, 90, 200, 640]}}, {"h": {"copier": [20, 465, 275, 345], "wb": [345, 135, 555, 280], "books": [1085, 145, 250, 270], "water": [1225, 435, 90, 265], "sci": [435, 465, 225, 335], "hr": [670, 465, 220, 335], "vp": [895, 465, 250, 335], "plant": [1400, 520, 200, 380], "door": [1360, 55, 215, 460]}}, {"h": {"shelf1": [0, 45, 295, 720], "clock": [555, 135, 90, 95], "shelf2": [690, 160, 360, 480], "case": [1050, 235, 260, 425], "models": [15, 665, 380, 180], "desk": [425, 530, 570, 140], "pc": [560, 425, 150, 105], "globe": [405, 550, 170, 300], "beanbag": [1230, 660, 345, 230], "news": [800, 680, 200, 180]}}]};const G='timecapsule-2';const NS='http://www.w3.org/2000/svg';
+const st=document.createElement('style');st.textContent='.hot .ah{transition:fill-opacity .15s,stroke-opacity .15s}.hot:hover .ah{fill:#fff;fill-opacity:.16;stroke:#ffd54f;stroke-opacity:1}';document.head.appendChild(st);
+let MS=null;function meas(raw){if(!MS){MS=document.createElementNS(NS,'svg');MS.setAttribute('viewBox','0 0 1600 1000');MS.style.cssText='position:absolute;left:-99999px;top:0;width:1600px;height:1000px;visibility:hidden';document.body.appendChild(MS)}MS.innerHTML=raw.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');const o={};MS.querySelectorAll('g.hot').forEach(h=>{let b;try{b=h.getBBox()}catch(e){b={x:0,y:0,width:1,height:1}}o[h.dataset.id]={b,inner:h.innerHTML}});return o}
+function wrap(raw,sp,i){const H=meas(raw);let s=`<svg viewBox="0 0 1600 900" width="100%" style="display:block" xmlns="${NS}">`+((raw.match(/<defs>[\s\S]*?<\/defs>/)||[''])[0])+`<image href="art/${G}_${i+1}.webp" x="0" y="0" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>`;
+ const lab=(t,x,y,f)=>`<text x="${x}" y="${y}" font-size="${f||28}" text-anchor="middle" font-family="Jua,sans-serif" fill="#fff" stroke="#3a2a1a" stroke-width="5" paint-order="stroke">${t}</text>`;
+ for(const id in H){const r=sp.h[id];const {b,inner}=H[id];
+  if(!r){s+=`<g class="hot" data-id="${id}"><g transform="translate(0,0) scale(1,.9)">${inner}</g></g>`;continue}
+  const [x,y,w,h,o]=r;let t='';
+  if(o&&o.fit){const k=Math.min(w/b.width,h/b.height);t=`<g transform="translate(${x+(w-b.width*k)/2},${y+(h-b.height*k)/2}) scale(${k}) translate(${-b.x},${-b.y})">${inner}</g>`}
+  s+=`<g class="hot" data-id="${id}"><rect class="ah" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" fill-opacity="0" stroke="#ffd54f" stroke-opacity="0" stroke-width="5"/>${t}</g>`;
+  if(o&&o.lab)o.lab.forEach(l=>s+=lab(...l));if(o&&o.js){try{s+=(new Function('return '+o.js))()||''}catch(e){}}}
+ if(sp.lab)sp.lab.forEach(l=>s+=lab(...l));
+ if(sp.dark&&(new Function('return '+sp.dark))())s+=`<rect width="1600" height="900" fill="#000" opacity=".86" pointer-events="none"/>`+lab(sp.darkText||'너무 어둡다…',800,450,40);
+ return s+'</svg>'}
+rooms.forEach((r,i)=>{const sp=SP.rooms[i];if(!sp)return;const f=r.scene;r.scene=function(){return wrap(f.apply(this,arguments),sp,i)}});
+})();/*🎨끝*/
+
 
 /* ---------- 시작 / 끝 ---------- */
 function renderIntro(app){
