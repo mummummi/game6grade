@@ -66,7 +66,7 @@ H.injectCSS();
 </script>
 <script>
 /* 우리 반 (학생) */
-H.joinFromURL()&&toast('🔗 우리 반에 연결됐어요!');
+
 let CLS=null;
 const METRIC={ndone:['완료한 게임 수','개'],esc:['탈출한 방탈출 수','개'],xp:['모은 경험치','XP'],missions:['완료한 미션 수','개'],level:['레벨 합계','']};
 async function load(){const r=await H.pull();CLS=r;render()}
@@ -83,7 +83,7 @@ function render(){const p=H.profile();
   <div class="grid g2">
   <div class="panel center"><h2>🎡 오늘의 미션</h2>${tm?`<div class="mission">${E(tm.m)}</div>${tm.done?'<p class="jua" style="font-size:22px;color:#5eea9a">✅ 완료! +20 XP</p>':'<button class="btn" id="mdone">✅ 미션 완료했어요!</button><p class="muted" style="font-size:14px">정말 했을 때만 눌러요. 선생님이 확인하실 수 있어요!</p>'}`:`<div class="wheel" id="wheel"><div class="wi" id="wi">${C.missions.slice(0,8).map((m,i)=>`<span style="transform:rotate(${i*45+22.5}deg) translate(-50%,-78px)">${(m.match(/\p{Extended_Pictographic}/gu)||['⭐']).pop()}</span>`).join('')}</div><div class="wp">▼</div></div><button class="btn" id="spin">🎡 미션 뽑기</button>`}
     <p class="muted" style="font-size:14px">지금까지 완료한 미션 ${s.missions}개</p></div>
-  <div class="panel"><h2>💖 칭찬 포인트 <span style="float:right;font-size:30px;color:#ffd54f">${pb.bal}점</span></h2><p class="muted" style="font-size:15px">받은 포인트 ${pb.earned}점 · 쓴 포인트 ${pb.spent}점${cfg.url?' · 🔗 선생님이 준 포인트가 자동으로 들어와요':''}</p>
+  <div class="panel"><h2>💖 칭찬 포인트 <span style="float:right;font-size:30px;color:#ffd54f">${pb.bal}점</span></h2><p class="muted" style="font-size:15px">받은 포인트 ${pb.earned}점 · 쓴 포인트 ${pb.spent}점${cfg.url&&cfg.cls?' · 🔗 선생님이 준 포인트가 자동으로 들어와요':''}</p>
     <label>🎟️ 칭찬 쿠폰 번호 입력</label><div class="row"><input id="cp" placeholder="예: 7-10-3-K2" style="flex:1"><button class="btn" id="cpb">받기</button></div></div></div>
   <div class="panel"><h2>🛒 학급 상점</h2><div class="grid g4">${C.shop.map(it=>`<button class="shop" data-id="${it.id}" ${pb.bal<it.cost?'disabled':''}><div style="font-size:42px">${it.e}</div><b>${E(it.n)}</b><div class="cost">💖 ${it.cost}점</div></button>`).join('')}</div>
     ${P.spent.length?`<h3>🎫 내 교환권</h3><div class="grid g2">${P.spent.slice().reverse().map(t=>`<div class="ticket ${((CLS&&CLS.delivered)||[]).includes(t.id)?'used':''}"><b>${t.e||'🎫'} ${E(t.n)}</b><div class="tc">${t.id}</div><div class="muted" style="font-size:13px">${new Date(t.at).toLocaleDateString()} · ${((CLS&&CLS.delivered)||[]).includes(t.id)?'✅ 받았어요':'선생님께 이 교환권을 보여 주세요'}</div></div>`).join('')}</div>`:''}</div>`;
