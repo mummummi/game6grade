@@ -124,9 +124,33 @@ function students(){const b=BD();const map={};
   Object.entries(b.manual||{}).forEach(([n,d])=>{map[n]=Object.assign(map[n]||{n:+n},{d:Object.assign({},d,{src:'code'})})});
   ((SYNC&&SYNC.students)||[]).forEach(st=>{const n=String(st.n);const old=map[n]&&map[n].d;if(!old||!old.ts||(st.d.ts||0)>=old.ts)map[n]=Object.assign(map[n]||{n:st.n},{d:Object.assign({},st.d,{src:'sync'})})});
   Object.values(map).forEach(s=>{s.name=s.name||(s.d&&s.d.name)||(s.n+'번')});return Object.values(map).sort((a,b)=>a.n-b.n)}
-function questProg(){const b=BD();const q=b.quest||H.DEF_QUEST;return students().reduce((a,s)=>a+(+((s.d||{})[q.metric==='esc'?'esc':q.metric])||0),0)}
+/*QCYCLE*/const QV=(s,q)=>+((s.d||{})[q.metric])||0;
+/* 퀘스트를 시작한 순간의 기록(base)을 빼고, 그 뒤에 쌓인 것만 몬스터 공격으로 세요 */
+function questContrib(){const b=BD();const q=b.quest||H.DEF_QUEST;const base=q.base||null;return students().filter(s=>s.d).map(s=>({s,v:Math.max(0,QV(s,q)-(base?(base[s.n]!=null?base[s.n]:QV(s,q)):0))}))}
+function questProg(){return questContrib().reduce((a,x)=>a+x.v,0)}
+const BOSSLIST=[['🐉','게으름 드래곤'],['👾','딴짓 외계인'],['🦖','투덜 공룡'],['🐙','미루기 문어'],['👹','짜증 도깨비'],['🤖','고장 난 로봇'],['🧟','졸음 좀비'],['🦑','엉망 오징어'],['👻','잔소리 유령'],['🐲','황금 드래곤']];
+const MNAME={ndone:['게임','개'],esc:['방탈출','개'],xp:['경험치','점'],missions:['미션','개'],level:['레벨','']};
+/* 처음 보는 학생은 지금 기록을 출발선으로 잡아요 */
+function questBase(){const b=BD();const q=Object.assign({},b.quest||H.DEF_QUEST);let ch=false;const first=!q.base;q.base=q.base||{};students().filter(s=>s.d).forEach(s=>{if(q.base[s.n]==null){q.base[s.n]=first?0:QV(s,q);ch=true}});if(first)ch=true;if(!q.stage){q.stage=1;ch=true}if(q.reward==null){q.reward=10;ch=true}if(ch){b.quest=q;saveBD(b)}return ch}
+let QBUSY=false;
+async function questCheck(){if(QBUSY)return;const b=BD();const q=b.quest;if(!q||!q.base)return;const C=questContrib();const prog=C.reduce((a,x)=>a+x.v,0);if(prog<q.goal)return;QBUSY=true;
+  try{const fighters=C.filter(x=>x.v>0).sort((a,c)=>c.v-a.v);const nums=fighters.map(x=>x.s.n);const mvp=fighters[0];const rw=Math.max(0,+q.reward||0);
+    let how='';if(rw&&nums.length){const cfg=H.getCfg();if(cfg.url&&cfg.cls){const r=await H.post({a:'grant',pin:PIN(),nums,amt:rw,reason:`${q.e} ${q.n} 처치 보상`});if(r.ok){how='sync';if(mvp){await H.post({a:'grant',pin:PIN(),nums:[mvp.s.n],amt:Math.ceil(rw/2),reason:`${q.e} ${q.n} MVP`})}}}
+      if(!how){how='coupon'}}
+    const b2=BD();const i=BOSSLIST.findIndex(x=>x[0]===q.e);const nb=BOSSLIST[(i+1+BOSSLIST.length)%BOSSLIST.length];const stage=(q.stage||1)+1;const goal=Math.max(q.goal+1,Math.round(q.goal*1.3));
+    const base={};students().filter(s=>s.d).forEach(s=>base[s.n]=QV(s,q));
+    const win={e:q.e,n:q.n,stage:q.stage||1,goal:q.goal,at:Date.now(),reward:rw,nums,mvp:mvp?{n:mvp.s.n,name:mvp.s.name,v:mvp.v}:null};
+    b2.quest={e:nb[0],n:nb[1],metric:q.metric,goal,reward:rw,stage,base,last:win,log:[win].concat(q.log||[]).slice(0,20),msg:`${stage}번째 몬스터 등장! 반 친구들이 힘을 합쳐 ${MNAME[q.metric]?MNAME[q.metric][0]:''} ${goal}${MNAME[q.metric]?MNAME[q.metric][1]:''}를 채우면 물리칠 수 있어요!`};
+    saveBD(b2);await pushCfg();
+    if(how==='coupon'&&rw&&nums.length){await give(nums,rw,`${q.e} ${q.n} 처치 보상`)}
+    questWinShow(win)}finally{QBUSY=false}}
+function questWinShow(w){confetti(120);const S=students();const nm=n=>{const s=S.find(x=>x.n===n);return s?s.name:n+'번'};const nq=BD().quest;
+  const m=modal(`<div class="center"><div style="font-size:120px;line-height:1">💥</div><h1 style="font-size:46px;margin:6px 0;color:#ffd54f">${E(w.e+' '+w.n)} 처치!</h1><p style="font-size:24px">함께 싸운 <b>${w.nums.length}명</b>에게 💖 <b>${w.reward}점</b>씩!${w.mvp?`<br>🏆 MVP <b>${E(w.mvp.name)}</b> (+${Math.ceil(w.reward/2)}점 더)`:''}</p>
+  <div class="row" style="justify-content:center;flex-wrap:wrap;gap:6px;margin:8px 0">${w.nums.slice(0,40).map(n=>`<span class="chip big">${E(nm(n))}</span>`).join('')}</div>
+  <hr style="border-color:#ffffff22"><p class="muted" style="font-size:18px">⚠️ 새로운 몬스터가 나타났어요!</p><div style="font-size:90px;line-height:1">${nq.e}</div><h2 style="font-size:32px;margin:4px 0">${nq.stage}번째 · ${E(nq.n)}</h2><p style="font-size:20px">❤️ 체력 ${nq.goal}</p><button class="btn" id="qok" style="font-size:24px;padding:10px 40px">⚔️ 다시 싸우러 가자!</button></div>`);
+  m.querySelector('.panel').style.maxWidth='860px';m.querySelector('#qok').onclick=()=>{m.remove();TAB='quest';render()}}
 function grantsOf(n){const g=SYNC&&SYNC.grants?+(SYNC.grants[String(n)]||0):0;return g}
-async function refresh(silent){if(!H.getCfg().url)return null;const r=await H.pull();if(r&&r.ok){SYNC=r;if(!silent)toast('🔄 학생 기록을 새로 불러왔어요');render()}else if(!silent)toast('⚠️ 학급 서버에서 기록을 못 가져왔어요'+(r&&r.msg?'<br><small>'+E(r.msg)+'</small>':''));return r}
+async function refresh(silent){if(!H.getCfg().url)return null;const r=await H.pull();if(r&&r.ok){SYNC=r;if(questBase())pushCfg();questCheck();if(!silent)toast('🔄 학생 기록을 새로 불러왔어요');render()}else if(!silent)toast('⚠️ 학급 서버에서 기록을 못 가져왔어요'+(r&&r.msg?'<br><small>'+E(r.msg)+'</small>':''));return r}
 function start(){render();refresh(true);setInterval(()=>{if(TAB==='home'||TAB==='quest')refresh(true)},30000)}
 function stCard(s){const d=s.d;if(!d)return `<button class="st empty" data-n="${s.n}"><span class="hub-av" style="--s:64px;--c:#555"><span class="hub-av-e">💤</span></span><div class="nm">${s.n}. ${E(s.name)}</div><div class="muted" style="font-size:14px">기록 없음</div></button>`;
   const prog=(d.xp-H.thr(d.level))/(H.thr(d.level+1)-H.thr(d.level));
@@ -157,16 +181,16 @@ async function give(nums,amt,reason){const b=BD(),cfg=H.getCfg();
   const codes=nums.map(n=>{const c=H.couponCode(cfg.cls,n,amt,b.ser++);return{n,c}});b.grants.push({nums,amt,reason,at:Date.now(),how:'coupon',codes});saveBD(b);
   const S=students();modal(`<h2>🎟️ 칭찬 쿠폰 (${amt}점 · ${E(reason)})</h2><p class="muted">학생이 <b>우리 반 → 칭찬 쿠폰 번호 입력</b>에 적으면 포인트가 들어가요. 쿠폰은 한 번만 쓸 수 있어요.</p><div class="coupons">${codes.map(x=>`<div class="coupon"><b>${x.n}. ${E((S.find(s=>s.n===x.n)||{}).name||'')}</b><div class="cc">${x.c}</div><div class="muted">💖 ${amt}점</div></div>`).join('')}</div><button class="btn ghost" onclick="window.print()">🖨️ 인쇄하기</button>`)}
 const BOSSES=['🐉','👾','🦖','🐙','👹','🤖','🧟','🦑','🐲','👻'];
-function quest(){const b=BD(),q=b.quest||H.DEF_QUEST,qp=questProg(),dead=qp>=q.goal;const hit=LASTQ!=null&&qp>LASTQ;LASTQ=qp;
-  const S=students().filter(s=>s.d);const top=S.map(s=>({s,v:+(s.d[q.metric]||0)})).sort((a,b)=>b.v-a.v).slice(0,5);
-  $('#tab').innerHTML=`<div class="panel qbig ${hit?'hit':''}"><div class="qboss ${dead?'dead':''}">${dead?'💥':q.e}</div><h1>${E(q.n)}</h1><p style="font-size:24px">${E(q.msg||'')}</p><div class="hp big"><i style="width:${Math.max(0,100-qp/q.goal*100)}%"></i><span>❤️ ${Math.max(0,q.goal-qp)} / ${q.goal}</span></div>
-    ${dead?'<h2 style="color:#ffd54f;font-size:44px">🎉 우리 반 승리!</h2>':''}<div class="row" style="justify-content:center;margin-top:14px">${top.map((t,i)=>`<span class="chip big">${['🥇','🥈','🥉','🏅','🏅'][i]} ${E(t.s.name)} ${t.v}</span>`).join('')}</div></div>
+function quest(){if(questBase())pushCfg();const b=BD(),q=b.quest||H.DEF_QUEST,qp=questProg(),dead=qp>=q.goal;const hit=LASTQ!=null&&qp>LASTQ;LASTQ=qp;
+  const top=questContrib().filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,5);
+  $('#tab').innerHTML=`<div class="panel qbig ${hit?'hit':''}"><div class="qboss ${dead?'dead':''}">${dead?'💥':q.e}</div><h1>${q.stage?`<span style="font-size:.55em;opacity:.8">${q.stage}번째 몬스터 · </span>`:''}${E(q.n)}</h1><p style="font-size:24px">${E(q.msg||'')}</p><div class="hp big"><i style="width:${Math.max(0,100-qp/q.goal*100)}%"></i><span>❤️ ${Math.max(0,q.goal-qp)} / ${q.goal}</span></div>
+    ${dead?'<h2 style="color:#ffd54f;font-size:44px">🎉 우리 반 승리! 보상을 나눠 줄게요…</h2>':''}<p class="muted" style="font-size:18px">🎁 처치 보상: 함께 싸운 친구 모두 💖 ${q.reward!=null?q.reward:10}점 · MVP는 더!</p><div class="row" style="justify-content:center;margin-top:14px">${top.map((t,i)=>`<span class="chip big">${['🥇','🥈','🥉','🏅','🏅'][i]} ${E(t.s.name)} ${t.v}</span>`).join('')}</div>${(q.log||[]).length?`<div class="row" style="justify-content:center;margin-top:12px;opacity:.85"><span class="muted">🏆 물리친 몬스터:</span>${q.log.slice(0,10).map(w=>`<span class="chip" title="${E(w.n)}">${w.e} ${w.stage}</span>`).join('')}</div>`:''}</div>
   <details class="panel"><summary class="jua" style="font-size:20px">✏️ 퀘스트 바꾸기</summary><div class="row" style="margin-top:10px">${BOSSES.map(e=>`<button class="bb ${q.e===e?'on':''}" data-e="${e}">${e}</button>`).join('')}</div>
     <label>보스 이름</label><input id="qn" value="${E(q.n)}"><label>목표 (반 전체 합계)</label><div class="row"><select id="qm" style="flex:1">${[['ndone','완료한 게임 수'],['esc','탈출한 방탈출 수'],['xp','경험치 합계'],['missions','완료한 미션 수'],['level','레벨 합계']].map(([k,n])=>`<option value="${k}" ${q.metric===k?'selected':''}>${n}</option>`).join('')}</select><input id="qg" type="number" min="1" value="${q.goal}" style="flex:1"></div>
-    <label>학생들에게 보일 설명</label><input id="qmsg" value="${E(q.msg||'')}"><button class="btn" id="qs" style="margin-top:10px">저장하기</button></details>`;
+    <label>학생들에게 보일 설명</label><input id="qmsg" value="${E(q.msg||'')}"><label>처치 보상 (함께 싸운 학생 1명당 💖 포인트, MVP는 절반 더)</label><input id="qrw" type="number" min="0" max="100" value="${q.reward!=null?q.reward:10}"><p class="muted" style="font-size:14px">몬스터를 물리치면 보상이 자동으로 나가고, 체력이 30% 더 센 다음 몬스터가 나와요. [저장하기]를 누르면 지금부터 다시 세요.</p><button class="btn" id="qs" style="margin-top:10px">저장하기</button></details>`;
   let be=q.e;document.querySelectorAll('.bb').forEach(x=>x.onclick=()=>{be=x.dataset.e;document.querySelectorAll('.bb').forEach(y=>y.classList.toggle('on',y===x))});
-  $('#qs').onclick=()=>{const b2=BD();b2.quest={e:be,n:$('#qn').value.trim()||'보스',metric:$('#qm').value,goal:Math.max(1,+$('#qg').value||1),msg:$('#qmsg').value.trim()};saveBD(b2);pushCfg();toast('퀘스트를 저장했어요!');quest()};
-  if(dead&&hit)confetti(80)}
+  $('#qs').onclick=()=>{const b2=BD();const old=b2.quest||{};const nq={e:be,n:$('#qn').value.trim()||'보스',metric:$('#qm').value,goal:Math.max(1,+$('#qg').value||1),msg:$('#qmsg').value.trim(),reward:Math.max(0,+$('#qrw').value||0),stage:old.stage||1,log:old.log||[],last:old.last,base:{}};students().filter(s=>s.d).forEach(s=>nq.base[s.n]=QV(s,nq));b2.quest=nq;saveBD(b2);pushCfg();toast('퀘스트를 저장했어요! 지금부터 다시 세요.');quest()};
+  if(dead)questCheck()}
 let WMODE='mission';
 function wheel(){const b=BD();const ms=b.missions||H.DEF_MISSIONS;const S=students();const items=WMODE==='mission'?ms:S.map(s=>s.n+'. '+s.name);
   const n=Math.max(items.length,1),cols=['#ef5350','#ffa726','#ffee58','#66bb6a','#42a5f5','#7e57c2','#ec407a','#26c6da'];
